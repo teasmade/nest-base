@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5577:5432'
+
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-test
+    command: npm run start:dev
+    env_file: .env
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
