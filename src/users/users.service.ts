@@ -7,12 +7,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   private users: User[] = [
     {
-      id: 1,
+      id: 'fakeuuid1',
       name: 'Tshimanga Mukendi',
       email: 'tshim@myapp.com',
     },
     {
-      id: 2,
+      id: 'fakeuuid2',
       name: 'Kasereka Akim',
       email: 'kase@myapp.com',
     },
@@ -25,7 +25,7 @@ export class UsersService {
   createUser(user: CreateUserDto): User {
     const newUser = {
       ...user,
-      id: this.users.length + 1,
+      id: 'fakeuuid' + this.users.length + 1,
     };
     this.users.push(newUser);
     return newUser;
@@ -35,7 +35,7 @@ export class UsersService {
   // Note dto for update user does not have id
   // Dto is for strictly data
   // The id is a resource identifier (routing layer)
-  updateUser(user: UpdateUserDto & { id: number }): User {
+  updateUser(user: UpdateUserDto & { id: string }): User {
     const userIndex = this.users.findIndex((u) => u.id === user.id);
     if (userIndex === -1) {
       throw new Error('User not found');

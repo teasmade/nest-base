@@ -6,7 +6,6 @@ import {
   ValidationPipe,
   Patch,
   Param,
-  ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -33,7 +32,7 @@ export class UsersController {
   updateUser(
     @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
     // ParseIntPipe will transform the id to a number
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
   ) {
     return this.usersService.updateUser({
       ...updateUserDto,

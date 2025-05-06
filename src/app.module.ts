@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { DataSource } from 'typeorm';
+import { DiagnosticsModule } from './diagnostics/diagnostics.module';
 
 @Module({
   imports: [
@@ -14,10 +15,11 @@ import { DataSource } from 'typeorm';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       entities: [],
-      synchronize: true,
+      synchronize: false,
       autoLoadEntities: true,
     }),
     UsersModule,
+    DiagnosticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
