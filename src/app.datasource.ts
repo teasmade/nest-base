@@ -9,13 +9,13 @@ export const dataSourceConfig: DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   entities: [User, UserProfile],
   synchronize: false,
-  migrations: ['src/migrations/*.js'],
+  migrations: ['src/db/migrations/*.js'],
   migrationsTableName: 'migrations',
 };
 
 const dataSource = new DataSource(dataSourceConfig);
 export default dataSource;
 
-// docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:generate src/migrations/Initial -o -d src/app.datasource.ts' node
+// docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:generate src/db/migrations/Initial -o -d src/app.datasource.ts' node
 // docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:run -d src/app.datasource.ts' node
 // docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:revert -d src/app.datasource.ts' node
