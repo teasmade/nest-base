@@ -23,10 +23,10 @@ export class User {
   password: string;
 
   @Column({ default: true })
-  is_enabled: boolean;
+  isEnabled: boolean;
 
   @Column({ default: false })
-  is_anon: boolean;
+  isAnon: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
