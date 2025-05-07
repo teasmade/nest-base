@@ -14,6 +14,7 @@ export const dataSourceConfig: DataSourceOptions & SeederOptions = {
   migrations: ['src/db/migrations/*.js'],
   migrationsTableName: 'migrations',
   seeds: ['src/db/seeders/*.ts'],
+  factories: ['src/db/factories/*.ts'],
 };
 
 const dataSource = new DataSource(dataSourceConfig);

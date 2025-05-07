@@ -1,31 +1,42 @@
-import { DataSource } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { UserProfile } from '../../users/entities/user-profile.entity';
-import { UserRole } from '../../users/enums/user-role.enum';
-import { Seeder } from 'typeorm-extension';
+import { DataSource } from 'typeorm';
+import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 
 export default class UserSeeder implements Seeder {
-  async run(dataSource: DataSource): Promise<void> {
-    const userRepository = dataSource.getRepository(User);
+  async run(
+    dataSource: DataSource,
+    factoryManager: SeederFactoryManager,
+  ): Promise<any> {
+    console.info('Seed starting...');
+
+    await this.truncateTables(dataSource);
+
+    const userFactory = factoryManager.get(User);
+    const profileFactory = factoryManager.get(UserProfile);
     const profileRepository = dataSource.getRepository(UserProfile);
 
-    // Create admin user
-    const adminUser = userRepository.create({
-      email: 'admin@example.com',
-      password: 'admin123',
-      isEnabled: true,
-      isAnon: false,
-    });
+    console.info('Seeding Users...');
+    const users = await userFactory.saveMany(5);
 
-    await userRepository.save(adminUser);
+    console.info('Seeding User Profiles...');
+    for (const user of users) {
+      const userProfile = await profileFactory.make();
+      userProfile.user = user;
+      await profileRepository.save(userProfile);
+    }
 
-    const adminProfile = profileRepository.create({
-      firstName: 'Admin',
-      lastName: 'User',
-      role: UserRole.ADMIN,
-      user: adminUser,
-    });
+    console.info('Seed completed');
+  }
 
-    await profileRepository.save(adminProfile);
+  private async truncateTables(dataSource: DataSource): Promise<void> {
+    await dataSource.query(`
+      TRUNCATE TABLE "user_profile" RESTART IDENTITY CASCADE
+      `);
+    await dataSource.query(`
+      TRUNCATE TABLE "user" RESTART IDENTITY CASCADE
+      `);
+
+    console.info('user_profile and user tables truncated, sequences reset');
   }
 }
