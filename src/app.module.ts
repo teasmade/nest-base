@@ -5,14 +5,9 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { DataSource } from 'typeorm';
 import { dataSourceConfig } from './app.datasource';
-import { DiagnosticsModule } from './diagnostics/diagnostics.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(dataSourceConfig),
-    UsersModule,
-    DiagnosticsModule,
-  ],
+  imports: [TypeOrmModule.forRoot(dataSourceConfig), UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
