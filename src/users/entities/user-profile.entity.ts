@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
+  Relation,
 } from 'typeorm';
 import { User } from './user.entity';
 import { UserRole } from '../enums/user-role.enum';
@@ -45,5 +46,5 @@ export class UserProfile {
 
   @OneToOne(() => User, (user) => user.profile)
   @JoinColumn()
-  user: User;
+  user: Relation<User>;
 }
