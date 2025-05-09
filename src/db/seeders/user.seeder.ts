@@ -15,7 +15,7 @@ export default class UserSeeder implements Seeder {
 
     const userFactory = factoryManager.get(User);
     const profileFactory = factoryManager.get(UserProfile);
-    const profileRepository = dataSource.getRepository(UserProfile);
+    const profilesRepository = dataSource.getRepository(UserProfile);
 
     console.info('Seeding Users...');
     const users = await userFactory.saveMany(5);
@@ -24,7 +24,7 @@ export default class UserSeeder implements Seeder {
     for (const user of users) {
       const userProfile = await profileFactory.make();
       userProfile.user = user;
-      await profileRepository.save(userProfile);
+      await profilesRepository.save(userProfile);
     }
 
     console.info('Seed completed');
