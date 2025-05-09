@@ -2,14 +2,16 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 import { User } from './users/entities/user.entity';
 import { UserProfile } from './users/entities/user-profile.entity';
+import { UserGroup } from './users/entities/user-group.entity';
 
+// The NestJS core DataSource instance uses this config for init in app.module.ts
 export const dataSourceConfig: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  entities: [User, UserProfile],
+  entities: [User, UserProfile, UserGroup],
   synchronize: false,
   migrations: ['src/db/migrations/*.js'],
   migrationsTableName: 'migrations',
@@ -17,9 +19,7 @@ export const dataSourceConfig: DataSourceOptions & SeederOptions = {
   factories: ['src/db/factories/*.ts'],
 };
 
+// The exported DataSource instance is for use in contexts outside of the NestJS application
+// E.g. CLI operations - migrations, seeders, etc.
 const dataSource = new DataSource(dataSourceConfig);
 export default dataSource;
-
-// docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:generate src/db/migrations/Initial -o -d src/app.datasource.ts' node
-// docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:run -d src/app.datasource.ts' node
-// docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:revert -d src/app.datasource.ts' node

@@ -5,10 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  ManyToMany,
   Relation,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { UserProfile } from './user-profile.entity';
+import { UserGroup } from './user-group.entity';
 
 @Entity()
 export class User {
@@ -36,4 +38,7 @@ export class User {
 
   @OneToOne(() => UserProfile, (profile) => profile.user)
   profile: Relation<UserProfile>;
+
+  @ManyToMany(() => UserGroup, (userGroup) => userGroup.users)
+  userGroups: Relation<UserGroup[]>;
 }
