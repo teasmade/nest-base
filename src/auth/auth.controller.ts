@@ -22,14 +22,11 @@ export class AuthController {
   @Post('signup')
   async onUserSignUp(@Body() signupDTO: SignupDTO) {
     return await this.authService.signUp(signupDTO);
-    // return {
-    //   message: 'Test from auth controller',
-    // };
   }
 
-  @HttpCode(202)
+  @HttpCode(200)
   @Post('login')
   async onUserLogin(@Body() loginDTO: LoginDTO) {
-    // return await this.authService.logIn(loginDTO);
+    return await this.authService.logIn(loginDTO);
   }
 }
