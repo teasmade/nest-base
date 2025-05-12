@@ -3,10 +3,12 @@ import {
   HttpCode,
   Post,
   Body,
+  Request,
   // UsePipes,
   // ValidationPipe,
   UseInterceptors,
   ClassSerializerInterceptor,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
@@ -14,19 +16,20 @@ import { SignupDTO, LoginDTO } from './dtos';
 
 @Controller('auth')
 // @UsePipes(new ValidationPipe())
+// TODO - shift ClassSerializerInterceptor to global interceptor
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   @Post('signup')
-  async onUserSignUp(@Body() signupDTO: SignupDTO) {
+  async signUp(@Body() signupDTO: SignupDTO) {
     return await this.authService.signUp(signupDTO);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async onUserLogin(@Body() loginDTO: LoginDTO) {
-    return await this.authService.logIn(loginDTO);
+  async login(@Body() loginDTO: LoginDTO) {
+    return this.authService.login(loginDTO);
   }
 }
