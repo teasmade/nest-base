@@ -1,10 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { hashPassword, matchPassword } from './hash.helper';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 // import { CreateUserDto } from './dto/create-user.dto';
-import { SignupDTO, LoginDTO } from '../auth';
+import { SignupDTO } from '../auth';
 import { EmailConflictError } from './errors/email-conflict.error';
 import { UserProfile } from './entities/user-profile.entity';
 
@@ -45,17 +45,17 @@ export class UsersService {
     return user;
   }
 
-  public async findAllUsers() {
-    return this.usersRepository.find();
+  public async findAll() {
+    return this.usersRepository.find({
+      relations: ['profile'],
+    });
   }
 
-  public async findUserByEmailPassword(loginDTO: LoginDTO) {
-    const user = await this._findUserByAttr('email', loginDTO.email);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    await this._verifyPassword(loginDTO.password, user.password);
-    return user;
+  public async findOneByEmail(email: string) {
+    return this.usersRepository.findOne({
+      where: { email },
+      relations: ['profile'],
+    });
   }
 
   private async _findUserByAttr(
@@ -65,10 +65,11 @@ export class UsersService {
     return await this.usersRepository.findOneBy({ [attr]: value });
   }
 
-  private async _verifyPassword(inputPassword: string, userPassword: string) {
+  public async verifyPassword(
+    inputPassword: string,
+    userPassword: string,
+  ): Promise<boolean> {
     const isPasswordMatch = await matchPassword(inputPassword, userPassword);
-    if (!isPasswordMatch) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    return isPasswordMatch;
   }
 }
