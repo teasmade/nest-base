@@ -31,6 +31,7 @@ export class User {
   @Column({ default: false })
   isAnon: boolean;
 
+  @Exclude()
   @Column({
     type: 'enum',
     enum: HashPolicy,
