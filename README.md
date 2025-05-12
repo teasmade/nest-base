@@ -35,3 +35,11 @@ $ docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:run 
 $ docker compose run nest-app su -c 'npx typeorm-ts-node-commonjs migration:revert -d src/app.datasource.ts' node
 
 ```
+
+## Seeding
+
+```bash
+# Run Seeders
+# This runs all seeders in src/db/seeders
+$ docker compose run nest-app npm run seed
+```
