@@ -11,6 +11,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { UserProfile } from './user-profile.entity';
 import { UserGroup } from './user-group.entity';
+import { HashPolicy } from '../enums';
 
 @Entity()
 export class User {
@@ -30,11 +31,22 @@ export class User {
   @Column({ default: false })
   isAnon: boolean;
 
+  @Column({
+    type: 'enum',
+    enum: HashPolicy,
+    default: HashPolicy.BCRYPT,
+  })
+  hashPolicy: HashPolicy;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // TODO - add hashPolicy field
+  // string - don't return in response
+  // to import existing users with different tech
 
   @OneToOne(() => UserProfile, (profile) => profile.user)
   profile: Relation<UserProfile>;
