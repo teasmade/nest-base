@@ -1,5 +1,5 @@
 export interface AuthenticatedUser {
-  readonly id: string;
-  readonly email: string;
-  readonly accessToken: string;
+  id: string;
+  email: string;
+  accessToken: string;
 }
