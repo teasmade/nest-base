@@ -3,33 +3,42 @@ import { hashPassword } from './hash.helper';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
+import { SignupDTO } from '../auth';
 import { EmailConflictError } from './errors/email-conflict.error';
+import { UserProfile } from './entities/user-profile.entity';
+
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(UserProfile)
+    private userProfilesRepository: Repository<UserProfile>,
   ) {}
 
-  // TODO - dto to come from auth module once it's in place, auth module route pipe can handle check password complexity
-  async createUser(createUserDto: CreateUserDto) {
-    const existingUser = await this._findUserByAttr(
-      'email',
-      createUserDto.email,
-    );
+  async createUser(signupDTO: SignupDTO) {
+    const existingUser = await this._findUserByAttr('email', signupDTO.email);
     if (existingUser) {
       throw new EmailConflictError();
     }
 
     // Reminder - always work with class instances, not raw objects
     // This ensure that serialize interceptor works as expected
-    const user = this.usersRepository.create();
+    // TODO - write password return test to check serializer interception
 
-    user.email = createUserDto.email;
-    user.password = await hashPassword(createUserDto.password);
+    // Create empty user profile - details here to be refined once more business logic is determined
+    const userProfile = this.userProfilesRepository.create();
+    userProfile.firstName = '';
+    userProfile.lastName = '';
+    await this.userProfilesRepository.save(userProfile);
+
+    const user = this.usersRepository.create();
+    user.email = signupDTO.email;
+    user.password = await hashPassword(signupDTO.password);
     user.isAnon = false;
     user.isEnabled = true;
+    user.profile = userProfile;
 
     await this.usersRepository.save(user);
 
@@ -46,8 +55,6 @@ export class UsersService {
   ) {
     return await this.usersRepository.findOneBy({ [attr]: value });
   }
-
-  // CARRY on work from https://github.com/Platekun/NestAuthExample/blob/master/src/users/users.service.ts
 
   // async validateUser(email: string, password: string) {
   //   const user = await this._findUserByAttr('email', email);
