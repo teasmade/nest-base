@@ -1,9 +1,4 @@
-import { UserRole } from 'src/users/enums/user-role.enum';
-
+import { AuthUser } from './';
 export interface UserContext {
-  user: {
-    id: string;
-    email: string;
-    role: UserRole;
-  };
+  user: AuthUser;
 }
