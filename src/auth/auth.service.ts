@@ -62,14 +62,13 @@ export class AuthService {
 
   private generateAccessToken(user: User) {
     const payload: JwtPayload = {
-      email: user.email,
       sub: user.id,
     };
     return this.jwtService.sign(payload);
   }
 
   public async verifyPayload(payload: JwtPayload) {
-    const user = await this.usersService.findOneByEmail(payload.email);
+    const user = await this.usersService.findOneById(payload.sub);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
