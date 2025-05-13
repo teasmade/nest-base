@@ -6,18 +6,21 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth.constants';
+import { Algorithm } from 'jsonwebtoken';
+
+const { privateKey, publicKey, expiresIn, issuer, algorithm } = jwtConstants;
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     JwtModule.register({
-      privateKey: jwtConstants.privateKey,
-      publicKey: jwtConstants.publicKey,
+      privateKey,
+      publicKey,
       signOptions: {
-        expiresIn: '3d',
-        issuer: 'https://api.example.com',
-        algorithm: 'RS256',
+        expiresIn,
+        issuer,
+        algorithm: algorithm as Algorithm,
       },
     }),
   ],
