@@ -12,8 +12,13 @@ import { jwtConstants } from './auth.constants';
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      privateKey: jwtConstants.privateKey,
+      publicKey: jwtConstants.publicKey,
+      signOptions: {
+        expiresIn: '3d',
+        issuer: 'https://api.example.com',
+        algorithm: 'RS256',
+      },
     }),
   ],
   controllers: [AuthController],

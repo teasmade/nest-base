@@ -3,7 +3,6 @@ import { hashPassword, matchPassword } from './hash.helper';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-// import { CreateUserDto } from './dto/create-user.dto';
 import { SignupDTO } from '../auth';
 import { EmailConflictError } from './errors/email-conflict.error';
 import { UserProfile } from './entities/user-profile.entity';
@@ -18,7 +17,7 @@ export class UsersService {
   ) {}
 
   async createUser(signupDTO: SignupDTO) {
-    const existingUser = await this._findUserByAttr('email', signupDTO.email);
+    const existingUser = await this.findOneByEmail(signupDTO.email);
     if (existingUser) {
       throw new EmailConflictError();
     }
@@ -41,7 +40,6 @@ export class UsersService {
     user.profile = userProfile;
 
     await this.usersRepository.save(user);
-
     return user;
   }
 
@@ -58,11 +56,11 @@ export class UsersService {
     });
   }
 
-  private async _findUserByAttr(
-    attr: string,
-    value: string | number | boolean,
-  ) {
-    return await this.usersRepository.findOneBy({ [attr]: value });
+  public async findOneById(id: string) {
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: ['profile'],
+    });
   }
 
   public async verifyPassword(
