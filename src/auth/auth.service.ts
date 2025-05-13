@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
 import { SignupDTO, LoginDTO } from './dtos';
-import { AuthenticatedUser } from './interfaces/authenticated-user.interface';
 import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 @Injectable()
@@ -30,7 +29,7 @@ export class AuthService {
     return user;
   }
 
-  public async signUp(signupDTO: SignupDTO): Promise<AuthenticatedUser> {
+  public async signUp(signupDTO: SignupDTO) {
     // TODO - verify password complexity e.g.
     // passwordHelper.verifyComplexity(signupDTO.password);
 
@@ -47,6 +46,21 @@ export class AuthService {
 
   public async login(loginDTO: LoginDTO) {
     const user = await this.validateUser(loginDTO);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const accessToken = this.generateAccessToken(user);
+
+    return {
+      id: user.id,
+      email: user.email,
+      accessToken,
+    };
+  }
+
+  public async refresh(id: string) {
+    const user = await this.usersService.findOneById(id);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }

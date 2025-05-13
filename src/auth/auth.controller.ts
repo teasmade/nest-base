@@ -9,10 +9,14 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   HttpStatus,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { SignupDTO, LoginDTO } from './dtos';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthReq } from './interfaces';
 
 @Controller('auth')
 // @UsePipes(new ValidationPipe())
@@ -31,5 +35,12 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDTO: LoginDTO) {
     return this.authService.login(loginDTO);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Post('refresh')
+  async refresh(@Req() req: AuthReq) {
+    return this.authService.refresh(req.user.id);
   }
 }

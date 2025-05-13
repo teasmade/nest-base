@@ -1,9 +1,9 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { jwtConstants } from '../auth.constants';
-import { JwtPayload } from '../interfaces';
 import { AuthService } from '../auth.service';
+import { jwtConstants } from '../auth.constants';
+import { JwtPayload, AuthUser } from '../interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(payload: JwtPayload): Promise<AuthUser> {
     // once here, token has been verified by passport lib
     // at the moment we're also verifying the payload on each request
     // notably to check whether the user is still enabled
