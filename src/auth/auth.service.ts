@@ -1,9 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
 import { SignupDTO, LoginDTO } from './dtos';
 import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { ErrorCode } from 'src/common/errors/enums/error-code.enum';
+import throwCodedError from 'src/common/errors/coded-error';
 @Injectable()
 export class AuthService {
   constructor(
@@ -32,6 +34,10 @@ export class AuthService {
   public async signUp(signupDTO: SignupDTO) {
     // TODO - verify password complexity e.g.
     // passwordHelper.verifyComplexity(signupDTO.password);
+    // TS > have to pass undefined if default provided?
+    if (signupDTO.password.length < 8) {
+      throwCodedError(ErrorCode.PASSWORD_TOO_SHORT, HttpStatus.BAD_REQUEST);
+    }
 
     const user = await this.usersService.createUser(signupDTO);
 
@@ -47,7 +53,7 @@ export class AuthService {
   public async login(loginDTO: LoginDTO) {
     const user = await this.validateUser(loginDTO);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throwCodedError(ErrorCode.INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED);
     }
 
     const accessToken = this.generateAccessToken(user);
@@ -62,7 +68,7 @@ export class AuthService {
   public async refresh(id: string) {
     const user = await this.usersService.findOneById(id);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throwCodedError(ErrorCode.INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED);
     }
 
     const accessToken = this.generateAccessToken(user);
@@ -84,10 +90,10 @@ export class AuthService {
   public async verifyPayload(payload: JwtPayload) {
     const user = await this.usersService.findOneById(payload.sub);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throwCodedError(ErrorCode.INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED);
     }
     if (!user.isEnabled) {
-      throw new UnauthorizedException('User is not enabled');
+      throwCodedError(ErrorCode.USER_NOT_ENABLED, HttpStatus.UNAUTHORIZED);
     }
     return user;
   }
