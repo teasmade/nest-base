@@ -5,5 +5,5 @@ if (!SMS_PROVIDER) {
 }
 
 export const smsConstants = {
-  provider: SMS_PROVIDER,
+  provider: SMS_PROVIDER as 'smsmode' | 'twilio',
 };

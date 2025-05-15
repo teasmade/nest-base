@@ -5,38 +5,43 @@ import { smsConstants } from './sms.constants';
 import { HttpModule } from '@nestjs/axios';
 import { SmsProvider } from './providers/interfaces/sms-provider.interface';
 
-const { provider } = smsConstants;
+// This pattern is based on choosing one provider config at a time
+// E.g. a basic provider for dev and a more robust provider for prod
+const { provider } = smsConstants as { provider: 'smsmode' | 'twilio' };
+
+const httpConfigMap = {
+  smsmode: {
+    baseURL: process.env.SMSMODE_BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Api-Key': `${process.env.SMSMODE_API_KEY}`,
+    },
+  },
+  twilio: {
+    baseURL: process.env.TWILIO_BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  },
+};
+
+const providerInstanceMap = {
+  smsmode: SmsModeProvider,
+  twilio: TwilioProvider,
+};
 
 @Module({
-  imports: [
-    HttpModule.register({
-      // TODO - per provider config pattern - do we need to put a config module in place?
-      baseURL: process.env.SMSMODE_BASE_URL,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-Api-Key': `${process.env.SMSMODE_API_KEY}`,
-      },
-    }),
-  ],
+  imports: [HttpModule.register(httpConfigMap[provider])],
   controllers: [],
   providers: [
     {
       provide: 'SmsProvider',
-      useFactory: (
-        smsMode: SmsModeProvider,
-        twilio: TwilioProvider,
-      ): SmsProvider => {
-        switch (provider) {
-          case 'smsmode':
-            return smsMode;
-          case 'twilio':
-            return twilio;
-          default:
-            throw new Error('No SMS provider configured');
-        }
+      useFactory: (provider: SmsModeProvider | TwilioProvider): SmsProvider => {
+        return provider;
       },
-      inject: [SmsModeProvider, TwilioProvider],
+      inject: [providerInstanceMap[provider]],
     },
     TwilioProvider,
     SmsModeProvider,
