@@ -6,7 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SignupDTO } from '../auth';
 import { EmailConflictError } from './errors/email-conflict.error';
 import { UserProfile } from './entities/user-profile.entity';
-
+import { MessagingService } from '../messaging/messaging.service';
+import { SendSmsDTO } from 'src/messaging/channels/sms/dtos';
 @Injectable()
 export class UsersService {
   constructor(
@@ -14,6 +15,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(UserProfile)
     private userProfilesRepository: Repository<UserProfile>,
+    private messagingService: MessagingService,
   ) {}
 
   async createUser(signupDTO: SignupDTO) {
@@ -43,7 +45,18 @@ export class UsersService {
     return user;
   }
 
-  public async findAll() {
+  public async findAll(authUserId: string) {
+    // TODO - remove sms send test
+    const dto: SendSmsDTO = {
+      authUserId,
+      smsDTO: {
+        to: '+1234567890',
+        text: `Hello from ${authUserId}`,
+      },
+    };
+
+    await this.messagingService.sendSms(dto);
+
     return this.usersRepository.find({
       relations: ['profile'],
     });
