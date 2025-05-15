@@ -1,5 +1,5 @@
-import { SmsDTO } from '../../dtos/sms.dto';
+import { SendSmsDTO } from '../../dtos';
 
 export interface SmsProvider {
-  sendSms(dto: SmsDTO): Promise<void>;
+  sendSms(dto: SendSmsDTO): Promise<void>;
 }

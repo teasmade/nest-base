@@ -2,15 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { SmsProvider } from '../interfaces/sms-provider.interface';
 import { HttpService } from '@nestjs/axios';
 // import { firstValueFrom } from 'rxjs';
-import { SmsDTO } from '../../dtos/sms.dto';
 import { SmsModeBody } from './interfaces/smsmode-body.interface';
-
+import { SendSmsDTO, SmsDTO } from '../../dtos';
 @Injectable()
 export class SmsModeProvider implements SmsProvider {
   constructor(private readonly httpService: HttpService) {}
 
-  async sendSms(dto: SmsDTO): Promise<void> {
-    console.info(`Sending SMS to ${dto.to}: ${dto.text} using SmsModeProvider`);
+  async sendSms(dto: SendSmsDTO): Promise<void> {
+    const { authUserId, smsDTO } = dto;
+    console.info(`SMS send initialized by ${authUserId}`);
+    console.info(
+      `Sending SMS to ${smsDTO.to}: ${smsDTO.text} using SmsModeProvider`,
+    );
 
     /*
     const body = this.buildSmsModeBody(dto);

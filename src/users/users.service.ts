@@ -7,7 +7,7 @@ import { SignupDTO } from '../auth';
 import { EmailConflictError } from './errors/email-conflict.error';
 import { UserProfile } from './entities/user-profile.entity';
 import { MessagingService } from '../messaging/messaging.service';
-import { SmsDTO } from '../messaging/channels/sms/dtos/sms.dto';
+import { SendSmsDTO } from 'src/messaging/channels/sms/dtos';
 @Injectable()
 export class UsersService {
   constructor(
@@ -46,11 +46,15 @@ export class UsersService {
   }
 
   public async findAll(authUserId: string) {
-    // ONLY HERE FOR TESTING
-    const dto: SmsDTO = {
-      to: '+1234567890',
-      text: `Hello from ${authUserId}`,
+    // TODO - remove sms send test
+    const dto: SendSmsDTO = {
+      authUserId,
+      smsDTO: {
+        to: '+1234567890',
+        text: `Hello from ${authUserId}`,
+      },
     };
+
     await this.messagingService.sendSms(dto);
 
     return this.usersRepository.find({
