@@ -21,9 +21,13 @@ export class User {
   @Column({ unique: true, length: 100 })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Exclude()
   password: string;
+
+  @Column({ nullable: true })
+  @Exclude()
+  externalId: string;
 
   @Column({ default: true })
   isEnabled: boolean;
