@@ -1,15 +1,18 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
+import { ExternalUsersService } from '../external-users/external-users.service';
 import { SignupDTO, LoginDTO } from './dtos';
 import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { ErrorCode } from 'src/common/errors/enums/error-code.enum';
 import throwCodedError from 'src/common/errors/coded-error';
+
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly externalUsersService: ExternalUsersService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -78,6 +81,42 @@ export class AuthService {
       email: user.email,
       accessToken,
     };
+  }
+
+  public async externalLogin(externalId: string, hash: string) {
+    const isExternalIdValid =
+      await this.externalUsersService.validateExternalLogin(externalId, hash);
+    if (!isExternalIdValid) {
+      throwCodedError(
+        ErrorCode.INVALID_CREDENTIALS,
+        HttpStatus.UNAUTHORIZED,
+        'test external login failed',
+      );
+    }
+
+    return { externalLoginTest: 'success' };
+
+    /*
+    // Does User already exist?
+    let user = await this.usersService.findOneByExternalId(externalId);
+    if (!user) {
+      // TODO - create user
+      const newUser = await this.usersService.createUser({
+        email: `${externalId}@fastt.com`,
+        password: '',
+      });
+      user = newUser;
+    }
+
+    // Generate access token
+    const accessToken = this.generateAccessToken(user);
+
+    return {
+      id: user.id,
+      email: user.email,
+      accessToken,
+    };
+    */
   }
 
   private generateAccessToken(user: User) {
