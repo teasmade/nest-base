@@ -76,6 +76,12 @@ export class UsersService {
     });
   }
 
+  public async findOneByExternalId(externalId: string) {
+    return this.usersRepository.findOne({
+      where: { externalId },
+    });
+  }
+
   public async verifyPassword(
     inputPassword: string,
     userPassword: string,
