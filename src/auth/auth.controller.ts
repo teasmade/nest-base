@@ -3,7 +3,6 @@ import {
   HttpCode,
   Post,
   Body,
-  Request,
   // UsePipes,
   // ValidationPipe,
   UseInterceptors,
@@ -11,6 +10,7 @@ import {
   HttpStatus,
   UseGuards,
   Req,
+  Param,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
@@ -35,6 +35,15 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDTO: LoginDTO) {
     return this.authService.login(loginDTO);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login/:externalId/:hash')
+  async externalLogin(
+    @Param('externalId') externalId: string,
+    @Param('hash') hash: string,
+  ) {
+    return await this.authService.externalLogin(externalId, hash);
   }
 
   @HttpCode(HttpStatus.OK)
