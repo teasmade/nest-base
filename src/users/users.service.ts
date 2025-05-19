@@ -62,6 +62,12 @@ export class UsersService {
     });
   }
 
+  public async test() {
+    return await this.usersRepository.find({
+      relations: ['profile'],
+    });
+  }
+
   public async findOneByEmail(email: string) {
     return this.usersRepository.findOne({
       where: { email },

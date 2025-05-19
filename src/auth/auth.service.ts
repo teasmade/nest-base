@@ -5,8 +5,7 @@ import { ExternalUsersService } from '../external-users/external-users.service';
 import { SignupDTO, LoginDTO } from './dtos';
 import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { ErrorCode } from 'src/common/errors/enums/error-code.enum';
-import throwCodedError from 'src/common/errors/coded-error';
+import { ErrorCode, throwCodedError } from '@common/errors/utils';
 
 @Injectable()
 export class AuthService {

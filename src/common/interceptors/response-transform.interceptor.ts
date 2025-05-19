@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DateUtil } from '../utils/date.util';
-import { RequestWithStartTime, TransformedResponse } from '../interfaces';
+import { DateUtil } from '@common/dates/utils/date.util';
+import { RequestWithStartTime, TransformedResponse } from '@common/interfaces';
 
 @Injectable()
 export class ResponseTransformInterceptor<T>
