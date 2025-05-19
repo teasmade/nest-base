@@ -25,4 +25,9 @@ export class UsersController {
   async getUsers(@User() user: AuthUser) {
     return await this.usersService.findAll(user.id);
   }
+
+  @Get('test')
+  async test() {
+    return await this.usersService.test();
+  }
 }
