@@ -1,12 +1,28 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
 import * as crypto from 'crypto';
+import { OasisHttpService } from '../oasis-auth/oasis-http.service';
 
 @Injectable()
-export class ExternalUsersService {
-  // TODO - config http for connection to OASIS
-  constructor(private readonly httpService: HttpService) {}
+export class OasisUsersService {
+  constructor(private readonly oasisHttpService: OasisHttpService) {}
+
+  public async getOasisUsers() {
+    // example endpoint only
+    const endpoint =
+      '/contacts?$select=contactid,fullname,emailaddress1,telephone1&$top=5&$filter=cap_type_contact_code eq 809020000';
+
+    // if we define types explicitly during development, we can more clearly document the more relevant fields for our business logic.
+    // the aim would be to extract these types to interface files once we have a more complete spec.
+    type QueryFields = {
+      contactid: string;
+      fullname: string | null;
+      emailaddress1: string | null;
+      telephone1: string | null;
+    };
+
+    const response = await this.oasisHttpService.get<QueryFields>(endpoint);
+    return response.data.value;
+  }
 
   public async validateExternalLogin(
     externalId: string,
@@ -16,6 +32,7 @@ export class ExternalUsersService {
     if (!isExternalIdValid) {
       return false;
     }
+
     const isExternalHashValid = this.validateExternalHash(externalId, hash);
     return isExternalHashValid;
   }
@@ -33,6 +50,7 @@ export class ExternalUsersService {
     // Placeholder only
     return response.status === 200 || true;
     */
+    console.log('validateExternalId', externalId);
     return await Promise.resolve(true);
   }
 

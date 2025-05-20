@@ -2,19 +2,19 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users';
-import { ExternalUsersModule } from '../external-users/external-users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth.constants';
 import { Algorithm } from 'jsonwebtoken';
+import { OasisModule } from 'src/oasis/oasis.module';
 
 const { privateKey, publicKey, expiresIn, issuer, algorithm } = jwtConstants;
 
 @Module({
   imports: [
     UsersModule,
-    ExternalUsersModule,
+    OasisModule,
     PassportModule,
     JwtModule.register({
       privateKey,
