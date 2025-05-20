@@ -1,7 +1,7 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
-import { ExternalUsersService } from '../external-users/external-users.service';
+import { OasisUsersService } from '../oasis/oasis-users/oasis-users.service';
 import { SignupDTO, LoginDTO } from './dtos';
 import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
@@ -11,7 +11,7 @@ import { ErrorCode, throwCodedError } from '@common/errors/utils';
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly externalUsersService: ExternalUsersService,
+    private readonly oasisUsersService: OasisUsersService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -84,7 +84,7 @@ export class AuthService {
 
   public async externalLogin(externalId: string, hash: string) {
     const isExternalIdValid =
-      await this.externalUsersService.validateExternalLogin(externalId, hash);
+      await this.oasisUsersService.validateExternalLogin(externalId, hash);
     if (!isExternalIdValid) {
       throwCodedError(
         ErrorCode.INVALID_CREDENTIALS,
