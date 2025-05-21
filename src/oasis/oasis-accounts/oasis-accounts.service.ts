@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { OasisHttpService } from '../oasis-auth/oasis-http.service';
-import { OasisResponse } from '../oasis-auth/interfaces/oasis-response.interface';
+import { OasisHttpService } from '../oasis-common/oasis-http.service';
+import { OasisResponse } from '../oasis-common/interfaces/oasis-response.interface';
 import { OasisAccount, OasisAccountQueryParams } from './interfaces';
 
 @Injectable()

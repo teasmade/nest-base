@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { OasisHttpService } from '../oasis-auth/oasis-http.service';
+import { OasisHttpService } from '../oasis-common/oasis-http.service';
 
 @Injectable()
 export class OasisContactsService {
