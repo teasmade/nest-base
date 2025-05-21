@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+import { CreateUserDTO } from './create-user.dto';
 
 // Example of target structure
 // export class UpdateUserDto {
@@ -7,4 +7,4 @@ import { CreateUserDto } from './create-user.dto';
 //   email?: string;
 // }
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+export class UpdateUserDTO extends PartialType(CreateUserDTO) {}

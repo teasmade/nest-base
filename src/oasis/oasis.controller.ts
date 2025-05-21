@@ -1,17 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
-import { OasisUsersService } from './oasis-users/oasis-users.service';
+import { OasisContactsService } from './oasis-contacts/oasis-contacts.service';
 import { OasisAccountsService } from './oasis-accounts/oasis-accounts.service';
 
 @Controller('oasis')
 export class OasisController {
   constructor(
-    private readonly oasisUsersService: OasisUsersService,
+    private readonly oasisContactsService: OasisContactsService,
     private readonly oasisAccountsService: OasisAccountsService,
   ) {}
 
   @Get('users')
-  async getUsers() {
-    return this.oasisUsersService.getOasisUsers();
+  async getContacts() {
+    return this.oasisContactsService.getOasisContacts();
   }
 
   @Get('accounts')

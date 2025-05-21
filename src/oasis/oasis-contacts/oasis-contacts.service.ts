@@ -3,10 +3,10 @@ import * as crypto from 'crypto';
 import { OasisHttpService } from '../oasis-auth/oasis-http.service';
 
 @Injectable()
-export class OasisUsersService {
+export class OasisContactsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
-  public async getOasisUsers() {
+  public async getOasisContacts() {
     // example endpoint only
     const endpoint =
       '/contacts?$select=contactid,fullname,emailaddress1,telephone1&$top=5&$filter=cap_type_contact_code eq 809020000';

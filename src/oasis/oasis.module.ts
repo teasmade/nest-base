@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { OasisController } from './oasis.controller';
-import { OasisUsersService } from './oasis-users/oasis-users.service';
+import { OasisContactsService } from './oasis-contacts/oasis-contacts.service';
 import { OasisAccountsService } from './oasis-accounts/oasis-accounts.service';
 import { OasisAuthService } from './oasis-auth/oasis-auth.service';
 import { OasisHttpService } from './oasis-auth/oasis-http.service';
@@ -11,13 +11,13 @@ import { OasisHttpService } from './oasis-auth/oasis-http.service';
   providers: [
     OasisAuthService,
     OasisHttpService,
-    OasisUsersService,
+    OasisContactsService,
     OasisAccountsService,
   ],
   exports: [
     OasisAuthService,
     OasisHttpService,
-    OasisUsersService,
+    OasisContactsService,
     OasisAccountsService,
   ],
   controllers: [OasisController],

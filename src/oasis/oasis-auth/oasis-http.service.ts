@@ -27,7 +27,10 @@ export class OasisHttpService {
     private readonly oasisAuthService: OasisAuthService,
   ) {}
 
-  async get<T>(endpoint: string): Promise<AxiosResponse<OasisResponse<T>>> {
+  async get<T>(
+    endpoint: string,
+    pageSize: number = 25,
+  ): Promise<AxiosResponse<OasisResponse<T>>> {
     try {
       const token = await this.oasisAuthService.getAccessToken();
       const { oasisBaseUrl } = oasisConstants;
@@ -39,7 +42,7 @@ export class OasisHttpService {
             Accept: 'application/json',
             'Odata-Version': '4.0',
             'Odata-MaxVersion': '4.0',
-            Prefer: 'odata.include-annotations=*',
+            Prefer: `odata.include-annotations=OData.Community.Display.V1.FormattedValue${pageSize ? `, odata.maxpagesize=${pageSize}` : ''}`,
           },
         }),
       );
