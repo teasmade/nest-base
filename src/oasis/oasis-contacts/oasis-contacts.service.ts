@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import { OasisHttpService } from '../oasis-auth/oasis-http.service';
 
 @Injectable()
-export class OasisUsersService {
+export class OasisContactsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
   public async getOasisContacts() {
