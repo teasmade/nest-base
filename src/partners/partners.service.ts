@@ -9,13 +9,25 @@ export class PartnersService {
 
   /**
    * Returns an array of partners mapped from Oasis accounts.
-   * @remarks This method should be used with ```@SerializeOptions({type: OasisAccountToPartnerDto})``` decorator on the controller method
-   * to ensure correct class-transformer serialization of the response.
+   * @remarks This method should be used with ```@SerializeOptions({type: OasisAccountToPartnerDto})``` decorator on the controller method or with the ```@UseInterceptors(ClassSerializerInterceptor)``` decorator on the controller class to ensure correct class-transformer serialization of the response.
    */
-  async getPartners(pageSize?: number): Promise<OasisAccountToPartnerDto[]> {
-    const oasisAccounts =
-      await this.oasisAccountsService.getOasisAccounts(pageSize);
-    return this._mapOasisAccountsToPartners(oasisAccounts.value);
+  async getPartners(
+    pageSize?: number,
+    paginationSessionId?: string,
+    direction?: 'next' | 'prev',
+  ): Promise<{
+    partners: OasisAccountToPartnerDto[];
+    pagination?: { paginationSessionId: string; currentPage: number };
+  }> {
+    const oasisAccounts = await this.oasisAccountsService.getOasisAccounts(
+      pageSize,
+      paginationSessionId,
+      direction,
+    );
+
+    const partners = this._mapOasisAccountsToPartners(oasisAccounts.data.value);
+
+    return { partners, pagination: oasisAccounts.pagination };
   }
 
   // We need to map in this way so that we return instances of the DTO class, not plain old JS objects, otherwise class-transformer serialization won't work properly.

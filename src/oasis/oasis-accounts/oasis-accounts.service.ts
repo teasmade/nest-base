@@ -10,7 +10,12 @@ export class OasisAccountsService {
   // TODO - work out how to paginate with returned next link cookie
   public async getOasisAccounts(
     pageSize?: number,
-  ): Promise<OasisResponse<OasisAccount>> {
+    paginationSessionId?: string,
+    direction?: 'next' | 'prev',
+  ): Promise<{
+    data: OasisResponse<OasisAccount>;
+    pagination?: { paginationSessionId: string; currentPage: number };
+  }> {
     const endpoint = '/accounts';
 
     const params: OasisAccountQueryParams = {
@@ -43,8 +48,10 @@ export class OasisAccountsService {
     const response = await this.oasisHttpService.get<OasisAccount>(
       `${endpoint}${paramsString}`,
       pageSize,
+      paginationSessionId,
+      direction,
     );
-    return response.data;
+    return { data: response.data, pagination: response.pagination };
   }
 
   private _buildParams(params: OasisAccountQueryParams): string {

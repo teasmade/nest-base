@@ -5,5 +5,5 @@ export interface OasisResponse<T> {
   '@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded'?: boolean;
   '@Microsoft.Dynamics.CRM.globalmetadataversion'?: string;
   value: Array<T>;
-  '@odata.nextlink'?: string;
+  '@odata.nextLink'?: string;
 }
