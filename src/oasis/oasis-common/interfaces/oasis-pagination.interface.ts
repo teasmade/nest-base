@@ -5,7 +5,7 @@ export interface PaginationResult {
   currentPage: number;
 }
 
-export interface PaginationResponse<T> {
+export interface PaginatedOasisResponse<T> {
   data: OasisResponse<T>;
   pagination?: PaginationResult;
 }

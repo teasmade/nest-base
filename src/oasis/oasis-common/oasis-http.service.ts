@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { OasisAuthService } from './oasis-auth.service';
 import { oasisConstants } from './oasis.constants';
-import { OasisResponse, PaginationResponse } from './interfaces';
+import { OasisResponse, PaginatedOasisResponse } from './interfaces';
 import { OasisPaginationService } from './oasis-pagination.service';
 
 /**
@@ -33,7 +33,7 @@ export class OasisHttpService {
     pageSize: number = 25,
     paginationSessionId?: string,
     direction?: 'next' | 'prev',
-  ): Promise<PaginationResponse<T>> {
+  ): Promise<PaginatedOasisResponse<T>> {
     try {
       const token = await this.oasisAuthService.getAccessToken();
       const requestUrl = await this._buildRequestUrl(
@@ -111,7 +111,7 @@ export class OasisHttpService {
     response: OasisResponse<T>,
     paginationSessionId?: string,
     direction?: 'next' | 'prev',
-  ): Promise<PaginationResponse<T>> {
+  ): Promise<PaginatedOasisResponse<T>> {
     if (response['@odata.nextLink']) {
       const paginationResult =
         await this.oasisPaginationService.handlePagination(
