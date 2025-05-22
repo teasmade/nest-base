@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { OasisAuthService } from './oasis-auth.service';
 import { oasisConstants } from './oasis.constants';
-import { OasisResponse } from './interfaces';
+import { OasisResponse, PaginationResponse } from './interfaces';
 import { OasisPaginationService } from './oasis-pagination.service';
 
 /**
@@ -33,81 +33,99 @@ export class OasisHttpService {
     pageSize: number = 25,
     paginationSessionId?: string,
     direction?: 'next' | 'prev',
-  ): Promise<{
-    data: OasisResponse<T>;
-    // TODO - extract pagination return type to a separate interface
-    pagination?: { paginationSessionId: string; currentPage: number };
-  }> {
+  ): Promise<PaginationResponse<T>> {
     try {
       const token = await this.oasisAuthService.getAccessToken();
-      const { oasisBaseUrl } = oasisConstants;
-      let requestUrl = `${oasisBaseUrl}${endpoint}`;
-
-      // If pagination session id and direction are provided, get the next or previous link from the session
-      if (paginationSessionId && direction) {
-        const newRequestUrl =
-          await this.oasisPaginationService.getLinkFromSession(
-            paginationSessionId,
-            direction,
-          );
-        if (newRequestUrl) {
-          requestUrl = newRequestUrl;
-        }
-      }
-
-      // Make the request
-      const response = await firstValueFrom(
-        this.httpService.get<OasisResponse<T>>(requestUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'Odata-Version': '4.0',
-            'Odata-MaxVersion': '4.0',
-            Prefer: `odata.include-annotations=OData.Community.Display.V1.FormattedValue${pageSize ? `, odata.maxpagesize=${pageSize}` : ''}`,
-          },
-        }),
+      const requestUrl = await this._buildRequestUrl(
+        endpoint,
+        paginationSessionId,
+        direction,
       );
+      const response = await this._makeRequest<T>(requestUrl, token, pageSize);
 
-      // If a nextlink has been received, update the pagination session
-      // console.log('response.data', response.data);
-      if (response.data['@odata.nextLink']) {
-        // console.log('nextlink', response.data['@odata.nextlink']);
-        const paginationResult =
-          await this.oasisPaginationService.handlePagination(
-            paginationSessionId,
-            response.data['@odata.nextLink'],
-            direction,
-          );
-
-        console.log('paginationResult', paginationResult);
-        return {
-          data: response.data,
-          pagination: paginationResult,
-        };
-      }
-
-      return { data: response.data };
+      return this._handleResponse<T>(response, paginationSessionId, direction);
     } catch (error) {
       console.error('Error making GET request to OASIS:', error);
       throw new Error('Failed to make GET request to OASIS');
     }
   }
 
-  // async post<T>(endpoint: string, data: any) {
-  //   const token = await this.oasisAuthService.getAccessToken();
-  //   return firstValueFrom(
-  //     this.httpService.post<T>(
-  //       `${process.env.FASTT_OASIS_BASE_URL}${endpoint}`,
-  //       data,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           'Content-Type': 'application/json',
-  //           Accept: 'application/json',
-  //         },
-  //       },
-  //     ),
-  //   );
-  // }
+  private async _buildRequestUrl(
+    endpoint: string,
+    paginationSessionId?: string,
+    direction?: 'next' | 'prev',
+  ): Promise<string> {
+    const { oasisBaseUrl } = oasisConstants;
+    let requestUrl = `${oasisBaseUrl}${endpoint}`;
+
+    if (paginationSessionId && direction) {
+      const newRequestUrl =
+        await this.oasisPaginationService.getLinkFromSession(
+          paginationSessionId,
+          direction,
+        );
+      if (newRequestUrl) {
+        requestUrl = newRequestUrl;
+      }
+    }
+
+    return requestUrl;
+  }
+
+  private async _makeRequest<T>(
+    requestUrl: string,
+    token: string,
+    pageSize: number,
+  ): Promise<OasisResponse<T>> {
+    const response = await firstValueFrom(
+      this.httpService.get<OasisResponse<T>>(requestUrl, {
+        headers: this._buildHeaders(token, pageSize),
+      }),
+    );
+    return response.data;
+  }
+
+  private _buildHeaders(
+    token: string,
+    pageSize: number,
+  ): Record<string, string> {
+    return {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Odata-Version': '4.0',
+      'Odata-MaxVersion': '4.0',
+      Prefer: this._buildPreferHeader(pageSize),
+    };
+  }
+
+  private _buildPreferHeader(pageSize: number): string {
+    const basePrefer =
+      'odata.include-annotations=OData.Community.Display.V1.FormattedValue';
+    return pageSize
+      ? `${basePrefer}, odata.maxpagesize=${pageSize}`
+      : basePrefer;
+  }
+
+  private async _handleResponse<T>(
+    response: OasisResponse<T>,
+    paginationSessionId?: string,
+    direction?: 'next' | 'prev',
+  ): Promise<PaginationResponse<T>> {
+    if (response['@odata.nextLink']) {
+      const paginationResult =
+        await this.oasisPaginationService.handlePagination(
+          paginationSessionId,
+          response['@odata.nextLink'],
+          direction,
+        );
+
+      return {
+        data: response,
+        pagination: paginationResult,
+      };
+    }
+
+    return { data: response };
+  }
 }
