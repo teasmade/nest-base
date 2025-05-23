@@ -5,6 +5,7 @@ import { UserProfile } from './users/entities/user-profile.entity';
 import { UserGroup } from './users/entities/user-group.entity';
 
 // The NestJS core DataSource instance uses this config for init in app.module.ts
+// New entities should be added to the entities array as needed
 export const dataSourceConfig: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
