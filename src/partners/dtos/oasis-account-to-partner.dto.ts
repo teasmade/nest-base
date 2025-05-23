@@ -5,7 +5,7 @@ import { OasisAccount } from 'src/oasis/oasis-accounts/interfaces';
  * DTO to map relevant Oasis Account data structure to Orizon Partner data structure for frontend usage
  */
 
-export class OasisAccountToPartnerDto implements Partial<OasisAccount> {
+export class OasisAccountToPartnerDto implements OasisAccount {
   @Exclude()
   '@odata.etag': string;
 
