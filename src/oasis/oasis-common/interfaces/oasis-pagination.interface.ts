@@ -3,6 +3,7 @@ import { OasisResponse } from './oasis-response.interface';
 export interface PaginationResult {
   paginationSessionId: string;
   currentPage: number;
+  totalItems: number | null;
 }
 
 export interface PaginatedOasisResponse<T> {
