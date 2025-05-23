@@ -1,27 +1,84 @@
 import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { OasisHttpService } from '../oasis-common/oasis-http.service';
+import { OasisContact } from './interfaces/oasis-contact.interface';
+import { PaginatedOasisResponse } from '../oasis-common/interfaces/oasis-pagination.interface';
+
+interface OasisContactQueryParams {
+  $select?: string[];
+  $count?: boolean;
+  $filter?: string;
+  $orderby?: string;
+}
 
 @Injectable()
 export class OasisContactsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
-  public async getOasisContacts() {
-    // example endpoint only
-    const endpoint =
-      '/contacts?$select=contactid,fullname,emailaddress1,telephone1&$top=5&$filter=cap_type_contact_code eq 809020000';
+  public async getOasisContacts(
+    pageSize?: number,
+    paginationSessionId?: string,
+    direction?: 'next' | 'prev',
+  ): Promise<PaginatedOasisResponse<OasisContact>> {
+    const endpoint = '/contacts';
 
-    // if we define types explicitly during development, we can more clearly document the more relevant fields for our business logic.
-    // the aim would be to extract these types to interface files once we have a more complete spec.
-    type QueryFields = {
-      contactid: string;
-      fullname: string | null;
-      emailaddress1: string | null;
-      telephone1: string | null;
+    const params: OasisContactQueryParams = {
+      $select: [
+        'contactid',
+        'firstname',
+        'lastname',
+        'fullname',
+        'emailaddress1',
+        'telephone1',
+        'cap_civilitecode',
+        'cap_type_contact_code',
+        'address1_line1',
+        'address1_line2',
+        'address1_line3',
+        'address1_postalcode',
+        'address1_city',
+        'address1_stateorprovince',
+        'address1_country',
+        'address1_composite',
+        '_cap_agence_emploi_referenteid_value',
+        'address1_longitude',
+        'address1_latitude',
+      ],
+      $count: true,
+      $orderby: 'fullname asc',
+      $filter: 'cap_type_contact_code eq 809020000',
     };
 
-    const response = await this.oasisHttpService.get<QueryFields>(endpoint);
-    return response.data.value;
+    const paramsString = this._buildParams(params);
+    const response = await this.oasisHttpService.get<OasisContact>(
+      `${endpoint}${paramsString}`,
+      pageSize,
+      paginationSessionId,
+      direction,
+    );
+    return { data: response.data, pagination: response.pagination };
+  }
+
+  private _buildParams(params: OasisContactQueryParams): string {
+    const paramStrings: string[] = [];
+
+    if (params.$select) {
+      paramStrings.push(`$select=${params.$select.join(',')}`);
+    }
+
+    if (params.$count !== undefined) {
+      paramStrings.push(`$count=${params.$count}`);
+    }
+
+    if (params.$filter) {
+      paramStrings.push(`$filter=${params.$filter}`);
+    }
+
+    if (params.$orderby) {
+      paramStrings.push(`$orderby=${params.$orderby}`);
+    }
+
+    return paramStrings.length ? '?' + paramStrings.join('&') : '';
   }
 
   public async validateExternalLogin(

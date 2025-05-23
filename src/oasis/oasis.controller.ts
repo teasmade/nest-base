@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { OasisContactsService } from './oasis-contacts/oasis-contacts.service';
 import { OasisAccountsService } from './oasis-accounts/oasis-accounts.service';
 
@@ -9,9 +9,9 @@ export class OasisController {
     private readonly oasisAccountsService: OasisAccountsService,
   ) {}
 
-  @Get('users')
-  async getContacts() {
-    return this.oasisContactsService.getOasisContacts();
+  @Get('contacts')
+  async getContacts(@Query('pageSize') pageSize: number) {
+    return this.oasisContactsService.getOasisContacts(pageSize);
   }
 
   @Get('accounts')
