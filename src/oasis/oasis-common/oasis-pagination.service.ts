@@ -11,16 +11,18 @@ export class OasisPaginationService {
   async handlePagination(
     existingSessionId: string | undefined,
     nextlink: string,
+    totalItems?: number,
     direction?: 'next' | 'prev',
   ): Promise<PaginationResult> {
     if (existingSessionId) {
       return this._updateExistingSession(
         existingSessionId,
         nextlink,
+        totalItems,
         direction,
       );
     }
-    return this._createNewSession(nextlink);
+    return this._createNewSession(nextlink, totalItems);
   }
 
   async getLinkFromSession(
@@ -43,6 +45,7 @@ export class OasisPaginationService {
   private async _updateExistingSession(
     sessionId: string,
     nextlink: string,
+    totalItems?: number,
     direction?: 'next' | 'prev',
   ): Promise<PaginationResult> {
     const session = await this._getSession(sessionId);
@@ -61,6 +64,7 @@ export class OasisPaginationService {
     return {
       paginationSessionId: sessionId,
       currentPage: updatedSession.currentPage,
+      totalItems: totalItems ?? null,
     };
   }
 
@@ -93,7 +97,10 @@ export class OasisPaginationService {
     };
   }
 
-  private async _createNewSession(nextlink: string): Promise<PaginationResult> {
+  private async _createNewSession(
+    nextlink: string,
+    totalItems?: number,
+  ): Promise<PaginationResult> {
     const newSessionId = randomUUID();
     const newSession: PaginationSession = {
       navigation: {
@@ -107,6 +114,7 @@ export class OasisPaginationService {
     return {
       paginationSessionId: newSessionId,
       currentPage: 1,
+      totalItems: totalItems ?? null,
     };
   }
 

@@ -117,6 +117,7 @@ export class OasisHttpService {
         await this.oasisPaginationService.handlePagination(
           paginationSessionId,
           response['@odata.nextLink'],
+          response['@odata.count'],
           direction,
         );
 
