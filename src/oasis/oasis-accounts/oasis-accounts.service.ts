@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OasisHttpService } from '../oasis-common/oasis-http.service';
-import { OasisResponse } from '../oasis-common/interfaces/oasis-response.interface';
 import { OasisAccount, OasisAccountQueryParams } from './interfaces';
+import { PaginatedOasisResponse } from '../oasis-common/interfaces/oasis-pagination.interface';
 
 @Injectable()
 export class OasisAccountsService {
@@ -12,10 +12,7 @@ export class OasisAccountsService {
     pageSize?: number,
     paginationSessionId?: string,
     direction?: 'next' | 'prev',
-  ): Promise<{
-    data: OasisResponse<OasisAccount>;
-    pagination?: { paginationSessionId: string; currentPage: number };
-  }> {
+  ): Promise<PaginatedOasisResponse<OasisAccount>> {
     const endpoint = '/accounts';
 
     const params: OasisAccountQueryParams = {
