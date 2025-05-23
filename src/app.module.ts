@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { DataSource } from 'typeorm';
 import { dataSourceConfig } from './app.datasource';
 import { PartnersModule } from './partners/partners.module';
+import { ContactsModule } from './contacts/contacts.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PartnersModule } from './partners/partners.module';
     UsersModule,
     AuthModule,
     PartnersModule,
+    ContactsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
