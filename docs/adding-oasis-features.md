@@ -15,9 +15,12 @@ Example files are provided illulstrating the process getting / mapping / transfo
 - The Oasis module is already set up to handle authentication, header params, http requests, pagination.
 - We just need to create a new oasis-service folder in the Oasis module
   - Example: `src/oasis/oasis-accounts`
-- Create an oasis-feature-interface which defines the raw results we will request from the Oasis API
+- Create an oasis-feature-interface which defines the raw results we will request from the Oasis API. This should include the OData expanded (e.g. formatted) fields we expect to receive.
   - Example: `src/oasis/oasis-accounts/interfaces/oasis-account.interface.ts`
-- Create an oasis-service to query this data from Oasis
+- Create an oasis-feature-constants which defines the fields we will request from Oasis via the select query param. This should not include OData expanded fields.
+  - Example `src/oasis/oasis-contacts/oasis-contacts.constants.ts`
+- There is some additional typing in the interface and constant files in order to create an assertion that the keys of the interface (minus the OData keys) are the same as the values in the select fields array.
+- Create an oasis-service to query the data from Oasis
   - Example: `src/oasis/oasis-accounts/oasis-accounts.service.ts`
 
 **Making a New Feature Module**
