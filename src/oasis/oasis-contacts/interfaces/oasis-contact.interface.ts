@@ -1,4 +1,4 @@
-import { NonODataFormattedValues } from 'src/oasis/oasis-common/utils/oasis-utility-types';
+import { ExcludeODataValues } from 'src/oasis/oasis-common/utils/oasis-utility-types';
 import { OasisContactSelectFields } from '../oasis-contacts.constants';
 
 export interface OasisContact {
@@ -34,11 +34,11 @@ export interface OasisContact {
   'address1_latitude@OData.Community.Display.V1.FormattedValue'?: string | null;
 }
 
-type NonODataFormattedOasisContactKeys =
-  keyof NonODataFormattedValues<OasisContact>;
+type NonODataFormattedOasisContactKeys = keyof ExcludeODataValues<OasisContact>;
 
-// Assert that NonODataFormattedOasisContactKeys is the same type as OasisContactSelectFields
-type _AssertKeyFieldMatch =
+// Assert that the keys of the OasisContact interface match the values in the OasisContactSelectFields array, excluding the OData.Community.Display.V1.FormattedValue fields
+// This allows us to enforce the interface we use to type the response from OASIS with the values we use to build the select query params when we get contacts.
+type _AssertKeysSelectFieldsMatch =
   NonODataFormattedOasisContactKeys extends OasisContactSelectFields
     ? true
     : {
@@ -50,4 +50,4 @@ type _AssertKeyFieldMatch =
       };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _test: _AssertKeyFieldMatch = true;
+const _test: _AssertKeysSelectFieldsMatch = true;

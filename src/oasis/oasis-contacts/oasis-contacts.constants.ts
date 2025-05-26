@@ -1,4 +1,4 @@
-export const oasisContactSelectFields = [
+export const OASIS_CONTACT_SELECT_FIELDS = [
   'contactid',
   'firstname',
   'lastname',
@@ -21,4 +21,4 @@ export const oasisContactSelectFields = [
 ] as const;
 
 export type OasisContactSelectFields =
-  (typeof oasisContactSelectFields)[number];
+  (typeof OASIS_CONTACT_SELECT_FIELDS)[number];
