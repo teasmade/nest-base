@@ -3,6 +3,9 @@ import { SeederOptions } from 'typeorm-extension';
 import { User } from './users/entities/user.entity';
 import { UserProfile } from './users/entities/user-profile.entity';
 import { UserGroup } from './users/entities/user-group.entity';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 // The NestJS core DataSource instance uses this config for init in app.module.ts
 // New entities should be added to the entities array as needed
