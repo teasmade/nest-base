@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { OasisHttpService } from '../oasis-common/oasis-http.service';
 import { OasisAccount, OasisAccountQueryParams } from './interfaces';
 import { PaginatedOasisResponse } from '../oasis-common/interfaces/oasis-pagination.interface';
+import { OASIS_ACCOUNT_SELECT_FIELDS } from './oasis-accounts.constants';
+
 
 @Injectable()
 export class OasisAccountsService {
@@ -16,26 +18,7 @@ export class OasisAccountsService {
     const endpoint = '/accounts';
 
     const params: OasisAccountQueryParams = {
-      $select: [
-        'accountid',
-        'accountnumber',
-        'name',
-        'address1_city',
-        'address1_stateorprovince',
-        'address1_country',
-        'address1_line1',
-        'address1_line2',
-        'address1_line3',
-        'address1_postalcode',
-        'cap_siret',
-        'cap_numtva',
-        'cap_typedepartenairecode',
-        'cap_typedepointdegeolocalisationcode',
-        'cap_typedepartenairepointgeocode',
-        '_cap_partenaireparentid_value',
-        'createdon',
-        'modifiedon',
-      ],
+      $select: OASIS_ACCOUNT_SELECT_FIELDS,
       $count: true,
       $orderby: 'name asc',
       $filter: 'cap_typedepartenairepointgeocode ne null',
