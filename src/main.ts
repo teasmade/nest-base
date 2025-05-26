@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ResponseTransformInterceptor } from './common/interceptors/response-transform.interceptor';
 import { timingMiddleware } from './common/middlewares/timing.middleware';
 
+declare const module: any;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -21,5 +23,13 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   await app.listen(process.env.APP_PORT ?? 3000);
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (module.hot) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    module.hot.accept();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    module.hot.dispose(() => app.close());
+  }
 }
 bootstrap();

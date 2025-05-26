@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 const {
   FASST_OASIS_MS_OAUTH_ENDPOINT,
   FASST_OASIS_MS_OAUTH_CLIENT_ID,

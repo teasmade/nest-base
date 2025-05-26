@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 const { SMS_PROVIDER } = process.env;
 
 if (!SMS_PROVIDER) {

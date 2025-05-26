@@ -1,3 +1,6 @@
+import { NonODataFormattedValues } from 'src/oasis/oasis-common/utils/oasis-utility-types';
+import { OasisContactSelectFields } from '../oasis-contacts.constants';
+
 export interface OasisContact {
   contactid: string;
   firstname: string;
@@ -30,3 +33,21 @@ export interface OasisContact {
   address1_latitude: number | null;
   'address1_latitude@OData.Community.Display.V1.FormattedValue'?: string | null;
 }
+
+type NonODataFormattedOasisContactKeys =
+  keyof NonODataFormattedValues<OasisContact>;
+
+// Assert that NonODataFormattedOasisContactKeys is the same type as OasisContactSelectFields
+type _AssertKeyFieldMatch =
+  NonODataFormattedOasisContactKeys extends OasisContactSelectFields
+    ? true
+    : {
+        error: 'OasisContactSelectFields array is missing fields from OasisContact interface';
+        missingFields: Exclude<
+          NonODataFormattedOasisContactKeys,
+          OasisContactSelectFields
+        >;
+      };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _test: _AssertKeyFieldMatch = true;
