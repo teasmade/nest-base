@@ -58,7 +58,6 @@ export class OasisPaginationService {
       nextlink,
       direction,
     );
-    console.log('updatedSession', updatedSession);
     await this._cacheSession(sessionId, updatedSession);
 
     return {
@@ -109,7 +108,6 @@ export class OasisPaginationService {
       currentPage: 1,
     };
 
-    console.log('newSession', newSession);
     await this._cacheSession(newSessionId, newSession);
     return {
       paginationSessionId: newSessionId,

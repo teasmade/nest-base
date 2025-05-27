@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OasisAccountsService } from '../oasis/oasis-accounts/oasis-accounts.service';
 import { GetPartnersResponseDto } from './dtos/partners-response-dto';
-import {
-  AccountsCategories,
-  AccountTypes,
-} from 'src/oasis/oasis-common/enums/accounts.enum';
+import { PartnerQueryParamsDTO } from './dtos/partner-query-params.dto';
 
 @Injectable()
 export class PartnersService {
@@ -15,18 +12,10 @@ export class PartnersService {
    * @remarks This method should be used with ```@UseInterceptors(ClassSerializerInterceptor)``` decorator on the controller class to ensure correct class-transformer serialization of the response.
    */
   async getPartners(
-    pageSize?: number,
-    paginationSessionId?: string,
-    direction?: 'next' | 'prev',
-    type?: AccountTypes,
-    category?: AccountsCategories,
+    getPartnersQueryParams?: PartnerQueryParamsDTO,
   ): Promise<GetPartnersResponseDto> {
     const oasisAccounts = await this.oasisAccountsService.getOasisAccounts(
-      pageSize,
-      paginationSessionId,
-      direction,
-      type,
-      category,
+      getPartnersQueryParams,
     );
 
     // Note - we need to return an instance of the DTO class, not a plain old JS object, otherwise class-transformer serialization won't work properly.

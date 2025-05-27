@@ -20,3 +20,6 @@ export const accountCategoryCodeMap = {
 
 export type AccountTypes = keyof typeof accountTypeCodeMap;
 export type AccountsCategories = keyof typeof accountCategoryCodeMap;
+
+type AccountSearchableFields = 'name' | 'city' | 'postalcode';
+export type AccountSearchQuery = `${AccountSearchableFields}:${string}`;

@@ -8,7 +8,9 @@ import {
   accountCategoryCodeMap,
   AccountTypes,
   AccountsCategories,
+  AccountSearchQuery,
 } from '../oasis-common/enums/accounts.enum';
+import { PartnerQueryParamsDTO } from 'src/partners/dtos/partner-query-params.dto';
 
 // TODO - break interface out to a separate file
 interface OasisAccountQueryParams {
@@ -23,19 +25,18 @@ export class OasisAccountsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
   public async getOasisAccounts(
-    pageSize?: number,
-    paginationSessionId?: string,
-    direction?: 'next' | 'prev',
-    type?: AccountTypes,
-    category?: AccountsCategories,
+    getPartnersQueryParams?: PartnerQueryParamsDTO,
   ): Promise<PaginatedOasisResponse<OasisAccount>> {
+    const { pageSize, paginationSessionId, direction, type, category, search } =
+      getPartnersQueryParams ?? {};
+
     const endpoint = '/accounts';
 
     const params: OasisAccountQueryParams = {
       $select: OASIS_ACCOUNT_SELECT_FIELDS,
       $count: true,
       $orderby: 'name asc',
-      $filter: this._buildFilterConditions(type, category),
+      $filter: this._buildFilterConditions(type, category, search),
     };
 
     const paramsString = this._buildParams(params);
@@ -48,9 +49,11 @@ export class OasisAccountsService {
     return { data: response.data, pagination: response.pagination };
   }
 
+  //  TODO - we need to break out mappings from domain keys back to oasis
   private _buildFilterConditions(
     type?: AccountTypes,
     category?: AccountsCategories,
+    search?: AccountSearchQuery,
   ): string {
     const defaultFilters = [
       'cap_typedepointdegeolocalisationcode eq 809020003',
@@ -83,7 +86,21 @@ export class OasisAccountsService {
     filterGroups.push(`(${defaultFilters.join(' or ')})`);
 
     // Join all filter groups with AND
-    return filterGroups.join(' and ');
+    let filterString = filterGroups.join(' and ');
+
+    // Oasis search is in the format contains(name, 'search')
+    // TODO - break out mappings from domain keys back to oasis
+    // TODO - validate search query param value
+    if (search) {
+      const searchFieldMap = {
+        name: 'name',
+        city: 'address1_city',
+        postalcode: 'address1_postalcode',
+      };
+      const [field, value] = search.split(':');
+      filterString += ` and contains(${searchFieldMap[field as keyof typeof searchFieldMap]}, '${value}')`;
+    }
+    return filterString;
   }
 
   private _buildParams(params: OasisAccountQueryParams): string {
