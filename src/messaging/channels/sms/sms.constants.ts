@@ -1,8 +1,7 @@
-// import * as dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-// dotenv.config();
-
-const { SMS_PROVIDER } = process.env;
+const SMS_PROVIDER = 'smsmode';
 
 if (!SMS_PROVIDER) {
   throw new Error('SMS_PROVIDER env variable must be set');
