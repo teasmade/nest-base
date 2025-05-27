@@ -1,5 +1,6 @@
 import { Expose, Exclude } from 'class-transformer';
 import { OasisAccount } from 'src/oasis/oasis-accounts/interfaces';
+import { AssertInterfaceKeysMatch } from 'src/oasis/oasis-common/utils/oasis-utility-types';
 
 /**
  * DTO to map relevant Oasis Account data structure to Orizon Partner data structure for frontend usage
@@ -9,7 +10,7 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Exclude()
   '@odata.etag': string;
 
-  @Expose({ name: 'oasis_id' })
+  @Expose({ name: 'oasis_account_id' })
   accountid: string;
 
   @Expose({ name: 'fastt_account_number' })
@@ -82,20 +83,6 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   'modifiedon@OData.Community.Display.V1.FormattedValue'?: string;
 }
 
-type _AssertExactKeysMatch =
-  keyof OasisAccountToPartnerDto extends keyof OasisAccount
-    ? true
-    : {
-        error: 'OasisAccountToPartnerDto does not match OasisAccount Interface';
-        interfaceMissingFields: Exclude<
-          keyof OasisAccountToPartnerDto,
-          keyof OasisAccount
-        >;
-        dtoMissingFields: Exclude<
-          keyof OasisAccount,
-          keyof OasisAccountToPartnerDto
-        >;
-      };
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _test: _AssertExactKeysMatch = true;
+const _test: AssertInterfaceKeysMatch<OasisAccountToPartnerDto, OasisAccount> =
+  true;
