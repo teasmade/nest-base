@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OasisContactsService } from '../oasis/oasis-contacts/oasis-contacts.service';
 import { GetContactsResponseDto } from './dtos/contacts-response.dto';
+import { ContactQueryParamsDTO } from './dtos/contact-query-params.dto';
 
 @Injectable()
 export class ContactsService {
@@ -11,14 +12,10 @@ export class ContactsService {
    * @remarks This method should be used with ```@UseInterceptors(ClassSerializerInterceptor)``` decorator on the controller class to ensure correct class-transformer serialization of the response.
    */
   async getContacts(
-    pageSize?: number,
-    paginationSessionId?: string,
-    direction?: 'next' | 'prev',
+    getContactsQueryParams?: ContactQueryParamsDTO,
   ): Promise<GetContactsResponseDto> {
     const oasisContacts = await this.oasisContactsService.getOasisContacts(
-      pageSize,
-      paginationSessionId,
-      direction,
+      getContactsQueryParams,
     );
 
     // Note - we need to return an instance of the DTO class, not a plain old JS object, otherwise class-transformer serialization won't work properly.

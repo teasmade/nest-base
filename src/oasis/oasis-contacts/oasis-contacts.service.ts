@@ -4,6 +4,8 @@ import { OasisHttpService } from '../oasis-common/oasis-http.service';
 import { OasisContact } from './interfaces/oasis-contact.interface';
 import { PaginatedOasisResponse } from '../oasis-common/interfaces/oasis-pagination.interface';
 import { OASIS_CONTACT_SELECT_FIELDS } from './oasis-contacts.constants';
+import { ContactQueryParamsDTO } from 'src/contacts/dtos/contact-query-params.dto';
+import { contactTypeCodeMap } from '../oasis-common/enums/contacts.enum';
 
 // TODO - break interface out to a separate file
 interface OasisContactQueryParams {
@@ -18,17 +20,23 @@ export class OasisContactsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
   public async getOasisContacts(
-    pageSize?: number,
-    paginationSessionId?: string,
-    direction?: 'next' | 'prev',
+    getContactsQueryParams?: ContactQueryParamsDTO,
   ): Promise<PaginatedOasisResponse<OasisContact>> {
+    const { pageSize, paginationSessionId, direction, type } =
+      getContactsQueryParams ?? {};
+
     const endpoint = '/contacts';
+
+    let filter = 'cap_type_contact_code eq 809020000';
+    if (type && type in contactTypeCodeMap) {
+      filter = `cap_type_contact_code eq ${contactTypeCodeMap[type]}`;
+    }
 
     const params: OasisContactQueryParams = {
       $select: OASIS_CONTACT_SELECT_FIELDS,
       $count: true,
       $orderby: 'fullname asc',
-      $filter: 'cap_type_contact_code eq 809020000',
+      $filter: filter,
     };
 
     const paramsString = this._buildParams(params);
