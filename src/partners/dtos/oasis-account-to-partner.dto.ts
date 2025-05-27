@@ -81,3 +81,21 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Expose({ name: 'updated_at_formatted' })
   'modifiedon@OData.Community.Display.V1.FormattedValue'?: string;
 }
+
+type _AssertExactKeysMatch =
+  keyof OasisAccountToPartnerDto extends keyof OasisAccount
+    ? true
+    : {
+        error: 'OasisAccountToPartnerDto does not match OasisAccount Interface';
+        interfaceMissingFields: Exclude<
+          keyof OasisAccountToPartnerDto,
+          keyof OasisAccount
+        >;
+        dtoMissingFields: Exclude<
+          keyof OasisAccount,
+          keyof OasisAccountToPartnerDto
+        >;
+      };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _test: _AssertExactKeysMatch = true;
