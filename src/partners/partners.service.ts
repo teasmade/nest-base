@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { OasisAccountsService } from '../oasis/oasis-accounts/oasis-accounts.service';
 import { GetPartnersResponseDto } from './dtos/partners-response-dto';
 import { PartnerQueryParamsDTO } from './dtos/partner-query-params.dto';
+import { CreatePartnerDto } from './dtos/create-partner.dto';
+import { instanceToPlain } from 'class-transformer';
+import { OasisCreateAccount } from 'src/oasis/oasis-accounts/interfaces/oasis-create-account.interface';
 
 @Injectable()
 export class PartnersService {
@@ -23,5 +26,15 @@ export class PartnersService {
     dto.value = oasisAccounts.data.value;
     dto.pagination = oasisAccounts.pagination;
     return dto;
+  }
+
+  async createPartner(createPartnerDto: CreatePartnerDto): Promise<string> {
+    const mappedCreatePartnerDto = instanceToPlain(
+      createPartnerDto,
+    ) as OasisCreateAccount;
+    // TODO - sort out how we type / add the cap_typecode
+    return await this.oasisAccountsService.createOasisAccount(
+      mappedCreatePartnerDto,
+    );
   }
 }

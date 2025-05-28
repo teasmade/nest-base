@@ -50,6 +50,27 @@ export class OasisHttpService {
     }
   }
 
+  async post<T>(endpoint: string, data: any): Promise<string> {
+    try {
+      const token = await this.oasisAuthService.getAccessToken();
+      const requestUrl = `${oasisConstants.oasisBaseUrl}${endpoint}`;
+
+      const response = await firstValueFrom(
+        this.httpService.post<OasisResponse<T>>(requestUrl, data, {
+          headers: this._buildPostHeaders(token),
+        }),
+      );
+      // If successful we get a 204 with the entity id in the header: odata-entityid
+      if (response.status === 204) {
+        return response.headers['odata-entityid'] as string;
+      }
+      return '';
+    } catch (error) {
+      console.error('Error making POST request to OASIS:', error);
+      throw new Error('Failed to make POST request to OASIS');
+    }
+  }
+
   private async _buildRequestUrl(
     endpoint: string,
     paginationSessionId?: string,
@@ -83,6 +104,16 @@ export class OasisHttpService {
       }),
     );
     return response.data;
+  }
+
+  private _buildPostHeaders(token: string): Record<string, string> {
+    return {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json; charset=utf-8',
+      'Odata-Version': '4.0',
+      'Odata-MaxVersion': '4.0',
+    };
   }
 
   private _buildHeaders(

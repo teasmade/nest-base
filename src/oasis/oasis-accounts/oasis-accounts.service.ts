@@ -11,6 +11,7 @@ import {
   AccountSearchQuery,
 } from '../oasis-common/enums/accounts.enum';
 import { PartnerQueryParamsDTO } from 'src/partners/dtos/partner-query-params.dto';
+import { OasisCreateAccount } from './interfaces/oasis-create-account.interface';
 
 // TODO - break interface out to a separate file
 interface OasisAccountQueryParams {
@@ -47,6 +48,26 @@ export class OasisAccountsService {
       direction,
     );
     return { data: response.data, pagination: response.pagination };
+  }
+
+  public async createOasisAccount(
+    account: OasisCreateAccount,
+  ): Promise<string> {
+    const endpoint = '/accounts';
+    const accountToCreate = {
+      ...account,
+      // always 809020000 for partners, TODO organise this in a constant
+      cap_typecode: 809020000,
+    };
+    const response = await this.oasisHttpService.post<OasisAccount>(
+      endpoint,
+      accountToCreate,
+    );
+    // Response example:
+    // https://fasttrecette.crm4.dynamics.com/api/data/v9.2/accounts(9a702436-083b-f011-b4cc-7c1e5275f0e9)
+    // we only want to return the id of the new account
+    const id = response.split('(')[1].split(')')[0];
+    return id;
   }
 
   //  TODO - we need to break out mappings from domain keys back to oasis
