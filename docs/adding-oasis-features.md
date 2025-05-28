@@ -18,7 +18,7 @@ Example files are provided illulstrating the process getting / mapping / transfo
 - Create an oasis-feature-interface which defines the raw results we will request from the Oasis API. This should include the OData expanded (e.g. formatted) fields we expect to receive.
   - Example: `src/oasis/oasis-accounts/interfaces/oasis-account.interface.ts`
 - Create an oasis-feature-constants which defines the fields we will request from Oasis via the select query param. This should not include OData expanded fields.
-  - Example `src/oasis/oasis-contacts/oasis-contacts.constants.ts`
+  - Example `src/oasis/oasis-contacts/oasis-accounts.constants.ts`
 - There is some additional typing in the interface and constant files in order to create an assertion that the keys of the interface (minus the OData keys) are the same as the values in the select fields array.
 - Create an oasis-service to query the data from Oasis
   - Example: `src/oasis/oasis-accounts/oasis-accounts.service.ts`
@@ -38,7 +38,7 @@ Example files are provided illulstrating the process getting / mapping / transfo
 
 **Notes on DTO Typing**
 
-- Transformation (oasis-a-to-b) dtos should implement the relevant oasis-feature-interface - this will give us type safety when writing the transformation dto and ensure all fields are present (either excluded or exposed).
+- Transformation (oasis-a-to-b) dtos should fully implement the relevant oasis-feature-interface - e.g. `OasisAccountToPartnerDto implements Required<OasisAccount>` - this will give us type safety when writing the transformation dto and ensure all fields are present (either excluded or exposed).
   - Example: `src/partners/dtos/oasis-account-to-partner.dto.ts` implements `src/oasis/oasis-accounts/interfaces/oasis-account.interface.ts`
 - Transformation DTOs should be wrapped in a feature-response DTO. This multi-level typing requires use of the `@Type(() => a-to-b-dto)` class-transformer decorator in the feature-response DTO, to allow serialization to work correctly on the nested transformation DTO.
   - Example: `src/partners/dtos/partners-response-dto.ts`
