@@ -1,17 +1,8 @@
-import { Expose, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { OasisAccountToPartnerDto } from './oasis-account-to-partner.dto';
-import {
-  PaginationResult,
-  TransformedOasisResponse,
-} from 'src/oasis/oasis-common/interfaces';
+import { BaseFeatureResponseDto } from '@common/dtos/base-feature-response.dto';
 
-export class GetPartnersResponseDto
-  implements TransformedOasisResponse<OasisAccountToPartnerDto>
-{
-  @Expose()
+export class GetPartnersResponseDto extends BaseFeatureResponseDto<OasisAccountToPartnerDto> {
   @Type(() => OasisAccountToPartnerDto)
-  value: OasisAccountToPartnerDto[];
-
-  @Expose()
-  pagination?: PaginationResult;
+  declare value: OasisAccountToPartnerDto[];
 }

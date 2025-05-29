@@ -1,17 +1,8 @@
-import { Expose, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { OasisContactToContactDto } from './oasis-contact-to-contact.dto';
-import {
-  PaginationResult,
-  TransformedOasisResponse,
-} from 'src/oasis/oasis-common/interfaces';
+import { BaseFeatureResponseDto } from '@common/dtos/base-feature-response.dto';
 
-export class GetContactsResponseDto
-  implements TransformedOasisResponse<OasisContactToContactDto>
-{
-  @Expose()
+export class GetContactsResponseDto extends BaseFeatureResponseDto<OasisContactToContactDto> {
   @Type(() => OasisContactToContactDto)
-  value: OasisContactToContactDto[];
-
-  @Expose()
-  pagination?: PaginationResult;
+  declare value: OasisContactToContactDto[];
 }

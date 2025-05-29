@@ -18,9 +18,6 @@ export class ContactsController {
 
   @Get()
   async getContacts(
-    // @Query('pageSize') pageSize?: number,
-    // @Query('paginationSessionId') paginationSessionId?: string,
-    // @Query('direction') direction?: 'next' | 'prev',
     @Query(new ValidationPipe({ transform: true }))
     getContactsQueryParams?: ContactQueryParamsDTO,
   ): Promise<TransformedOasisResponse<OasisContactToContactDto>> {
