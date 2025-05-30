@@ -2,13 +2,12 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 
 /**
- * This DTO uses a combination of `@Expose`	 and `@Exclude` decorators to handle validation and transformation in two steps. The transformation is to convert field names to match the OASIS OData API.
+ * This DTO uses a combination of `@Expose`	 and `@Exclude` decorators to handle validation and transformation in two steps. The transformation is to convert property names to match the requirements of the OASIS OData API.
  *
  * - Validation is performed as usual on the controller method with a validation pipe. At this step we use the `@Expose({ toClassOnly: true })` decorator to expose the domain model property names (e.g. `partner_name`) and exclude the OASIS property names.
  *
- * - The controller calls the partner service, which converts the DTO using `instanceToPlain()` to a plain object. At this step we use the `@Expose({ toPlainOnly: true })` decorator to expose the OASIS property names (e.g. `name`) while excluding the domain model property names with `@Exclude({ toPlainOnly: true })`.
+ * - The controller calls the partner service, which converts the DTO using `instanceToPlain()` to a plain object. At this step we use the `@Expose({ toPlainOnly: true })` decorator to expose the target OASIS property names via a getter(e.g. `get name()`) and map them to the domain model property values.Domain model property names are excluded with `@Exclude({ toPlainOnly: true })`.
  *
- * - The partner service needs to type the plain object as `OasisCreateAccount` before passing it to the OasisAccountsService.createOasisAccount() method.
  */
 export class CreatePartnerDto {
   @IsString()

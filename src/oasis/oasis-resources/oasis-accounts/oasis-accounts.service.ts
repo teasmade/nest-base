@@ -11,7 +11,7 @@ import {
   AccountSearchQuery,
 } from '@oasis/oasis-common/enums/accounts.enum';
 import { GetPartnersQueryParamsDTO } from 'src/external-resources/partners/dtos/get-partners-query-params.dto';
-import { OasisCreateAccount } from './interfaces/oasis-create-account.interface';
+import { OasisCreateAccountBody } from './interfaces/oasis-create-account.interface';
 
 // TODO - break interface out to a separate file
 interface OasisAccountQueryParams {
@@ -50,16 +50,14 @@ export class OasisAccountsService {
     return response;
   }
 
-  public async createOasisAccount(
-    account: OasisCreateAccount,
-  ): Promise<string> {
+  public async create(account: OasisCreateAccountBody): Promise<string> {
     const endpoint = '/accounts';
     const accountToCreate = {
       ...account,
       // always 809020000 for partners, TODO organise this in a constant
       cap_typecode: 809020000,
     };
-    const response = await this.oasisHttpService.post<OasisAccount>(
+    const response = await this.oasisHttpService.post<OasisCreateAccountBody>(
       endpoint,
       accountToCreate,
     );

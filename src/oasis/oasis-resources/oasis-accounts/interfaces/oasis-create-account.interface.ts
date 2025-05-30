@@ -1,4 +1,4 @@
-export interface OasisCreateAccount {
+export interface OasisCreateAccountBody {
   cap_typecode: number;
   name: string;
   cap_typedepartenairepointgeocode: number;

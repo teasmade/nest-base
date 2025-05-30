@@ -3,8 +3,7 @@ import { OasisAccountsService } from '@oasis/oasis-resources/oasis-accounts/oasi
 import { GetPartnersDto } from './dtos/get-partners.dto';
 import { GetPartnersQueryParamsDTO } from './dtos/get-partners-query-params.dto';
 import { CreatePartnerDto } from './dtos/create-partner.dto';
-import { instanceToPlain } from 'class-transformer';
-import { OasisCreateAccount } from '@oasis/oasis-resources/oasis-accounts/interfaces/oasis-create-account.interface';
+import { OasisCreateAccountBody } from '@oasis/oasis-resources/oasis-accounts/interfaces/oasis-create-account.interface';
 import { ExternalResourceService } from '../common/external-resource.service';
 
 @Injectable()
@@ -19,6 +18,7 @@ export class PartnersService extends ExternalResourceService {
     const oasisAccounts = await this.oasisAccountsService.getOasisAccounts(
       getPartnersQueryParams,
     );
+
     return this.assignOasisResponseToTransformationDTO(
       oasisAccounts,
       GetPartnersDto,
@@ -26,12 +26,11 @@ export class PartnersService extends ExternalResourceService {
   }
 
   async createPartner(createPartnerDto: CreatePartnerDto): Promise<string> {
-    const mappedCreatePartnerDto = instanceToPlain(
-      createPartnerDto,
-    ) as OasisCreateAccount;
-    // TODO - sort out how we type / add the cap_typecode
-    return await this.oasisAccountsService.createOasisAccount(
-      mappedCreatePartnerDto,
-    );
+    const oasisCreateAccountBody = this.transformInputDTOToOasisBody<
+      OasisCreateAccountBody,
+      CreatePartnerDto
+    >(createPartnerDto);
+
+    return await this.oasisAccountsService.create(oasisCreateAccountBody);
   }
 }

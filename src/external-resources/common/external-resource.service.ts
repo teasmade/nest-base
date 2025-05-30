@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PaginatedOasisResponse } from '@oasis/oasis-common/interfaces/oasis-pagination.interface';
 import { TransformedOasisResponse } from '@oasis/oasis-common/interfaces/transformed-oasis-response.interface';
+import { instanceToPlain } from 'class-transformer';
 
 /**
  * Base class for external resource services (i.e. services that interact with external resources such as Oasis).
@@ -25,5 +26,15 @@ export abstract class ExternalResourceService {
     dto.value = oasisResponse.data.value as D[];
     dto.pagination = oasisResponse.pagination;
     return dto;
+  }
+
+  /**
+   * Transforms an input DTO to an Oasis resource body to be sent to the Oasis API.
+   * @param inputDTO - The input DTO to transform to an Oasis body.
+   * @returns The Oasis resource body as a plain object.
+   * @remarks This method is the second step in the input validation / transformation process. We have to split the proess in two for class-validator and class-transformer to work correctly.
+   */
+  protected transformInputDTOToOasisBody<T, D>(inputDTO: D): T {
+    return instanceToPlain(inputDTO) as T;
   }
 }
