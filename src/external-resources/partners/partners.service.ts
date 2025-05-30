@@ -5,6 +5,7 @@ import { GetPartnersQueryParamsDTO } from './dtos/get-partners-query-params.dto'
 import { CreatePartnerDto } from './dtos/create-partner.dto';
 import { OasisCreateAccountBody } from '@oasis/oasis-resources/oasis-accounts/interfaces/oasis-create-account.interface';
 import { ExternalResourceService } from '../common/external-resource.service';
+import { GetPartnerDto } from './dtos/get-partner.dto';
 
 @Injectable()
 export class PartnersService extends ExternalResourceService {
@@ -15,13 +16,22 @@ export class PartnersService extends ExternalResourceService {
   async getPartners(
     getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
-    const oasisAccounts = await this.oasisAccountsService.getOasisAccounts(
+    const oasisAccounts = await this.oasisAccountsService.get(
       getPartnersQueryParams,
     );
 
     return this.assignOasisResponseToTransformationDTO(
       oasisAccounts,
       GetPartnersDto,
+    );
+  }
+
+  async getPartner(id: string): Promise<GetPartnerDto> {
+    const oasisAccount = await this.oasisAccountsService.getOne(id);
+
+    return this.assignOasisResponseToTransformationDTO(
+      oasisAccount,
+      GetPartnerDto,
     );
   }
 

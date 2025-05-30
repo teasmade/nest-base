@@ -7,6 +7,7 @@
 export type ExcludeODataValues<T> = {
   [K in keyof T as K extends
     | '@odata.etag'
+    | '@odata.context'
     | `${string}@OData.Community.Display.V1.FormattedValue`
     ? never
     : K]: T[K];

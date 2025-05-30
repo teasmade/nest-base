@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Query,
+  Param,
   Body,
   UseInterceptors,
   ValidationPipe,
@@ -11,6 +12,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common';
 import { PartnersService } from './partners.service';
 import {
   GetPartnersDto,
+  GetPartnerDto,
   GetPartnersQueryParamsDTO,
   CreatePartnerDto,
 } from './dtos';
@@ -26,6 +28,11 @@ export class PartnersController {
     getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
     return this.partnersService.getPartners(getPartnersQueryParams);
+  }
+
+  @Get(':id')
+  async getPartner(@Param('id') id: string): Promise<GetPartnerDto> {
+    return await this.partnersService.getPartner(id);
   }
 
   @Post()

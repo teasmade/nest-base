@@ -18,13 +18,20 @@ export abstract class ExternalResourceService {
    * @returns The transformation DTO with the Oasis response assigned to it.
    * @remarks This method should be used with ```@UseInterceptors(ClassSerializerInterceptor)``` decorator on the controller class to ensure correct class-transformer serialization of the response.
    */
-  protected assignOasisResponseToTransformationDTO<T, D extends T>(
+  protected assignOasisResponseToTransformationDTO<T, D extends T, V = D | D[]>(
     oasisResponse: PaginatedOasisResponse<T>,
-    dtoClass: new () => TransformedOasisResponse<D>,
-  ): TransformedOasisResponse<D> {
+    dtoClass: new () => TransformedOasisResponse<D, V>,
+  ): TransformedOasisResponse<D, V> {
     const dto = new dtoClass();
-    dto.value = oasisResponse.data.value as D[];
+
+    dto.value = (
+      'value' in oasisResponse.data
+        ? oasisResponse.data.value
+        : oasisResponse.data
+    ) as V;
+
     dto.pagination = oasisResponse.pagination;
+
     return dto;
   }
 

@@ -25,7 +25,7 @@ interface OasisAccountQueryParams {
 export class OasisAccountsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
-  public async getOasisAccounts(
+  public async get(
     getAccountsQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<PaginatedOasisResponse<OasisAccount>> {
     const { pageSize, paginationSessionId, direction, type, category, search } =
@@ -47,6 +47,24 @@ export class OasisAccountsService {
       paginationSessionId,
       direction,
     );
+    return response;
+  }
+
+  public async getOne(
+    id: string,
+  ): Promise<PaginatedOasisResponse<OasisAccount>> {
+    const endpoint = `/accounts(${id})`;
+
+    const params: OasisAccountQueryParams = {
+      $select: OASIS_ACCOUNT_SELECT_FIELDS,
+    };
+
+    const paramsString = this._buildParams(params);
+
+    const response = await this.oasisHttpService.get<OasisAccount>(
+      `${endpoint}${paramsString}`,
+    );
+
     return response;
   }
 

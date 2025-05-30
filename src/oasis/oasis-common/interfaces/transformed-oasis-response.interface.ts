@@ -8,7 +8,7 @@ import { PaginationResult } from './';
  * @remarks
  * We can't directly define DTO classes with this generic typing because class-transformer needs to compile to specific known types for serialization to work.
  */
-export interface TransformedOasisResponse<T> {
-  value: T[];
+export interface TransformedOasisResponse<T, V = T | T[]> {
+  value: V;
   pagination?: PaginationResult;
 }

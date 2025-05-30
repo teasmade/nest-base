@@ -7,6 +7,9 @@ import { AssertInterfaceKeysMatch } from 'src/oasis/oasis-common/utils/oasis-uti
  */
 export class OasisAccountToPartnerDto implements OasisAccount {
   @Exclude()
+  '@odata.context': string;
+
+  @Exclude()
   '@odata.etag': string;
 
   @Expose({ name: 'oasis_account_id' })

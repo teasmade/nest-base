@@ -2,6 +2,7 @@ import { ExcludeODataValues } from 'src/oasis/oasis-common/utils/oasis-utility-t
 import { OasisAccountSelectFields } from '../oasis-accounts.constants';
 
 export interface OasisAccount {
+  '@odata.context'?: string;
   '@odata.etag': string;
   accountid: string;
   accountnumber: string;

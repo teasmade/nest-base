@@ -10,12 +10,12 @@ import {
  * - DTOs used for responses transforming OASIS data should extend this class.
  * @usageNotes DTOs extending this class need to declare the `value` property with the `@Type(() => Object)` decorator and a `declare value: T[];` override of the base `value` property.
  */
-export abstract class BaseExternalResourceResponseDto<T>
-  implements TransformedOasisResponse<T>
+export abstract class BaseExternalResourceResponseDto<T, V = T | T[]>
+  implements TransformedOasisResponse<T, V>
 {
   @Expose()
   @Type(() => Object)
-  value: T[];
+  value: V;
 
   @Expose()
   pagination?: PaginationResult;
