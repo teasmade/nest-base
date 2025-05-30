@@ -46,7 +46,7 @@ export class OasisContactsService {
       paginationSessionId,
       direction,
     );
-    return { data: response.data, pagination: response.pagination };
+    return response;
   }
 
   // TODO - a utility function for building params once we know what sets of params we'll be using in various different services / routes

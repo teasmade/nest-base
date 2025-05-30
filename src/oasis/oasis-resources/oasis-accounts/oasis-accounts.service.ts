@@ -47,7 +47,7 @@ export class OasisAccountsService {
       paginationSessionId,
       direction,
     );
-    return { data: response.data, pagination: response.pagination };
+    return response;
   }
 
   public async createOasisAccount(
