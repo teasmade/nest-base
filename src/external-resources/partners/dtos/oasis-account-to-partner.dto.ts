@@ -1,5 +1,5 @@
 import { Expose, Exclude } from 'class-transformer';
-import { OasisAccount } from 'src/oasis/oasis-accounts/interfaces';
+import { OasisAccount } from '@oasis/oasis-resources/oasis-accounts/interfaces';
 import { AssertInterfaceKeysMatch } from 'src/oasis/oasis-common/utils/oasis-utility-types';
 
 /**

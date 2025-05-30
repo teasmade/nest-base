@@ -1,6 +1,6 @@
 import { Expose, Exclude } from 'class-transformer';
 import { AssertInterfaceKeysMatch } from 'src/oasis/oasis-common/utils/oasis-utility-types';
-import { OasisContact } from 'src/oasis/oasis-contacts/interfaces/oasis-contact.interface';
+import { OasisContact } from '@oasis/oasis-resources/oasis-contacts/interfaces/oasis-contact.interface';
 
 /**
  * DTO to map relevant Oasis Contact data structure to Orizon Contact data structure for frontend usage

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { OasisHttpService } from '../oasis-common/oasis-http.service';
+import { OasisHttpService } from '@oasis/oasis-common/oasis-http.service';
 import { OasisAccount } from './interfaces/oasis-account.interface';
-import { PaginatedOasisResponse } from '../oasis-common/interfaces/oasis-pagination.interface';
+import { PaginatedOasisResponse } from '@oasis/oasis-common/interfaces/oasis-pagination.interface';
 import { OASIS_ACCOUNT_SELECT_FIELDS } from './oasis-accounts.constants';
 import {
   accountTypeCodeMap,
@@ -9,8 +9,8 @@ import {
   AccountTypes,
   AccountsCategories,
   AccountSearchQuery,
-} from '../oasis-common/enums/accounts.enum';
-import { PartnerQueryParamsDTO } from 'src/partners/dtos/partner-query-params.dto';
+} from '@oasis/oasis-common/enums/accounts.enum';
+import { PartnerQueryParamsDTO } from 'src/external-resources/partners/dtos/partner-query-params.dto';
 import { OasisCreateAccount } from './interfaces/oasis-create-account.interface';
 
 // TODO - break interface out to a separate file

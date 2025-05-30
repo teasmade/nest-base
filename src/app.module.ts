@@ -7,8 +7,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DataSource } from 'typeorm';
 import { dataSourceConfig } from './app.datasource';
-import { PartnersModule } from './partners/partners.module';
-import { ContactsModule } from './contacts/contacts.module';
+import { PartnersModule } from './external-resources/partners/partners.module';
+import { ContactsModule } from './external-resources/contacts/contacts.module';
 
 @Module({
   imports: [

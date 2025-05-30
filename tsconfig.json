@@ -18,7 +18,8 @@
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@common/*": ["./src/common/*"]
+      "@common/*": ["./src/common/*"],
+      "@oasis/*": ["./src/oasis/*"]
     }
   }
 }

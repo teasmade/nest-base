@@ -1,7 +1,7 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users';
-import { OasisContactsService } from '../oasis/oasis-contacts/oasis-contacts.service';
+import { OasisContactsService } from '../oasis/oasis-resources/oasis-contacts/oasis-contacts.service';
 import { SignupDTO, LoginDTO } from './dtos';
 import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';

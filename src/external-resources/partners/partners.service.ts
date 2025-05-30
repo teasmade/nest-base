@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { OasisAccountsService } from '../oasis/oasis-accounts/oasis-accounts.service';
+import { OasisAccountsService } from '@oasis/oasis-resources/oasis-accounts/oasis-accounts.service';
 import { GetPartnersResponseDto } from './dtos/partners-response-dto';
 import { PartnerQueryParamsDTO } from './dtos/partner-query-params.dto';
 import { CreatePartnerDto } from './dtos/create-partner.dto';
 import { instanceToPlain } from 'class-transformer';
-import { OasisCreateAccount } from 'src/oasis/oasis-accounts/interfaces/oasis-create-account.interface';
+import { OasisCreateAccount } from '@oasis/oasis-resources/oasis-accounts/interfaces/oasis-create-account.interface';
 
 @Injectable()
 export class PartnersService {

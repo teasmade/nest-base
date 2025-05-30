@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { OasisContactsService } from '../oasis/oasis-contacts/oasis-contacts.service';
+import { OasisContactsService } from '@oasis/oasis-resources/oasis-contacts/oasis-contacts.service';
 import { GetContactsResponseDto } from './dtos/contacts-response.dto';
 import { ContactQueryParamsDTO } from './dtos/contact-query-params.dto';
 

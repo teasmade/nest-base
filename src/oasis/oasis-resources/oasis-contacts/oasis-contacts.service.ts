@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { OasisHttpService } from '../oasis-common/oasis-http.service';
+import { OasisHttpService } from '@oasis/oasis-common/oasis-http.service';
 import { OasisContact } from './interfaces/oasis-contact.interface';
-import { PaginatedOasisResponse } from '../oasis-common/interfaces/oasis-pagination.interface';
+import { PaginatedOasisResponse } from '@oasis/oasis-common/interfaces/oasis-pagination.interface';
 import { OASIS_CONTACT_SELECT_FIELDS } from './oasis-contacts.constants';
-import { ContactQueryParamsDTO } from 'src/contacts/dtos/contact-query-params.dto';
-import { contactTypeCodeMap } from '../oasis-common/enums/contacts.enum';
+import { ContactQueryParamsDTO } from 'src/external-resources/contacts/dtos/contact-query-params.dto';
+import { contactTypeCodeMap } from '@oasis/oasis-common/enums/contacts.enum';
 
 // TODO - break interface out to a separate file
 interface OasisContactQueryParams {
