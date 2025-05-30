@@ -1,13 +1,5 @@
-import {
-  IsNumber,
-  Matches,
-  Max,
-  Min,
-  IsEnum,
-  IsOptional,
-  IsUUID,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { BaseExternalResourceQueryParamsDTO } from 'src/external-resources/common/dtos/base-query-params.dto';
+import { Matches, IsEnum, IsOptional } from 'class-validator';
 import {
   AccountSearchQuery,
   AccountTypes,
@@ -16,22 +8,7 @@ import {
   accountTypeCodeMap,
 } from 'src/oasis/oasis-common/enums/accounts.enum';
 
-export class PartnerQueryParamsDTO {
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  @Max(100)
-  pageSize?: number;
-
-  @IsOptional()
-  @IsUUID()
-  paginationSessionId?: string;
-
-  @IsOptional()
-  @IsEnum(['next', 'prev'])
-  direction?: 'next' | 'prev';
-
+export class GetPartnersQueryParamsDTO extends BaseExternalResourceQueryParamsDTO {
   @IsOptional()
   @IsEnum(Object.keys(accountTypeCodeMap), {
     message: () =>

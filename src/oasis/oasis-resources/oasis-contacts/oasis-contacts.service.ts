@@ -4,7 +4,7 @@ import { OasisHttpService } from '@oasis/oasis-common/oasis-http.service';
 import { OasisContact } from './interfaces/oasis-contact.interface';
 import { PaginatedOasisResponse } from '@oasis/oasis-common/interfaces/oasis-pagination.interface';
 import { OASIS_CONTACT_SELECT_FIELDS } from './oasis-contacts.constants';
-import { ContactQueryParamsDTO } from 'src/external-resources/contacts/dtos/contact-query-params.dto';
+import { GetContactsQueryParamsDTO } from 'src/external-resources/contacts/dtos/get-contacts-query-params.dto';
 import { contactTypeCodeMap } from '@oasis/oasis-common/enums/contacts.enum';
 
 // TODO - break interface out to a separate file
@@ -20,7 +20,7 @@ export class OasisContactsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
   public async getOasisContacts(
-    getContactsQueryParams?: ContactQueryParamsDTO,
+    getContactsQueryParams?: GetContactsQueryParamsDTO,
   ): Promise<PaginatedOasisResponse<OasisContact>> {
     const { pageSize, paginationSessionId, direction, type } =
       getContactsQueryParams ?? {};

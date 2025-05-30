@@ -11,7 +11,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common';
 import { PartnersService } from './partners.service';
 import {
   GetPartnersDto,
-  PartnerQueryParamsDTO,
+  GetPartnersQueryParamsDTO,
   CreatePartnerDto,
 } from './dtos';
 
@@ -23,7 +23,7 @@ export class PartnersController {
   @Get()
   async getPartners(
     @Query(new ValidationPipe({ transform: true }))
-    getPartnersQueryParams?: PartnerQueryParamsDTO,
+    getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
     return this.partnersService.getPartners(getPartnersQueryParams);
   }

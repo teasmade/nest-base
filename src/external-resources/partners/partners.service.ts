@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OasisAccountsService } from '@oasis/oasis-resources/oasis-accounts/oasis-accounts.service';
 import { GetPartnersDto } from './dtos/get-partners.dto';
-import { PartnerQueryParamsDTO } from './dtos/partner-query-params.dto';
+import { GetPartnersQueryParamsDTO } from './dtos/get-partners-query-params.dto';
 import { CreatePartnerDto } from './dtos/create-partner.dto';
 import { instanceToPlain } from 'class-transformer';
 import { OasisCreateAccount } from '@oasis/oasis-resources/oasis-accounts/interfaces/oasis-create-account.interface';
@@ -14,7 +14,7 @@ export class PartnersService extends ExternalResourceService {
   }
 
   async getPartners(
-    getPartnersQueryParams?: PartnerQueryParamsDTO,
+    getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
     const oasisAccounts = await this.oasisAccountsService.getOasisAccounts(
       getPartnersQueryParams,

@@ -10,7 +10,7 @@ import {
   AccountsCategories,
   AccountSearchQuery,
 } from '@oasis/oasis-common/enums/accounts.enum';
-import { PartnerQueryParamsDTO } from 'src/external-resources/partners/dtos/partner-query-params.dto';
+import { GetPartnersQueryParamsDTO } from 'src/external-resources/partners/dtos/get-partners-query-params.dto';
 import { OasisCreateAccount } from './interfaces/oasis-create-account.interface';
 
 // TODO - break interface out to a separate file
@@ -26,10 +26,10 @@ export class OasisAccountsService {
   constructor(private readonly oasisHttpService: OasisHttpService) {}
 
   public async getOasisAccounts(
-    getPartnersQueryParams?: PartnerQueryParamsDTO,
+    getAccountsQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<PaginatedOasisResponse<OasisAccount>> {
     const { pageSize, paginationSessionId, direction, type, category, search } =
-      getPartnersQueryParams ?? {};
+      getAccountsQueryParams ?? {};
 
     const endpoint = '/accounts';
 
