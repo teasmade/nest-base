@@ -1,111 +1,79 @@
-import { Exclude, Expose } from 'class-transformer';
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import {
+  ExposeForRename,
+  Rename,
+} from 'src/external-resources/common/decorators';
 
 /**
- * This DTO uses a combination of `@Expose`	 and `@Exclude` decorators to handle validation and transformation in two steps. The transformation is to convert property names to match the requirements of the OASIS OData API.
+ * This DTO uses a combination of `@ExposeForRename`	 and `@Rename` decorators to handle validation and transformation in two steps. The transformation is to convert property names to match the requirements of the OASIS OData API.
  *
- * - Validation is performed as usual on the controller method with a validation pipe. At this step we use the `@Expose({ toClassOnly: true })` decorator to expose the domain model property names (e.g. `partner_name`) and exclude the OASIS property names.
+ * - Validation is performed as usual on the controller method with a validation pipe. At this step ExposeForRename uses the `@Expose({ toClassOnly: true })` decorator to expose the domain model property names (e.g. `partner_name`) and exclude the OASIS property names.
  *
- * - The controller calls the partner service, which converts the DTO using `instanceToPlain()` to a plain object. At this step we use the `@Expose({ toPlainOnly: true })` decorator to expose the target OASIS property names via a getter(e.g. `get name()`) and map them to the domain model property values.Domain model property names are excluded with `@Exclude({ toPlainOnly: true })`.
+ * - The controller calls the partner service, which converts the DTO using `instanceToPlain()` to a plain object. At this step Rename uses the `@Expose({ toPlainOnly: true })` decorator to expose the target OASIS property names `@Transform` to map them to the domain model property values. Domain model property names are excluded with `@Exclude({ toPlainOnly: true })`.
  *
  */
+
 export class CreatePartnerDto {
   @IsString()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   partner_name: string;
-
-  @Expose({ toPlainOnly: true })
-  get name(): string {
-    return this.partner_name;
-  }
+  @Rename('partner_name')
+  name: string;
 
   @IsNumber()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   partner_type_code: number;
-
-  @Expose({ toPlainOnly: true })
-  get cap_typedepartenairepointgeocode(): number {
-    return this.partner_type_code;
-  }
+  @Rename('partner_type_code')
+  type: number;
 
   @IsNumber()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   partner_category_code: number;
-
-  @Expose({ toPlainOnly: true })
-  get cap_typedepointdegeolocalisationcode(): number {
-    return this.partner_category_code;
-  }
+  @Rename('partner_category_code')
+  category: number;
 
   @IsString()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   email: string;
-
-  @Expose({ toPlainOnly: true })
-  get emailaddress3(): string {
-    return this.email;
-  }
+  @Rename('email')
+  emailAddress: string;
 
   @IsString()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   address_line1: string;
-
-  @Expose({ toPlainOnly: true })
-  get address1_line1(): string {
-    return this.address_line1;
-  }
+  @Rename('address_line1')
+  addressLine1: string;
 
   @IsString()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   city: string;
-
-  @Expose({ toPlainOnly: true })
-  get address1_city(): string {
-    return this.city;
-  }
+  @Rename('city')
+  address1City: string;
 
   @IsString()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   departement: string;
-
-  @Expose({ toPlainOnly: true })
-  get address1_stateorprovince(): string {
-    return this.departement;
-  }
+  @Rename('departement')
+  address1StateOrProvince: string;
 
   @IsString()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   postal_code: string;
-
-  @Expose({ toPlainOnly: true })
-  get address1_postalcode(): string {
-    return this.postal_code;
-  }
+  @Rename('postal_code')
+  address1PostalCode: string;
 
   @IsString()
   @IsNotEmpty()
-  @Expose({ toClassOnly: true })
-  @Exclude({ toPlainOnly: true })
+  @ExposeForRename()
   country: string;
-
-  @Expose({ toPlainOnly: true })
-  get address1_country(): string {
-    return this.country;
-  }
+  @Rename('country')
+  address1Country: string;
 }

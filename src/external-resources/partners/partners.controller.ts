@@ -37,7 +37,14 @@ export class PartnersController {
 
   @Post()
   async createPartner(
-    @Body(new ValidationPipe({ transform: true }))
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        // ForbidNonWhitelisted returns an error if the body contains properties that are not in the DTO, rather than just silently ignoring them
+        // forbidNonWhitelisted: true,
+      }),
+    )
     createPartnerDto: CreatePartnerDto,
   ): Promise<string> {
     return await this.partnersService.createPartner(createPartnerDto);
