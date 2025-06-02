@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 import {
   ExposeForRename,
   Rename,
@@ -13,65 +13,65 @@ import {
  *
  */
 
-export class CreatePartnerDto {
+export class UpdatePartnerDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   partner_name: string;
   @Rename('partner_name')
   name: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   partner_type_code: number;
   @Rename('partner_type_code')
   cap_typedepartenairepointgeocode: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   partner_category_code: number;
   @Rename('partner_category_code')
   cap_typedepointdegeolocalisationcode: number;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   email: string;
   @Rename('email')
   emailaddress3: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   address_line1: string;
   @Rename('address_line1')
   address1_line1: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   city: string;
   @Rename('city')
   address1_city: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   departement: string;
   @Rename('departement')
   address1_stateorprovince: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   postal_code: string;
   @Rename('postal_code')
   address1_postalcode: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   country: string;
   @Rename('country')

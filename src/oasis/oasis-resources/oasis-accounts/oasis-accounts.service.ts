@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { OasisHttpService } from '@oasis/oasis-common/oasis-http.service';
-import { OasisAccount } from './interfaces/oasis-account.interface';
 import { PaginatedOasisResponse } from '@oasis/oasis-common/interfaces/oasis-pagination.interface';
 import { OASIS_ACCOUNT_SELECT_FIELDS } from './oasis-accounts.constants';
 import {
@@ -11,7 +10,11 @@ import {
   AccountSearchQuery,
 } from '@oasis/oasis-common/enums/accounts.enum';
 import { GetPartnersQueryParamsDTO } from 'src/external-resources/partners/dtos/get-partners-query-params.dto';
-import { OasisCreateAccountBody } from './interfaces/oasis-create-account.interface';
+import {
+  OasisCreateAccountBody,
+  OasisUpdateAccountBody,
+  OasisAccount,
+} from './interfaces';
 
 // TODO - break interface out to a separate file
 interface OasisAccountQueryParams {
@@ -84,6 +87,23 @@ export class OasisAccountsService {
     // we only want to return the id of the new account
     const id = response.split('(')[1].split(')')[0];
     return id;
+  }
+
+  public async update(
+    id: string,
+    account: OasisUpdateAccountBody,
+  ): Promise<string> {
+    const endpoint = `/accounts(${id})`;
+    const response = await this.oasisHttpService.patch<OasisUpdateAccountBody>(
+      endpoint,
+      account,
+    );
+    // TODO - break this out into helpers
+    // Response example:
+    // https://fasttrecette.crm4.dynamics.com/api/data/v9.2/accounts(9a702436-083b-f011-b4cc-7c1e5275f0e9)
+    // we only want to return the id of the new account
+    const returnId = response.split('(')[1].split(')')[0];
+    return returnId;
   }
 
   //  TODO - we need to break out mappings from domain keys back to oasis

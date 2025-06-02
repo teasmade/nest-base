@@ -7,6 +7,7 @@ import {
   Body,
   UseInterceptors,
   ValidationPipe,
+  Patch,
 } from '@nestjs/common';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 import { PartnersService } from './partners.service';
@@ -16,6 +17,7 @@ import {
   GetPartnersQueryParamsDTO,
   CreatePartnerDto,
 } from './dtos';
+import { UpdatePartnerDto } from './dtos/update-partner.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('partners')
@@ -48,5 +50,14 @@ export class PartnersController {
     createPartnerDto: CreatePartnerDto,
   ): Promise<string> {
     return await this.partnersService.createPartner(createPartnerDto);
+  }
+
+  @Patch(':id')
+  async updatePartner(
+    @Param('id') id: string,
+    @Body(new ValidationPipe({ transform: true, whitelist: true }))
+    updatePartnerDto: UpdatePartnerDto,
+  ): Promise<string> {
+    return await this.partnersService.updatePartner(id, updatePartnerDto);
   }
 }

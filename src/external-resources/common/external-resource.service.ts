@@ -42,6 +42,6 @@ export abstract class ExternalResourceService {
    * @remarks This method is the second step in the input validation / transformation process. We have to split the proess in two for class-validator and class-transformer to work correctly.
    */
   protected transformInputDTOToOasisBody<T, D>(inputDTO: D): T {
-    return instanceToPlain(inputDTO) as T;
+    return instanceToPlain(inputDTO, { exposeUnsetFields: false }) as T;
   }
 }

@@ -71,6 +71,30 @@ export class OasisHttpService {
     }
   }
 
+  async patch<T>(endpoint: string, data: any): Promise<string> {
+    try {
+      const token = await this.oasisAuthService.getAccessToken();
+      const requestUrl = `${oasisConstants.oasisBaseUrl}${endpoint}`;
+
+      const response = await firstValueFrom(
+        this.httpService.patch<OasisResponse<T>>(requestUrl, data, {
+          headers: this._buildPostHeaders(token),
+        }),
+      );
+      // If successful we get a 204 with the entity id in the header: odata-entityid
+      if (response.status === 204) {
+        return response.headers['odata-entityid'] as string;
+      }
+      return '';
+    } catch (error) {
+      console.error(
+        'Error making PATCH request to OASIS:',
+        JSON.stringify(error),
+      );
+      throw new Error('Failed to make PATCH request to OASIS');
+    }
+  }
+
   private async _buildRequestUrl(
     endpoint: string,
     paginationSessionId?: string,
@@ -113,6 +137,7 @@ export class OasisHttpService {
       Accept: 'application/json; charset=utf-8',
       'Odata-Version': '4.0',
       'Odata-MaxVersion': '4.0',
+      'If-Match': '*',
     };
   }
 

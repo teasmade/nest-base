@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { OasisAccountsService } from '@oasis/oasis-resources/oasis-accounts/oasis-accounts.service';
-import { GetPartnersDto } from './dtos/get-partners.dto';
-import { GetPartnersQueryParamsDTO } from './dtos/get-partners-query-params.dto';
-import { CreatePartnerDto } from './dtos/create-partner.dto';
-import { OasisCreateAccountBody } from '@oasis/oasis-resources/oasis-accounts/interfaces/oasis-create-account.interface';
+import {
+  OasisCreateAccountBody,
+  OasisUpdateAccountBody,
+} from '@oasis/oasis-resources/oasis-accounts/interfaces';
 import { ExternalResourceService } from '../common/external-resource.service';
-import { GetPartnerDto } from './dtos/get-partner.dto';
+import {
+  GetPartnersDto,
+  GetPartnersQueryParamsDTO,
+  GetPartnerDto,
+  CreatePartnerDto,
+  UpdatePartnerDto,
+} from './dtos';
 
 @Injectable()
 export class PartnersService extends ExternalResourceService {
@@ -42,5 +48,17 @@ export class PartnersService extends ExternalResourceService {
     >(createPartnerDto);
 
     return await this.oasisAccountsService.create(oasisCreateAccountBody);
+  }
+
+  async updatePartner(
+    id: string,
+    updatePartnerDto: UpdatePartnerDto,
+  ): Promise<string> {
+    const oasisUpdateAccountBody = this.transformInputDTOToOasisBody<
+      OasisUpdateAccountBody,
+      UpdatePartnerDto
+    >(updatePartnerDto);
+
+    return await this.oasisAccountsService.update(id, oasisUpdateAccountBody);
   }
 }
