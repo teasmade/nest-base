@@ -4,7 +4,7 @@ import {
   OasisCreateAccountBody,
   OasisUpdateAccountBody,
 } from '@oasis/oasis-resources/oasis-accounts/interfaces';
-import { ExternalResourceService } from '../common/external-resource.service';
+import { ExternalResourceService } from '../common/base-services/external-resource.service';
 import {
   GetPartnersDto,
   GetPartnersQueryParamsDTO,
@@ -12,6 +12,7 @@ import {
   CreatePartnerDto,
   UpdatePartnerDto,
 } from './dtos';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PartnersService extends ExternalResourceService {
@@ -22,8 +23,14 @@ export class PartnersService extends ExternalResourceService {
   async getPartners(
     getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
-    const oasisAccounts = await this.oasisAccountsService.get(
+    const transformedQueryParams = plainToInstance(
+      GetPartnersQueryParamsDTO,
       getPartnersQueryParams,
+      { groups: ['transform'] },
+    );
+
+    const oasisAccounts = await this.oasisAccountsService.get(
+      transformedQueryParams,
     );
 
     return this.assignOasisResponseToTransformationDTO(
