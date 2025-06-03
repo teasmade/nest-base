@@ -1,9 +1,9 @@
 import { Transform } from 'class-transformer';
-import { QueryParamComponents } from '../types/query-param-components.type';
+import { QueryParamComponent } from '../types/query-param-component.type';
 
 /**
- * This decorator is used to provide a QueryParamComponents object on the target property, for ease of use building OData query params strings in the external resources layer.
- * @Usage the decorated property should be typed with `QueryParamComponents<T>`
+ * This decorator is used to provide a QueryParamComponent object on the target property, for ease of use building OData query params strings in the external resources layer.
+ * @Usage the decorated property should be typed with `QueryParamComponent<T>`
  */
 function OasisQueryParamTarget(
   targetOasisProperty: string,
@@ -15,7 +15,7 @@ function OasisQueryParamTarget(
         value,
       }: {
         value: unknown;
-      }): QueryParamComponents<unknown> | undefined => {
+      }): QueryParamComponent<unknown> | undefined => {
         if (value === undefined) {
           return undefined;
         }

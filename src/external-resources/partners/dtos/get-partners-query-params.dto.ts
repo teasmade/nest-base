@@ -3,59 +3,54 @@ import { IsEnum, IsOptional, IsString } from 'class-validator';
 import {
   AccountTypeCodes,
   AccountCategoryCodes,
-  accountCategoryCodeMap,
-  accountTypeCodeMap,
 } from 'src/oasis/oasis-common/enums/accounts.enum';
 import {
   OasisQueryParamTarget,
   OrderBy,
 } from 'src/external-resources/common/decorators';
-import { QueryParamComponents } from 'src/external-resources/common/types/query-param-components.type';
+import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
+import { Type } from 'class-transformer';
 
 export class GetPartnersQueryParamsDTO extends BaseExternalResourceQueryParamsDTO {
   @IsOptional()
-  @IsEnum(Object.values(accountTypeCodeMap), {
-    message: () =>
-      'filterType must be one of the following: ' +
-      Object.values(accountTypeCodeMap).join(', '),
-  })
+  @Type(() => Number)
+  @IsEnum(AccountTypeCodes)
   @OasisQueryParamTarget('cap_typedepointdegeolocalisationcode', 'filter')
-  filterType?: QueryParamComponents<AccountTypeCodes>;
+  filterType?: QueryParamComponent<AccountTypeCodes>;
 
   @IsOptional()
-  @IsEnum(Object.values(accountCategoryCodeMap), {
-    message: 'Bad category',
-  })
+  @Type(() => Number)
+  @IsEnum(AccountCategoryCodes)
   @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
-  filterCategory?: QueryParamComponents<AccountCategoryCodes>;
+  filterCategory?: QueryParamComponent<AccountCategoryCodes>;
 
   @IsOptional()
   @IsString()
   @OasisQueryParamTarget('name', 'search')
-  searchName?: QueryParamComponents<string>;
+  searchName?: QueryParamComponent<string>;
 
   @IsOptional()
   @OrderBy()
   @OasisQueryParamTarget('name', 'orderby')
-  orderbyName?: QueryParamComponents<string>;
+  orderbyName?: QueryParamComponent<string>;
 
   @IsOptional()
   @IsString()
   @OasisQueryParamTarget('address1_city', 'search')
-  searchCity?: QueryParamComponents<string>;
+  searchCity?: QueryParamComponent<string>;
 
   @IsOptional()
   @OrderBy()
   @OasisQueryParamTarget('address1_city', 'orderby')
-  orderbyCity?: QueryParamComponents<string>;
+  orderbyCity?: QueryParamComponent<string>;
 
   @IsOptional()
   @IsString()
   @OasisQueryParamTarget('address1_postalcode', 'search')
-  searchPostalcode?: QueryParamComponents<string>;
+  searchPostalcode?: QueryParamComponent<string>;
 
   @IsOptional()
   @OrderBy()
   @OasisQueryParamTarget('address1_postalcode', 'orderby')
-  orderbyPostalcode?: QueryParamComponents<string>;
+  orderbyPostalcode?: QueryParamComponent<string>;
 }
