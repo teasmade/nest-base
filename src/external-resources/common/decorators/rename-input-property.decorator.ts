@@ -7,7 +7,7 @@ import { Allow } from 'class-validator';
  * @usage in DTOs for validating input and mapping it to property names needed in an external API (e.g. OASIS), use `@ExposeForRename` on the source input property. This will ensure that standard class-validator validation via other decorators is performed on the source property. Combine this with `@Rename` , which will map the source property to the target property name needed in the external API.
  */
 function RenameInputProperty(sourceProperty: string) {
-  return function (target: any, propertyKey: string) {
+  return function (target: object, propertyKey: string) {
     Transform(
       ({ obj }: { obj: Record<string, unknown> }) => obj[sourceProperty],
     )(target, propertyKey);

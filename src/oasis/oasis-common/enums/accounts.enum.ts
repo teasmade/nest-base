@@ -1,9 +1,9 @@
 // partner type code = cap_typedepartenairepointgeocode
 export const accountTypeCodeMap = {
-  nationaux: 809020000,
-  sans_voiture: 809020001,
-  asso_4_roues: 809020002,
-  asso_mixte: 809020003,
+  nationaux: '809020000',
+  sans_voiture: '809020001',
+  asso_4_roues: '809020002',
+  asso_mixte: '809020003',
 } as const;
 
 export const accountTypeDisplayNameMap = {
@@ -16,10 +16,10 @@ export const accountTypeDisplayNameMap = {
 // partner category code = cap_typedepointdegeolocalisationcode
 export const accountCategoryCodeMap = {
   // microcredit: 809020007,
-  reparation_renault: 809020006,
-  permis: 809020005,
-  location_vehicule: 809020004,
-  reparation_vehicule: 809020003,
+  reparation_renault: '809020006',
+  permis: '809020005',
+  location_vehicule: '809020004',
+  reparation_vehicule: '809020003',
   // logement_temporaire: 809020002,
   // logement_locatif: 809020001,
   // garde_enfant: 809020000,
@@ -33,7 +33,11 @@ export const accountCategoryDisplayNameMap = {
 } as const;
 
 export type AccountTypes = keyof typeof accountTypeCodeMap;
+export type AccountTypeCodes = (typeof accountTypeCodeMap)[AccountTypes];
 export type AccountsCategories = keyof typeof accountCategoryCodeMap;
+export type AccountCategoryCodes =
+  (typeof accountCategoryCodeMap)[AccountsCategories];
 
+// TODO - remove this search pattern, no longer used
 type AccountSearchableFields = 'name' | 'city' | 'postalcode';
 export type AccountSearchQuery = `${AccountSearchableFields}:${string}`;
