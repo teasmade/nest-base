@@ -26,7 +26,8 @@ export class PartnersController {
 
   @Get()
   async getPartners(
-    @Query(new ValidationPipe({ transform: true }))
+    // Whitelist will strip out any properties that are not in the DTO
+    @Query(new ValidationPipe({ transform: true, whitelist: true }))
     getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
     return this.partnersService.getPartners(getPartnersQueryParams);

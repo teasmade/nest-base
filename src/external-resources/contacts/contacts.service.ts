@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OasisContactsService } from '@oasis/oasis-resources/oasis-contacts/oasis-contacts.service';
 import { GetContactsDto } from './dtos/get-contacts.dto';
 import { GetContactsQueryParamsDTO } from './dtos/get-contacts-query-params.dto';
-import { ExternalResourceService } from '../common/external-resource.service';
+import { ExternalResourceService } from '../common/base-services/external-resource.service';
 
 @Injectable()
 export class ContactsService extends ExternalResourceService {
