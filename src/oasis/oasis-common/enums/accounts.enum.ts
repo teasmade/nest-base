@@ -1,43 +1,59 @@
-// partner type code = cap_typedepartenairepointgeocode
-export const accountTypeCodeMap = {
-  nationaux: '809020000',
-  sans_voiture: '809020001',
-  asso_4_roues: '809020002',
-  asso_mixte: '809020003',
-} as const;
+export enum AccountTypeCodes {
+  Nationaux = 809020000,
+  SansVoiture = 809020001,
+  Asso4Roues = 809020002,
+  AssoMixte = 809020003,
+}
 
-export const accountTypeDisplayNameMap = {
-  nationaux: 'Partenaires nationaux',
-  sans_voiture: 'Partenaires sans voiture',
-  asso_4_roues: 'Partenaires 4 roues associatif',
-  asso_mixte: 'Partenaires associatifs mixtes',
-} as const;
+const accountTypeConfig = {
+  Nationaux: {
+    code: 809020000,
+    name: 'Partenaires nationaux',
+  },
+  SansVoiture: {
+    code: 809020001,
+    name: 'Partenaires sans voiture',
+  },
+  Asso4Roues: {
+    code: 809020002,
+    name: 'Partenaires 4 roues associatif',
+  },
+  AssoMixte: {
+    code: 809020003,
+    name: 'Partenaires associatifs mixtes',
+  },
+};
 
-// partner category code = cap_typedepointdegeolocalisationcode
-export const accountCategoryCodeMap = {
-  // microcredit: 809020007,
-  reparation_renault: '809020006',
-  permis: '809020005',
-  location_vehicule: '809020004',
-  reparation_vehicule: '809020003',
-  // logement_temporaire: 809020002,
-  // logement_locatif: 809020001,
-  // garde_enfant: 809020000,
-} as const;
+export enum AccountCategoryCodes {
+  ReparationRenault = 809020006,
+  Permis = 809020005,
+  LocationVehicule = 809020004,
+  ReparationVehicule = 809020003,
+}
 
-export const accountCategoryDisplayNameMap = {
-  reparation_renault: 'Réparation de véhicule Renault',
-  permis: 'Permis de conduire',
-  location_vehicule: 'Location de véhicule',
-  reparation_vehicule: 'Réparation de véhicule',
-} as const;
+const accountCategoryConfig = {
+  ReparationRenault: {
+    code: 809020006,
+    name: 'Réparation de véhicule Renault',
+  },
+  Permis: {
+    code: 809020005,
+    name: 'Permis de conduire',
+  },
+  LocationVehicule: {
+    code: 809020004,
+    name: 'Location de véhicule',
+  },
+  ReparationVehicule: {
+    code: 809020003,
+    name: 'Réparation de véhicule',
+  },
+};
 
-export type AccountTypes = keyof typeof accountTypeCodeMap;
-export type AccountTypeCodes = (typeof accountTypeCodeMap)[AccountTypes];
-export type AccountsCategories = keyof typeof accountCategoryCodeMap;
-export type AccountCategoryCodes =
-  (typeof accountCategoryCodeMap)[AccountsCategories];
-
-// TODO - remove this search pattern, no longer used
-type AccountSearchableFields = 'name' | 'city' | 'postalcode';
-export type AccountSearchQuery = `${AccountSearchableFields}:${string}`;
+// Exporting config object with account types and categories under partners key for use in client
+export const partnersConfig = {
+  partners: {
+    PartnerTypes: accountTypeConfig,
+    PartnerCategories: accountCategoryConfig,
+  },
+};
