@@ -27,7 +27,7 @@ export class Workflow {
   @Column({ default: false })
   isPublished: boolean;
 
-  @OneToOne(() => WorkflowVersion)
+  @OneToOne(() => WorkflowVersion, { nullable: true })
   @JoinColumn()
   activeVersion: Relation<WorkflowVersion>;
 

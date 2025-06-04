@@ -21,8 +21,8 @@ export class WorkflowVersion {
   @Column({ nullable: true })
   description: string;
 
-  @Column('jsonb')
-  definition: Record<string, any>;
+  @Column('jsonb', { default: {} })
+  definition: Record<string, unknown>;
 
   @Column({ default: false })
   isPublished: boolean;
