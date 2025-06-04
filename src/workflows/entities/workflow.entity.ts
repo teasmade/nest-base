@@ -9,6 +9,7 @@ import {
   JoinColumn,
   OneToOne,
   Relation,
+  DeleteDateColumn,
 } from 'typeorm';
 import { WorkflowVersion } from './workflow-version.entity';
 import { User } from '../../users/entities/user.entity';
@@ -45,4 +46,7 @@ export class Workflow {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
