@@ -10,10 +10,10 @@ import {
   HttpStatus,
   UseGuards,
   Request,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { WorkflowService } from './workflow.service';
 import { Workflow } from './entities/workflow.entity';
-import { WorkflowVersion } from './entities/workflow-version.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../users/entities/user.entity';
 
@@ -22,15 +22,15 @@ import { User } from '../users/entities/user.entity';
 export class WorkflowController {
   constructor(private readonly workflowService: WorkflowService) {}
 
-  // Workflows
-
   @Get()
-  findAll(): Promise<Workflow[]> {
+  findAll(): Promise<Partial<Workflow>[]> {
     return this.workflowService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Workflow> {
+  findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<Workflow | null> {
     return this.workflowService.findOne(id);
   }
 
@@ -57,32 +57,11 @@ export class WorkflowController {
     return this.workflowService.remove(id);
   }
 
-  // Workflow Versions
-
-  @Post(':id/versions')
-  createVersion(
+  @Post(':id/publish')
+  publish(
     @Param('id') id: string,
-    @Body() createVersionDto: Partial<WorkflowVersion>,
-    @Request() req: { user: User },
-  ): Promise<WorkflowVersion> {
-    return this.workflowService.createVersion(id, createVersionDto, req.user);
-  }
-
-  @Post(':id/versions/:versionId/publish')
-  publishVersion(
-    @Param('id') id: string,
-    @Param('versionId') versionId: string,
-    @Request() req: { user: User },
-  ): Promise<WorkflowVersion> {
-    return this.workflowService.publishVersion(id, versionId, req.user);
-  }
-
-  @Post(':id/versions/:versionId/activate')
-  setActiveVersion(
-    @Param('id') id: string,
-    @Param('versionId') versionId: string,
     @Request() req: { user: User },
   ): Promise<Workflow> {
-    return this.workflowService.setActiveVersion(id, versionId, req.user);
+    return this.workflowService.publish(id, req.user);
   }
 }
