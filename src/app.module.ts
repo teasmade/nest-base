@@ -9,6 +9,7 @@ import { DataSource } from 'typeorm';
 import { dataSourceConfig } from './app.datasource';
 import { PartnersModule } from './external-resources/partners/partners.module';
 import { ContactsModule } from './external-resources/contacts/contacts.module';
+import { WorkflowsModule } from './workflows/workflows.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ContactsModule } from './external-resources/contacts/contacts.module';
     AuthModule,
     PartnersModule,
     ContactsModule,
+    WorkflowsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
