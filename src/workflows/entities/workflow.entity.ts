@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { WorkflowVersion } from './workflow-version.entity';
 import { User } from '../../users/entities/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Workflow {
@@ -55,5 +56,6 @@ export class Workflow {
   updatedAt: Date;
 
   @DeleteDateColumn()
+  @Exclude()
   deletedAt: Date;
 }
