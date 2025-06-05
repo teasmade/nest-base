@@ -15,13 +15,15 @@ import {
 } from '@nestjs/common';
 import { WorkflowVersionService } from './workflow-version.service';
 import { WorkflowVersion } from './entities/workflow-version.entity';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreateWorkflowVersionDto } from './dtos/workflow-version/create-workflow-version.dto';
-import { UpdateWorkflowVersionDto } from './dtos/workflow-version/update-workflow-version.dto';
 import { AuthUser } from 'src/auth/interfaces';
-import { CreateWorkflowVersionResponseDto } from './dtos/workflow-version/create-workflow-version.response.dto';
-import { UpdateWorkflowVersionResponseDto } from './dtos/workflow-version/update-workflow-version.response.dto';
-import { PublishWorkflowVersionResponseDto } from './dtos/workflow-version/publish-workflow-version.response.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import {
+  CreateWorkflowVersionDto,
+  CreateWorkflowVersionResponseDto,
+  UpdateWorkflowVersionDto,
+  UpdateWorkflowVersionResponseDto,
+  PublishWorkflowVersionResponseDto,
+} from './dtos/workflow-version';
 
 // TODO: role based guards
 @Controller('workflows/:workflowId/versions')

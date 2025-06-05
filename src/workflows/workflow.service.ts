@@ -4,20 +4,22 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
+import { plainToInstance } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Workflow } from './entities/workflow.entity';
-import { AuthUser } from '../auth/interfaces';
-import { CreateWorkflowDto } from './dtos/workflow/create-workflow.dto';
-import { UpdateWorkflowDto } from './dtos/workflow/update-workflow.dto';
 import { WorkflowVersion } from './entities/workflow-version.entity';
-import { UsersService } from 'src/users/users.service';
-import { CreateWorkflowResponseDto } from './dtos/workflow/create-workflow.response.dto';
-import { plainToInstance } from 'class-transformer';
-import { UpdateWorkflowResponseDto } from './dtos/workflow/update-workflow.response.dto';
-import { PublishWorkflowResponseDto } from './dtos/workflow/publish-workflow.response.dto';
-import { SetActiveVersionDto } from './dtos/workflow/set-active-version.dto';
-import { SetActiveVersionResponseDto } from './dtos/workflow/set-active-version.response.dto';
+import { AuthUser } from '../auth/interfaces';
+import {
+  CreateWorkflowDto,
+  CreateWorkflowResponseDto,
+  UpdateWorkflowDto,
+  UpdateWorkflowResponseDto,
+  PublishWorkflowResponseDto,
+  SetActiveVersionDto,
+  SetActiveVersionResponseDto,
+} from './dtos/workflow';
 
 @Injectable()
 export class WorkflowService {

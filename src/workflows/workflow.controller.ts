@@ -17,14 +17,16 @@ import { WorkflowService } from './workflow.service';
 import { Workflow } from './entities/workflow.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthUser } from '../auth/interfaces';
-import { CreateWorkflowDto } from './dtos/workflow/create-workflow.dto';
-import { UpdateWorkflowDto } from './dtos/workflow/update-workflow.dto';
-import { CreateWorkflowResponseDto } from './dtos/workflow/create-workflow.response.dto';
-import { UpdateWorkflowResponseDto } from './dtos/workflow/update-workflow.response.dto';
-import { PublishWorkflowResponseDto } from './dtos/workflow/publish-workflow.response.dto';
 import { WorkflowVersion } from './entities/workflow-version.entity';
-import { SetActiveVersionDto } from './dtos/workflow/set-active-version.dto';
-import { SetActiveVersionResponseDto } from './dtos/workflow/set-active-version.response.dto';
+import {
+  CreateWorkflowDto,
+  CreateWorkflowResponseDto,
+  UpdateWorkflowDto,
+  UpdateWorkflowResponseDto,
+  PublishWorkflowResponseDto,
+  SetActiveVersionDto,
+  SetActiveVersionResponseDto,
+} from './dtos/workflow';
 
 // TODO: role based guards
 @Controller('workflows')

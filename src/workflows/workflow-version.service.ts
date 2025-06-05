@@ -5,17 +5,19 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { WorkflowVersion } from './entities/workflow-version.entity';
 import { Workflow } from './entities/workflow.entity';
-import { CreateWorkflowVersionDto } from './dtos/workflow-version/create-workflow-version.dto';
-import { UpdateWorkflowVersionDto } from './dtos/workflow-version/update-workflow-version.dto';
 import { AuthUser } from 'src/auth/interfaces';
 import { UsersService } from 'src/users/users.service';
-import { plainToInstance } from 'class-transformer';
-import { CreateWorkflowVersionResponseDto } from './dtos/workflow-version/create-workflow-version.response.dto';
-import { UpdateWorkflowVersionResponseDto } from './dtos/workflow-version/update-workflow-version.response.dto';
-import { PublishWorkflowVersionResponseDto } from './dtos/workflow-version/publish-workflow-version.response.dto';
+import {
+  CreateWorkflowVersionDto,
+  CreateWorkflowVersionResponseDto,
+  UpdateWorkflowVersionDto,
+  UpdateWorkflowVersionResponseDto,
+  PublishWorkflowVersionResponseDto,
+} from './dtos/workflow-version';
 
 @Injectable()
 export class WorkflowVersionService {
