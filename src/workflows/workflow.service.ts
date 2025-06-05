@@ -16,6 +16,8 @@ import { CreateWorkflowResponseDto } from './dtos/workflow/create-workflow.respo
 import { plainToInstance } from 'class-transformer';
 import { UpdateWorkflowResponseDto } from './dtos/workflow/update-workflow.response.dto';
 import { PublishWorkflowResponseDto } from './dtos/workflow/publish-workflow.response.dto';
+import { SetActiveVersionDto } from './dtos/workflow/set-active-version.dto';
+import { SetActiveVersionResponseDto } from './dtos/workflow/set-active-version.response.dto';
 
 @Injectable()
 export class WorkflowService {
@@ -223,5 +225,58 @@ export class WorkflowService {
       console.error(error);
       throw new InternalServerErrorException();
     }
+  }
+
+  async getActiveVersion(id: string): Promise<WorkflowVersion> {
+    const workflow = await this.findOne(id);
+
+    if (!workflow) {
+      throw new NotFoundException(`Workflow ${id} not found`);
+    }
+
+    if (!workflow.activeVersion) {
+      throw new NotFoundException(`Workflow ${id} has no active version`);
+    }
+
+    return workflow.activeVersion;
+  }
+
+  async setActiveVersion(
+    id: string,
+    setActiveVersionDto: SetActiveVersionDto,
+    authUser: AuthUser,
+  ): Promise<SetActiveVersionResponseDto> {
+    const workflow = await this.findOne(id);
+
+    if (!workflow) {
+      throw new NotFoundException(`Workflow ${id} not found`);
+    }
+
+    const version = await this.versionRepository.findOne({
+      where: { id: setActiveVersionDto.versionId, workflow: { id } },
+    });
+
+    if (!version) {
+      throw new NotFoundException(
+        `Version ${setActiveVersionDto.versionId} not found in workflow ${id}`,
+      );
+    }
+
+    if (!version.isPublished) {
+      throw new BadRequestException(
+        `Version ${setActiveVersionDto.versionId} is not published, cannot set as active`,
+      );
+    }
+
+    Object.assign(workflow, {
+      activeVersion: version,
+      updatedBy: authUser.id,
+    });
+
+    const updatedWorkflow = await this.workflowRepository.save(workflow);
+
+    return plainToInstance(SetActiveVersionResponseDto, updatedWorkflow, {
+      excludeExtraneousValues: true,
+    });
   }
 }

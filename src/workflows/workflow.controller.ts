@@ -22,6 +22,9 @@ import { UpdateWorkflowDto } from './dtos/workflow/update-workflow.dto';
 import { CreateWorkflowResponseDto } from './dtos/workflow/create-workflow.response.dto';
 import { UpdateWorkflowResponseDto } from './dtos/workflow/update-workflow.response.dto';
 import { PublishWorkflowResponseDto } from './dtos/workflow/publish-workflow.response.dto';
+import { WorkflowVersion } from './entities/workflow-version.entity';
+import { SetActiveVersionDto } from './dtos/workflow/set-active-version.dto';
+import { SetActiveVersionResponseDto } from './dtos/workflow/set-active-version.response.dto';
 
 // TODO: role based guards
 @Controller('workflows')
@@ -83,5 +86,27 @@ export class WorkflowController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.workflowService.remove(id);
+  }
+
+  // Get active version of a workflow
+  @Get(':id/active-version')
+  getActiveVersion(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<WorkflowVersion> {
+    return this.workflowService.getActiveVersion(id);
+  }
+
+  // Set active version of a workflow
+  @Patch(':id/active-version')
+  setActiveVersion(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body(new ValidationPipe()) setActiveVersionDto: SetActiveVersionDto,
+    @Request() req: { user: AuthUser },
+  ): Promise<SetActiveVersionResponseDto> {
+    return this.workflowService.setActiveVersion(
+      id,
+      setActiveVersionDto,
+      req.user,
+    );
   }
 }
