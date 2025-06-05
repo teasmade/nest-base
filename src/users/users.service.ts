@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { hashPassword, matchPassword } from './hash.helper';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -80,6 +80,14 @@ export class UsersService {
       where: { id },
       relations: ['profile'],
     });
+  }
+
+  public async findByAuthUserId(id: string) {
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
   }
 
   public async findOneByExternalId(externalId: string) {
