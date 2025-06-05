@@ -6,10 +6,10 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToOne,
-  JoinColumn,
   OneToOne,
   Relation,
   DeleteDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { WorkflowVersion } from './workflow-version.entity';
 import { User } from '../../users/entities/user.entity';
@@ -28,11 +28,18 @@ export class Workflow {
   @Column({ default: false })
   isPublished: boolean;
 
-  @OneToOne(() => WorkflowVersion, { nullable: true })
-  @JoinColumn()
-  activeVersion: Relation<WorkflowVersion>;
+  @OneToOne(
+    'WorkflowVersion',
+    (workflowVersion: WorkflowVersion) => workflowVersion.workflow,
+    { nullable: true },
+  )
+  @JoinColumn({ name: 'activeVersionId' })
+  activeVersion: Relation<WorkflowVersion> | null;
 
-  @OneToMany(() => WorkflowVersion, (version) => version.workflow)
+  @OneToMany(
+    'WorkflowVersion',
+    (workflowVersion: WorkflowVersion) => workflowVersion.workflow,
+  )
   versions: Relation<WorkflowVersion>[];
 
   @ManyToOne(() => User)

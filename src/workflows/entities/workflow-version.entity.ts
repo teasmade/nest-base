@@ -28,7 +28,7 @@ export class WorkflowVersion {
   @Column({ default: false })
   isPublished: boolean;
 
-  @ManyToOne(() => Workflow, (workflow) => workflow.versions)
+  @ManyToOne('Workflow', (workflow: Workflow) => workflow.versions)
   workflow: Relation<Workflow>;
 
   @ManyToOne(() => User)
