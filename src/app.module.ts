@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, ClassSerializerInterceptor } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -9,6 +10,7 @@ import { DataSource } from 'typeorm';
 import { dataSourceConfig } from './app.datasource';
 import { PartnersModule } from './external-resources/partners/partners.module';
 import { ContactsModule } from './external-resources/contacts/contacts.module';
+import { WorkflowsModule } from './workflows/workflows.module';
 
 @Module({
   imports: [
@@ -18,9 +20,16 @@ import { ContactsModule } from './external-resources/contacts/contacts.module';
     AuthModule,
     PartnersModule,
     ContactsModule,
+    WorkflowsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

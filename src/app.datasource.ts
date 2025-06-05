@@ -3,6 +3,7 @@ import { SeederOptions } from 'typeorm-extension';
 import { User } from './users/entities/user.entity';
 import { UserProfile } from './users/entities/user-profile.entity';
 import { UserGroup } from './users/entities/user-group.entity';
+import { Workflow, WorkflowVersion } from './workflows/entities';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,7 +16,7 @@ export const dataSourceConfig: DataSourceOptions & SeederOptions = {
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  entities: [User, UserProfile, UserGroup],
+  entities: [User, UserProfile, UserGroup, Workflow, WorkflowVersion],
   synchronize: false,
   migrations: ['src/db/migrations/*.js'],
   migrationsTableName: 'migrations',

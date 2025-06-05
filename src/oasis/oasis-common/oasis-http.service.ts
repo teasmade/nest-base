@@ -45,7 +45,10 @@ export class OasisHttpService {
 
       return this._handleResponse<T>(response, paginationSessionId, direction);
     } catch (error) {
-      console.error('Error making GET request to OASIS:', error);
+      console.error(
+        'Error making GET request to OASIS:',
+        JSON.stringify(error, null, 2),
+      );
       throw new Error('Failed to make GET request to OASIS');
     }
   }
