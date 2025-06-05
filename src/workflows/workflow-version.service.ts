@@ -2,12 +2,20 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { WorkflowVersion } from './entities/workflow-version.entity';
 import { Workflow } from './entities/workflow.entity';
-import { User } from '../users/entities/user.entity';
+import { CreateWorkflowVersionDto } from './dtos/workflow-version/create-workflow-version.dto';
+import { UpdateWorkflowVersionDto } from './dtos/workflow-version/update-workflow-version.dto';
+import { AuthUser } from 'src/auth/interfaces';
+import { UsersService } from 'src/users/users.service';
+import { plainToInstance } from 'class-transformer';
+import { CreateWorkflowVersionResponseDto } from './dtos/workflow-version/create-workflow-version.response.dto';
+import { UpdateWorkflowVersionResponseDto } from './dtos/workflow-version/update-workflow-version.response.dto';
+import { PublishWorkflowVersionResponseDto } from './dtos/workflow-version/publish-workflow-version.response.dto';
 
 @Injectable()
 export class WorkflowVersionService {
@@ -16,25 +24,25 @@ export class WorkflowVersionService {
     private versionRepository: Repository<WorkflowVersion>,
     @InjectRepository(Workflow)
     private workflowRepository: Repository<Workflow>,
+    private usersService: UsersService,
   ) {}
 
-  async findAll(workflowId: string): Promise<WorkflowVersion[]> {
-    return this.versionRepository.find({
-      where: { workflow: { id: workflowId } },
-      relations: ['createdBy', 'updatedBy'],
-      order: { createdAt: 'DESC' },
-    });
-  }
+  // async findAll(workflowId: string): Promise<WorkflowVersion[]> {
+  //   return this.versionRepository.find({
+  //     where: { workflow: { id: workflowId } },
+  //     relations: ['workflow', 'createdBy', 'updatedBy'],
+  //   });
+  // }
 
   async findOne(workflowId: string, id: string): Promise<WorkflowVersion> {
     const version = await this.versionRepository.findOne({
       where: { id, workflow: { id: workflowId } },
-      relations: ['createdBy', 'updatedBy'],
+      // relations: ['workflow', 'createdBy', 'updatedBy'],
     });
 
     if (!version) {
       throw new NotFoundException(
-        `Version with ID ${id} not found for workflow ${workflowId}`,
+        `Workflow version ${id} not found in workflow ${workflowId}`,
       );
     }
 
@@ -43,36 +51,47 @@ export class WorkflowVersionService {
 
   async create(
     workflowId: string,
-    versionData: Partial<WorkflowVersion>,
-    user: User,
-  ): Promise<WorkflowVersion> {
+    createVersionDto: CreateWorkflowVersionDto,
+    authUser: AuthUser,
+  ): Promise<CreateWorkflowVersionResponseDto> {
+    const user = await this.usersService.findByAuthUserId(authUser.id);
+
     const workflow = await this.workflowRepository.findOne({
       where: { id: workflowId },
-      relations: ['activeVersion'],
     });
 
     if (!workflow) {
-      throw new NotFoundException(`Workflow with ID ${workflowId} not found`);
+      throw new NotFoundException(`Workflow ${workflowId} not found`);
     }
 
+    if (!createVersionDto.description) {
+      createVersionDto.description = `Version ${createVersionDto.version} pour ${workflow.name}`;
+    }
+
+    Object.assign(workflow, {
+      updatedBy: user,
+    });
+
     const version = this.versionRepository.create({
-      ...versionData,
-      workflow,
+      ...createVersionDto,
       createdBy: user,
       updatedBy: user,
+      workflow,
     });
 
     const savedVersion = await this.versionRepository.save(version);
 
-    return savedVersion;
+    return plainToInstance(CreateWorkflowVersionResponseDto, savedVersion, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async update(
     workflowId: string,
     id: string,
-    versionData: Partial<WorkflowVersion>,
-    user: User,
-  ): Promise<WorkflowVersion> {
+    updateVersionDto: UpdateWorkflowVersionDto,
+    authUser: AuthUser,
+  ): Promise<UpdateWorkflowVersionResponseDto> {
     const workflow = await this.workflowRepository.findOne({
       where: { id: workflowId },
       relations: ['activeVersion'],
@@ -86,116 +105,128 @@ export class WorkflowVersionService {
       throw new BadRequestException('Cannot update the active version');
     }
 
-    const version = await this.findOne(workflowId, id);
+    const version = await this.versionRepository.findOne({
+      where: { id, workflow: { id: workflowId } },
+    });
+
+    if (!version) {
+      throw new NotFoundException(
+        `Workflow version ${id} not found in workflow ${workflowId}`,
+      );
+    }
 
     Object.assign(version, {
-      ...versionData,
-      updatedBy: user,
+      ...updateVersionDto,
+      updatedBy: authUser.id,
     });
 
-    return this.versionRepository.save(version);
-  }
+    const savedVersion = await this.versionRepository.save(version);
 
-  async remove(workflowId: string, id: string): Promise<void> {
-    const workflow = await this.workflowRepository.findOne({
-      where: { id: workflowId },
-      relations: ['activeVersion'],
+    return plainToInstance(UpdateWorkflowVersionResponseDto, savedVersion, {
+      excludeExtraneousValues: true,
     });
-
-    if (workflow?.activeVersion?.id === id) {
-      throw new BadRequestException('Cannot delete the active version');
-    }
-
-    const version = await this.findOne(workflowId, id);
-    // Don't allow deleting published versions - safety net?
-    if (version.isPublished) {
-      throw new BadRequestException('Cannot delete a published version');
-    }
-
-    await this.versionRepository.remove(version);
   }
 
   async publish(
     workflowId: string,
     id: string,
-    user: User,
-  ): Promise<{
-    publishedVersion: WorkflowVersion;
-    publishedWorkflow?: Workflow;
-  }> {
-    const workflow = await this.workflowRepository.findOne({
-      where: { id: workflowId },
-      relations: ['activeVersion', 'versions'],
+    authUser: AuthUser,
+  ): Promise<PublishWorkflowVersionResponseDto> {
+    const version = await this.versionRepository.findOne({
+      where: { id, workflow: { id: workflowId } },
     });
-
-    if (!workflow) {
-      throw new NotFoundException(`Workflow with ID ${workflowId} not found`);
-    }
-    const version = workflow.versions.find((v) => v.id === id);
 
     if (!version) {
       throw new NotFoundException(
-        `Version with ID ${id} not found in workflow ${workflowId}`,
+        `Workflow version ${id} not found in workflow ${workflowId}`,
+      );
+    }
+
+    Object.assign(version, {
+      isPublished: true,
+      updatedBy: authUser.id,
+    });
+
+    const publishedVersion = await this.versionRepository.save(version);
+
+    return plainToInstance(
+      PublishWorkflowVersionResponseDto,
+      publishedVersion,
+      {
+        excludeExtraneousValues: true,
+      },
+    );
+  }
+
+  async unpublish(
+    workflowId: string,
+    id: string,
+    authUser: AuthUser,
+  ): Promise<PublishWorkflowVersionResponseDto> {
+    const version = await this.versionRepository.findOne({
+      where: { id, workflow: { id: workflowId } },
+      relations: ['workflow', 'workflow.activeVersion'],
+    });
+
+    if (!version) {
+      throw new NotFoundException(
+        `Workflow version ${id} not found in workflow ${workflowId}`,
+      );
+    }
+
+    // Cannot unpublish a version if it is the active version
+    if (version.workflow.activeVersion?.id === id) {
+      throw new BadRequestException(
+        `This version is the active version of the workflow, cannot unpublish`,
+      );
+    }
+
+    Object.assign(version, {
+      isPublished: false,
+      updatedBy: authUser.id,
+    });
+
+    const unpublishedVersion = await this.versionRepository.save(version);
+
+    return plainToInstance(
+      PublishWorkflowVersionResponseDto,
+      unpublishedVersion,
+      {
+        excludeExtraneousValues: true,
+      },
+    );
+  }
+
+  async remove(workflowId: string, id: string): Promise<void> {
+    const version = await this.versionRepository.findOne({
+      where: { id, workflow: { id: workflowId } },
+      relations: ['workflow', 'workflow.activeVersion'],
+    });
+
+    if (!version) {
+      throw new NotFoundException(
+        `Workflow version ${id} not found in workflow ${workflowId}`,
+      );
+    }
+
+    if (version.workflow.activeVersion?.id === id) {
+      throw new BadRequestException(
+        `This version is the active version of the workflow, cannot delete`,
       );
     }
 
     if (version.isPublished) {
-      throw new BadRequestException('Version is already published');
-    }
-
-    version.isPublished = true;
-    version.updatedBy = user;
-
-    let savedWorkflow: Workflow | null = null;
-    if (!workflow.isPublished) {
-      workflow.isPublished = true;
-      workflow.updatedBy = user;
-      savedWorkflow = await this.workflowRepository.save(workflow);
-    }
-    const savedVersion = await this.versionRepository.save(version);
-
-    const result: {
-      publishedVersion: WorkflowVersion;
-      publishedWorkflow?: Workflow;
-    } = {
-      publishedVersion: savedVersion,
-    };
-    if (savedWorkflow) {
-      result.publishedWorkflow = savedWorkflow;
-    }
-    return result;
-  }
-
-  async setActive(
-    workflowId: string,
-    id: string,
-    user: User,
-  ): Promise<Workflow> {
-    const workflow = await this.workflowRepository.findOne({
-      where: { id: workflowId },
-      relations: ['activeVersion', 'versions'],
-    });
-
-    if (!workflow) {
-      throw new NotFoundException(`Workflow with ID ${workflowId} not found`);
-    }
-
-    const version = workflow.versions.find((v) => v.id === id);
-
-    if (!version) {
-      throw new NotFoundException(
-        `Version with ID ${id} not found in workflow ${workflowId}`,
-      );
-    }
-
-    if (!version.isPublished) {
       throw new BadRequestException(
-        'Cannot set an unpublished version as active',
+        `Version ${id} is published, cannot delete`,
       );
     }
 
-    workflow.activeVersion = version;
-    workflow.updatedBy = user;
-    return this.workflowRepository.save(workflow);
+    try {
+      await this.versionRepository.remove(version);
+    } catch (error) {
+      // TODO: handle error in proper logging service, sentry etc.
+      console.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 }
