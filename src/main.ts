@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ResponseTransformInterceptor } from './common/interceptors/response-transform.interceptor';
 import { timingMiddleware } from './common/middlewares/timing.middleware';
@@ -22,6 +23,15 @@ async function bootstrap() {
   });
 
   app.useGlobalInterceptors(new ResponseTransformInterceptor());
+
+  const config = new DocumentBuilder()
+    .setTitle('Orizon API')
+    .setDescription('')
+    .setVersion('1.0')
+    .addTag('orizon')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
 
   app.setGlobalPrefix('api');
 
