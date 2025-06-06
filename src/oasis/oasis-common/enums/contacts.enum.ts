@@ -1,10 +1,26 @@
-// contact type code = cap_type_contact_code
-export const contactTypeCodeMap = {
-  interim_worker: 809020000,
-  agency_contact: 809020001,
-  partner_contact: 809020002,
-  // interim_worker_child: 809020003,
-  // company_contact: 809020005,
-} as const;
+export enum ContactTypeCodes {
+  InterimWorker = 809020000,
+  AgencyContact = 809020001,
+  PartnerContact = 809020002,
+}
 
-export type ContactTypes = keyof typeof contactTypeCodeMap;
+const contactTypeConfig = {
+  InterimWorker: {
+    code: 809020000,
+    name: 'Intérimaire',
+  },
+  AgencyContact: {
+    code: 809020001,
+    name: 'Contact Agence',
+  },
+  PartnerContact: {
+    code: 809020002,
+    name: 'Contact Partenaire',
+  },
+};
+
+export const contactsConfig = {
+  contacts: {
+    ContactTypes: contactTypeConfig,
+  },
+};

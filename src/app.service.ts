@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { partnersConfig } from '@oasis/oasis-common/enums/accounts.enum';
+import { contactsConfig } from '@oasis/oasis-common/enums/contacts.enum';
 
 @Injectable()
 export class AppService {
@@ -8,6 +9,6 @@ export class AppService {
   }
 
   getConfig(): object {
-    return { config: partnersConfig };
+    return { config: { ...partnersConfig, ...contactsConfig } };
   }
 }
