@@ -199,7 +199,7 @@ export class WorkflowVersionService {
     );
   }
 
-  async remove(workflowId: string, id: string): Promise<void> {
+  async softRemove(workflowId: string, id: string): Promise<void> {
     const version = await this.versionRepository.findOne({
       where: { id, workflow: { id: workflowId } },
       relations: ['workflow', 'workflow.activeVersion'],
@@ -224,7 +224,33 @@ export class WorkflowVersionService {
     }
 
     try {
-      await this.versionRepository.remove(version);
+      await this.versionRepository.softRemove(version);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async restore(workflowId: string, id: string): Promise<WorkflowVersion> {
+    const version = await this.versionRepository.findOne({
+      where: { id, workflow: { id: workflowId } },
+      relations: ['workflow'],
+      withDeleted: true,
+    });
+
+    if (!version) {
+      throw new NotFoundException(
+        `Workflow version ${id} not found in workflow ${workflowId}`,
+      );
+    }
+
+    if (!version.deletedAt) {
+      throw new BadRequestException(`Workflow version ${id} is not deleted`);
+    }
+
+    try {
+      await this.versionRepository.restore({ id });
+      return this.findOne(workflowId, id);
     } catch (error) {
       // TODO: handle error in proper logging service, sentry etc.
       console.error(error);
