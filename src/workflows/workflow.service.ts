@@ -7,7 +7,7 @@ import {
 import { UsersService } from 'src/users/users.service';
 import { plainToInstance } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Not, IsNull } from 'typeorm';
 import { Workflow } from './entities/workflow.entity';
 import { WorkflowVersion } from './entities/workflow-version.entity';
 import { AuthUser } from '../auth/interfaces';
@@ -279,6 +279,23 @@ export class WorkflowService {
 
     return plainToInstance(SetActiveVersionResponseDto, updatedWorkflow, {
       excludeExtraneousValues: true,
+    });
+  }
+
+  async findDeletedVersions(id: string): Promise<WorkflowVersion[]> {
+    const workflow = await this.findOne(id);
+
+    if (!workflow) {
+      throw new NotFoundException(`Workflow ${id} not found`);
+    }
+
+    return this.versionRepository.find({
+      where: {
+        workflow: { id },
+        deletedAt: Not(IsNull()),
+      },
+      relations: ['createdBy', 'updatedBy'],
+      withDeleted: true,
     });
   }
 }

@@ -95,6 +95,14 @@ export class WorkflowVersionController {
     @Param('workflowId', new ParseUUIDPipe()) workflowId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<void> {
-    return this.versionService.remove(workflowId, id);
+    return this.versionService.softRemove(workflowId, id);
+  }
+
+  @Patch(':id/restore')
+  restore(
+    @Param('workflowId', new ParseUUIDPipe()) workflowId: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<WorkflowVersion> {
+    return this.versionService.restore(workflowId, id);
   }
 }

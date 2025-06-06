@@ -111,4 +111,11 @@ export class WorkflowController {
       req.user,
     );
   }
+
+  @Get(':id/deleted-versions')
+  getDeletedVersions(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<WorkflowVersion[]> {
+    return this.workflowService.findDeletedVersions(id);
+  }
 }
