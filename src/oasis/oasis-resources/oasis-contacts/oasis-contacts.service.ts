@@ -5,41 +5,25 @@ import { OasisContact } from './interfaces/oasis-contact.interface';
 import { PaginatedOasisResponse } from '@oasis/oasis-common/interfaces/oasis-pagination.interface';
 import { OASIS_CONTACT_SELECT_FIELDS } from './oasis-contacts.constants';
 import { GetContactsQueryParamsDTO } from 'src/external-resources/contacts/dtos/get-contacts-query-params.dto';
-import { contactTypeCodeMap } from '@oasis/oasis-common/enums/contacts.enum';
-
-// TODO - break interface out to a separate file
-interface OasisContactQueryParams {
-  $select?: readonly string[];
-  $count?: boolean;
-  $filter?: string;
-  $orderby?: string;
-}
+import { OasisResourceService } from '@oasis/oasis-common/base-services/oasis-resource.service';
 
 @Injectable()
-export class OasisContactsService {
-  constructor(private readonly oasisHttpService: OasisHttpService) {}
+export class OasisContactsService extends OasisResourceService {
+  constructor(private readonly oasisHttpService: OasisHttpService) {
+    super();
+  }
 
   public async getOasisContacts(
     getContactsQueryParams?: GetContactsQueryParamsDTO,
   ): Promise<PaginatedOasisResponse<OasisContact>> {
-    const { pageSize, paginationSessionId, direction, type } =
-      getContactsQueryParams ?? {};
+    const { pageSize, paginationSessionId, direction, paramsString } =
+      this.handleQueryParams(
+        getContactsQueryParams ?? {},
+        OASIS_CONTACT_SELECT_FIELDS,
+      );
 
     const endpoint = '/contacts';
 
-    let filter = 'cap_type_contact_code eq 809020000';
-    if (type && type in contactTypeCodeMap) {
-      filter = `cap_type_contact_code eq ${contactTypeCodeMap[type]}`;
-    }
-
-    const params: OasisContactQueryParams = {
-      $select: OASIS_CONTACT_SELECT_FIELDS,
-      $count: true,
-      $orderby: 'fullname asc',
-      $filter: filter,
-    };
-
-    const paramsString = this._buildParams(params);
     const response = await this.oasisHttpService.get<OasisContact>(
       `${endpoint}${paramsString}`,
       pageSize,
@@ -47,29 +31,6 @@ export class OasisContactsService {
       direction,
     );
     return response;
-  }
-
-  // TODO - a utility function for building params once we know what sets of params we'll be using in various different services / routes
-  private _buildParams(params: OasisContactQueryParams): string {
-    const paramStrings: string[] = [];
-
-    if (params.$select) {
-      paramStrings.push(`$select=${params.$select.join(',')}`);
-    }
-
-    if (params.$count !== undefined) {
-      paramStrings.push(`$count=${params.$count}`);
-    }
-
-    if (params.$filter) {
-      paramStrings.push(`$filter=${params.$filter}`);
-    }
-
-    if (params.$orderby) {
-      paramStrings.push(`$orderby=${params.$orderby}`);
-    }
-
-    return paramStrings.length ? '?' + paramStrings.join('&') : '';
   }
 
   public async validateExternalLogin(

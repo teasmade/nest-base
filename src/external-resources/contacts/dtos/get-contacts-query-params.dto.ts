@@ -1,16 +1,20 @@
 import { IsEnum, IsOptional } from 'class-validator';
-import {
-  contactTypeCodeMap,
-  ContactTypes,
-} from 'src/oasis/oasis-common/enums/contacts.enum';
+import { ContactTypeCodes } from 'src/oasis/oasis-common/enums/contacts.enum';
 import { BaseExternalResourceQueryParamsDTO } from 'src/external-resources/common/dtos/base-query-params.dto';
+import { Type } from 'class-transformer';
+import { IsString } from 'class-validator';
+import { OasisQueryParamTarget } from 'src/external-resources/common/decorators';
+import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
 
 export class GetContactsQueryParamsDTO extends BaseExternalResourceQueryParamsDTO {
   @IsOptional()
-  @IsEnum(Object.keys(contactTypeCodeMap), {
-    message: () =>
-      'Type must be one of the following: ' +
-      Object.keys(contactTypeCodeMap).join(', '),
-  })
-  type?: ContactTypes;
+  @Type(() => Number)
+  @IsEnum(ContactTypeCodes)
+  @OasisQueryParamTarget('cap_type_contact_code', 'filter')
+  filterType?: QueryParamComponent<ContactTypeCodes>;
+
+  @IsOptional()
+  @IsString()
+  @OasisQueryParamTarget('telephone1', 'search')
+  searchPhone?: QueryParamComponent<string>;
 }

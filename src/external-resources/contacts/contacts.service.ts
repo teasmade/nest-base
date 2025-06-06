@@ -3,6 +3,7 @@ import { OasisContactsService } from '@oasis/oasis-resources/oasis-contacts/oasi
 import { GetContactsDto } from './dtos/get-contacts.dto';
 import { GetContactsQueryParamsDTO } from './dtos/get-contacts-query-params.dto';
 import { ExternalResourceService } from '../common/base-services/external-resource.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ContactsService extends ExternalResourceService {
@@ -13,8 +14,14 @@ export class ContactsService extends ExternalResourceService {
   async getContacts(
     getContactsQueryParams?: GetContactsQueryParamsDTO,
   ): Promise<GetContactsDto> {
-    const oasisContacts = await this.oasisContactsService.getOasisContacts(
+    const transformedQueryParams = plainToInstance(
+      GetContactsQueryParamsDTO,
       getContactsQueryParams,
+      { groups: ['transform'] },
+    );
+
+    const oasisContacts = await this.oasisContactsService.getOasisContacts(
+      transformedQueryParams,
     );
     return this.assignOasisResponseToTransformationDTO(
       oasisContacts,
