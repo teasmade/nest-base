@@ -5,6 +5,7 @@ export const OASIS_CONTACT_SELECT_FIELDS = [
   'fullname',
   'emailaddress1',
   'telephone1',
+  'birthdate',
   'cap_civilitecode',
   'cap_type_contact_code',
   'address1_line1',

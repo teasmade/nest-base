@@ -9,6 +9,8 @@ export interface OasisContact {
   fullname: string;
   emailaddress1: string;
   telephone1: string | null;
+  birthdate: string | null;
+  'birthdate@OData.Community.Display.V1.FormattedValue'?: string;
   cap_civilitecode: number | null;
   'cap_civilitecode@OData.Community.Display.V1.FormattedValue'?: string;
   cap_type_contact_code: number | null;
