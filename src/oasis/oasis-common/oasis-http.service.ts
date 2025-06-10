@@ -69,7 +69,10 @@ export class OasisHttpService {
       }
       return '';
     } catch (error) {
-      console.error('Error making POST request to OASIS:', error);
+      console.error(
+        'Error making POST request to OASIS:',
+        JSON.stringify(error, null, 2),
+      );
       throw new Error('Failed to make POST request to OASIS');
     }
   }
@@ -140,7 +143,6 @@ export class OasisHttpService {
       Accept: 'application/json; charset=utf-8',
       'Odata-Version': '4.0',
       'Odata-MaxVersion': '4.0',
-      'If-Match': '*',
     };
   }
 

@@ -6,6 +6,8 @@ import { PaginatedOasisResponse } from '@oasis/oasis-common/interfaces/oasis-pag
 import { OASIS_CONTACT_SELECT_FIELDS } from './oasis-contacts.constants';
 import { GetContactsQueryParamsDTO } from 'src/external-resources/contacts/dtos/get-contacts-query-params.dto';
 import { OasisResourceService } from '@oasis/oasis-common/base-services/oasis-resource.service';
+import { OasisCreateContactBody } from './interfaces/oasis-create-contact.interface';
+import { OasisUpdateContactBody } from './interfaces/oasis-update-contact.interface';
 
 @Injectable()
 export class OasisContactsService extends OasisResourceService {
@@ -31,6 +33,45 @@ export class OasisContactsService extends OasisResourceService {
       direction,
     );
     return response;
+  }
+
+  public async getContact(
+    id: string,
+  ): Promise<PaginatedOasisResponse<OasisContact>> {
+    const endpoint = `/contacts(${id})`;
+
+    const paramsString = `?$select=${OASIS_CONTACT_SELECT_FIELDS.join(',')}`;
+
+    const response = await this.oasisHttpService.get<OasisContact>(
+      `${endpoint}${paramsString}`,
+    );
+    return response;
+  }
+
+  public async createContact(contact: OasisCreateContactBody): Promise<string> {
+    const endpoint = '/contacts';
+
+    const response = await this.oasisHttpService.post<OasisCreateContactBody>(
+      endpoint,
+      contact,
+    );
+
+    const id = response.split('(')[1].split(')')[0];
+    return id;
+  }
+
+  public async updateContact(
+    id: string,
+    contact: OasisUpdateContactBody,
+  ): Promise<string> {
+    const endpoint = `/contacts(${id})`;
+    const response = await this.oasisHttpService.patch<OasisContact>(
+      endpoint,
+      contact,
+    );
+    // TODO - break this out into helpers
+    const returnId = response.split('(')[1].split(')')[0];
+    return returnId;
   }
 
   public async validateExternalLogin(

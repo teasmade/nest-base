@@ -27,10 +27,10 @@ export class OasisContactToContactDto implements OasisContact {
   @Expose({ name: 'phone_number' })
   telephone1: string | null;
 
-  @Expose({ name: 'birthdate_formatted' })
+  @Expose({ name: 'dob_formatted' })
   'birthdate@OData.Community.Display.V1.FormattedValue'?: string;
 
-  @Expose({ name: 'birthdate' })
+  @Expose({ name: 'dob' })
   birthdate: string | null;
 
   @Expose({ name: 'title' })
