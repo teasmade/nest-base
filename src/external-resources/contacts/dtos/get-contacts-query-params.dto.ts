@@ -25,6 +25,11 @@ export class GetContactsQueryParamsDTO extends BaseExternalResourceQueryParamsDT
 
   @IsOptional()
   @IsString()
+  @OasisQueryParamTarget('emailaddress1', 'search')
+  searchEmail?: QueryParamComponent<string>;
+
+  @IsOptional()
+  @IsString()
   @OasisQueryParamTarget('birthdate', 'filter')
   filterBirthdate?: QueryParamComponent<string>;
 }
