@@ -56,7 +56,7 @@ export class OasisContactsService extends OasisResourceService {
       contact,
     );
 
-    const id = response.split('(')[1].split(')')[0];
+    const id = this.extractGuidFromODataUrl(response);
     return id;
   }
 
@@ -69,8 +69,7 @@ export class OasisContactsService extends OasisResourceService {
       endpoint,
       contact,
     );
-    // TODO - break this out into helpers
-    const returnId = response.split('(')[1].split(')')[0];
+    const returnId = this.extractGuidFromODataUrl(response);
     return returnId;
   }
 

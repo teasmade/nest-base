@@ -89,7 +89,7 @@ export class OasisHttpService {
       );
       // If successful we get a 204 with the entity id in the header: odata-entityid
       if (response.status === 204) {
-        return response.headers['odata-entityid'] as string;
+        return (response?.headers['odata-entityid'] as string) ?? '';
       }
       return '';
     } catch (error) {

@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BaseExternalResourceQueryParamsDTO } from 'src/external-resources/common/dtos/base-query-params.dto';
 import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
 
 @Injectable()
 export abstract class OasisResourceService {
+  private readonly logger = new Logger(OasisResourceService.name);
+
   constructor() {}
 
   protected handleQueryParams<T extends BaseExternalResourceQueryParamsDTO>(
@@ -106,5 +108,46 @@ export abstract class OasisResourceService {
     }
 
     return paramsString;
+  }
+
+  private _validateGuid(guid: string): boolean {
+    // Standard GUID format: 8-4-4-4-12 hexadecimal characters
+    const guidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return guidRegex.test(guid);
+  }
+
+  /**
+   * Extracts the GUID from an OData response URL
+   * @param responseUrl - The OData response URL containing the GUID
+   * @returns The extracted GUID, or empty string if extraction fails
+   * @example
+   * // Input: "https://fasttrecette.crm4.dynamics.com/api/data/v9.2/accounts(9a702436-083b-f011-b4cc-7c1e5275f0e9)"
+   * // Output: "9a702436-083b-f011-b4cc-7c1e5275f0e9"
+   */
+  protected extractGuidFromODataUrl(responseUrl: string): string {
+    try {
+      const parts = responseUrl.split('(');
+      if (parts.length !== 2) {
+        this.logger.warn(`Invalid OData response URL format: ${responseUrl}`);
+        return '';
+      }
+
+      const guidPart = parts[1].split(')')[0];
+      if (!guidPart || !this._validateGuid(guidPart)) {
+        this.logger.warn(
+          `Invalid GUID format in OData response URL: ${responseUrl}`,
+        );
+        return '';
+      }
+
+      return guidPart;
+    } catch (error) {
+      this.logger.error(
+        `Failed to extract GUID from OData response URL: ${responseUrl}`,
+        error,
+      );
+      return '';
+    }
   }
 }

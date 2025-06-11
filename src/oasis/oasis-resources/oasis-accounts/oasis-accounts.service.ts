@@ -61,10 +61,8 @@ export class OasisAccountsService extends OasisResourceService {
       endpoint,
       accountToCreate,
     );
-    // Response example:
-    // https://fasttrecette.crm4.dynamics.com/api/data/v9.2/accounts(9a702436-083b-f011-b4cc-7c1e5275f0e9)
-    // we only want to return the id of the new account
-    const id = response.split('(')[1].split(')')[0];
+
+    const id = this.extractGuidFromODataUrl(response);
     return id;
   }
 
@@ -77,11 +75,8 @@ export class OasisAccountsService extends OasisResourceService {
       endpoint,
       account,
     );
-    // TODO - break this out into helpers
-    // Response example:
-    // https://fasttrecette.crm4.dynamics.com/api/data/v9.2/accounts(9a702436-083b-f011-b4cc-7c1e5275f0e9)
-    // we only want to return the id of the new account
-    const returnId = response.split('(')[1].split(')')[0];
+
+    const returnId = this.extractGuidFromODataUrl(response);
     return returnId;
   }
 }
