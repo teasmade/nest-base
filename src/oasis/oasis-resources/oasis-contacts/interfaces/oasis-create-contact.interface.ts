@@ -10,4 +10,5 @@ export interface OasisCreateContactBody {
   address1_postalcode: string;
   address1_country: string;
   birthdate: string;
+  'cap_agence_emploi_referenteId@odata.bind'?: string;
 }

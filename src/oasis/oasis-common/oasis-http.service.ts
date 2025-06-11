@@ -95,7 +95,7 @@ export class OasisHttpService {
     } catch (error) {
       console.error(
         'Error making PATCH request to OASIS:',
-        JSON.stringify(error),
+        JSON.stringify(error, null, 2),
       );
       throw new Error('Failed to make PATCH request to OASIS');
     }

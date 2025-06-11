@@ -1,3 +1,4 @@
+import { OasisBind } from '@oasis/oasis-common/decorators/oasis-input-bind.decorator';
 import {
   IsEmail,
   IsEnum,
@@ -101,4 +102,12 @@ export class CreateContactDto {
   dob: string;
   @Rename('dob')
   birthdate: string;
+
+  @IsString()
+  @IsOptional()
+  @ExposeForRename()
+  referring_agency_id: string;
+  @Rename('referring_agency_id')
+  @OasisBind('accounts')
+  'cap_agence_emploi_referenteId@odata.bind': string;
 }
