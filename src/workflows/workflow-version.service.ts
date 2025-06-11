@@ -39,7 +39,7 @@ export class WorkflowVersionService {
   async findOne(workflowId: string, id: string): Promise<WorkflowVersion> {
     const version = await this.versionRepository.findOne({
       where: { id, workflow: { id: workflowId } },
-      // relations: ['workflow', 'createdBy', 'updatedBy'],
+      relations: ['workflow'],
     });
 
     if (!version) {
