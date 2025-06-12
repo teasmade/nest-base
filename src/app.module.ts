@@ -11,6 +11,7 @@ import { dataSourceConfig } from './app.datasource';
 import { PartnersModule } from './external-resources/partners/partners.module';
 import { ContactsModule } from './external-resources/contacts/contacts.module';
 import { WorkflowsModule } from './workflows/workflows.module';
+import { DemandesModule } from './external-resources/demandes/demandes.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WorkflowsModule } from './workflows/workflows.module';
     PartnersModule,
     ContactsModule,
     WorkflowsModule,
+    DemandesModule,
   ],
   controllers: [AppController],
   providers: [

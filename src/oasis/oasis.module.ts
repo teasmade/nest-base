@@ -6,6 +6,7 @@ import { OasisAccountsService } from './oasis-resources/oasis-accounts/oasis-acc
 import { OasisAuthService } from './oasis-common/oasis-auth.service';
 import { OasisHttpService } from './oasis-common/oasis-http.service';
 import { OasisPaginationService } from './oasis-common/oasis-pagination.service';
+import { OasisIncidentsService } from './oasis-resources/oasis-incidents/oasis-incidents.service';
 
 @Module({
   imports: [HttpModule],
@@ -15,6 +16,7 @@ import { OasisPaginationService } from './oasis-common/oasis-pagination.service'
     OasisPaginationService,
     OasisContactsService,
     OasisAccountsService,
+    OasisIncidentsService,
   ],
   exports: [
     OasisAuthService,
@@ -22,6 +24,7 @@ import { OasisPaginationService } from './oasis-common/oasis-pagination.service'
     OasisPaginationService,
     OasisContactsService,
     OasisAccountsService,
+    OasisIncidentsService,
   ],
   controllers: [OasisController],
 })
