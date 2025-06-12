@@ -87,7 +87,12 @@ export class WorkflowController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
-    return this.workflowService.remove(id);
+    return this.workflowService.softRemove(id);
+  }
+
+  @Patch(':id/restore')
+  restore(@Param('id', new ParseUUIDPipe()) id: string): Promise<Workflow> {
+    return this.workflowService.restore(id);
   }
 
   // Get active version of a workflow

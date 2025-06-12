@@ -198,7 +198,7 @@ export class WorkflowService {
     });
   }
 
-  async remove(id: string): Promise<void> {
+  async softRemove(id: string): Promise<void> {
     const workflow = await this.findOne(id);
 
     if (!workflow) {
@@ -219,11 +219,59 @@ export class WorkflowService {
       );
     }
 
-    // Can delete if unpublished and no active version, even if there are published versions - TOCHECK - if so front should warn before sending delete request
     try {
-      await this.workflowRepository.remove(workflow);
+      // First soft remove all versions
+      const versions = await this.versionRepository.find({
+        where: { workflow: { id } },
+      });
+
+      for (const version of versions) {
+        await this.versionRepository.softRemove(version);
+      }
+
+      // Then soft remove the workflow
+      await this.workflowRepository.softRemove(workflow);
     } catch (error) {
-      // TODO: handle error in proper logging service, sentry etc.
+      console.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async restore(id: string): Promise<Workflow> {
+    const workflow = await this.workflowRepository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+
+    if (!workflow) {
+      throw new NotFoundException(`Workflow ${id} not found`);
+    }
+
+    if (!workflow.deletedAt) {
+      throw new BadRequestException(`Workflow ${id} is not deleted`);
+    }
+
+    try {
+      // First restore all versions
+      const versions = await this.versionRepository.find({
+        where: { workflow: { id } },
+        withDeleted: true,
+      });
+
+      for (const version of versions) {
+        if (version.deletedAt) {
+          await this.versionRepository.restore({ id: version.id });
+        }
+      }
+
+      // Then restore the workflow
+      await this.workflowRepository.restore({ id });
+
+      return this.workflowRepository.findOneOrFail({
+        where: { id },
+        relations: ['versions'],
+      });
+    } catch (error) {
       console.error(error);
       throw new InternalServerErrorException();
     }
