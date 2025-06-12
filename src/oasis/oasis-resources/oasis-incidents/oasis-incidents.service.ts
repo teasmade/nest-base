@@ -31,4 +31,18 @@ export class OasisIncidentsService extends OasisResourceService {
     );
     return response;
   }
+
+  public async getOne(
+    id: string,
+  ): Promise<PaginatedOasisResponse<OasisIncident>> {
+    const endpoint = `/incidents(${id})`;
+
+    const paramsString = `?$select=${OASIS_INCIDENT_SELECT_FIELDS.join(',')}`;
+
+    const response = await this.oasisHttpService.get<OasisIncident>(
+      `${endpoint}${paramsString}`,
+    );
+
+    return response;
+  }
 }

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { OasisIncidentsService } from 'src/oasis/oasis-resources/oasis-incidents/oasis-incidents.service';
-import { GetDemandesDto, GetDemandesQueryParamsDTO } from './dtos';
+import {
+  GetDemandeDto,
+  GetDemandesDto,
+  GetDemandesQueryParamsDTO,
+} from './dtos';
 import { plainToInstance } from 'class-transformer';
 import { ExternalResourceService } from '../common/base-services/external-resource.service';
 
@@ -10,7 +14,7 @@ export class DemandesService extends ExternalResourceService {
     super();
   }
 
-  public async getDemandes(
+  async getDemandes(
     getDemandesQueryParams?: GetDemandesQueryParamsDTO,
   ): Promise<GetDemandesDto> {
     const transformedQueryParams = plainToInstance(
@@ -26,6 +30,15 @@ export class DemandesService extends ExternalResourceService {
     return this.assignOasisResponseToTransformationDTO(
       oasisIncidents,
       GetDemandesDto,
+    );
+  }
+
+  async getDemande(id: string): Promise<GetDemandeDto> {
+    const oasisIncident = await this.oasisIncidentsService.getOne(id);
+
+    return this.assignOasisResponseToTransformationDTO(
+      oasisIncident,
+      GetDemandeDto,
     );
   }
 }
