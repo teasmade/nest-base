@@ -15,13 +15,13 @@ export class GetPartnersQueryParamsDTO extends BaseExternalResourceQueryParamsDT
   @IsOptional()
   @Type(() => Number)
   @IsEnum(AccountTypeCodes)
-  @OasisQueryParamTarget('cap_typedepointdegeolocalisationcode', 'filter')
+  @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
   filterType?: QueryParamComponent<AccountTypeCodes>;
 
   @IsOptional()
   @Type(() => Number)
   @IsEnum(AccountCategoryCodes)
-  @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
+  @OasisQueryParamTarget('cap_typedepointdegeolocalisationcode', 'filter')
   filterCategory?: QueryParamComponent<AccountCategoryCodes>;
 
   @IsOptional()
