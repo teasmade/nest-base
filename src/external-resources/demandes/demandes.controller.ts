@@ -12,6 +12,8 @@ import {
   GetDemandesQueryParamsDTO,
   GetDemandesDto,
   GetDemandeDto,
+  GetPartnerProximityQueryParamsDTO,
+  GetPartnerProximityDto,
 } from './dtos';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -30,5 +32,17 @@ export class DemandesController {
   @Get(':id')
   async getDemande(@Param('id') id: string): Promise<GetDemandeDto> {
     return this.demandesService.getDemande(id);
+  }
+
+  @Get(':id/partner-proximity')
+  async getDemandePartnerProximity(
+    @Param('id') id: string,
+    @Query(new ValidationPipe({ transform: true, whitelist: true }))
+    getPartnerProximityQueryParams?: GetPartnerProximityQueryParamsDTO,
+  ): Promise<GetPartnerProximityDto> {
+    return this.demandesService.getDemandePartnerProximity(
+      id,
+      getPartnerProximityQueryParams,
+    );
   }
 }

@@ -9,6 +9,7 @@ import {
   OasisAccount,
 } from './interfaces';
 import { OasisResourceService } from '@oasis/oasis-common/base-services/oasis-resource.service';
+import { BoundingBox } from 'geolocation-utils';
 
 @Injectable()
 export class OasisAccountsService extends OasisResourceService {
@@ -78,5 +79,26 @@ export class OasisAccountsService extends OasisResourceService {
 
     const returnId = this.extractGuidFromODataUrl(response);
     return returnId;
+  }
+
+  public async getInBoundingBox(
+    boundingBox: BoundingBox,
+  ): Promise<PaginatedOasisResponse<OasisAccount>> {
+    const endpoint = '/accounts';
+
+    // We need to round to 5 decimal places for OData ge le filters
+    const {
+      topLeft: { latitude: topLeftLat, longitude: topLeftLon },
+      bottomRight: { latitude: bottomRightLat, longitude: bottomRightLon },
+    } = boundingBox;
+
+    const filter = `address1_latitude ge ${bottomRightLat.toFixed(5)} and address1_latitude le ${topLeftLat.toFixed(5)} and address1_longitude ge ${topLeftLon.toFixed(5)} and address1_longitude le ${bottomRightLon.toFixed(5)}`;
+
+    const paramsString = `?$select=${OASIS_ACCOUNT_SELECT_FIELDS.join(',')}&$filter=${filter}`;
+
+    const response = await this.oasisHttpService.get<OasisAccount>(
+      `${endpoint}${paramsString}`,
+    );
+    return response;
   }
 }

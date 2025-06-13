@@ -10,12 +10,12 @@ interface OasisMetadata {
 }
 
 // For collection responses (array under value)
-interface OasisCollectionResponse<T> extends OasisMetadata {
+export interface OasisCollectionResponse<T> extends OasisMetadata {
   value: Array<T>;
 }
 
 // For single resource responses (metadata mixed with resource)
-type OasisSingleResponse<T> = OasisMetadata & T;
+export type OasisSingleResponse<T> = OasisMetadata & T;
 
 // Union type for both response patterns
 export type OasisResponse<T> =

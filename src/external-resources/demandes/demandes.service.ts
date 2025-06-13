@@ -4,6 +4,8 @@ import {
   GetDemandeDto,
   GetDemandesDto,
   GetDemandesQueryParamsDTO,
+  GetPartnerProximityQueryParamsDTO,
+  GetPartnerProximityDto,
 } from './dtos';
 import { plainToInstance } from 'class-transformer';
 import { ExternalResourceService } from '../common/base-services/external-resource.service';
@@ -39,6 +41,27 @@ export class DemandesService extends ExternalResourceService {
     return this.assignOasisResponseToTransformationDTO(
       oasisIncident,
       GetDemandeDto,
+    );
+  }
+
+  async getDemandePartnerProximity(
+    demandeId: string,
+    getPartnerProximityQueryParams?: GetPartnerProximityQueryParamsDTO,
+  ): Promise<GetPartnerProximityDto> {
+    const transformedQueryParams = plainToInstance(
+      GetPartnerProximityQueryParamsDTO,
+      getPartnerProximityQueryParams,
+      { groups: ['transform'] },
+    );
+
+    const oasisPartners = await this.oasisIncidentsService.getPartnerProximity(
+      demandeId,
+      transformedQueryParams,
+    );
+
+    return this.assignOasisResponseToTransformationDTO(
+      oasisPartners,
+      GetPartnerProximityDto,
     );
   }
 }
