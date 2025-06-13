@@ -28,6 +28,8 @@ export interface OasisAccount {
   'createdon@OData.Community.Display.V1.FormattedValue'?: string;
   modifiedon: string;
   'modifiedon@OData.Community.Display.V1.FormattedValue'?: string;
+  address1_latitude?: number;
+  address1_longitude?: number;
 }
 
 type NonODataFormattedOasisAccountKeys = keyof ExcludeODataValues<OasisAccount>;

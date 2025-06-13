@@ -83,6 +83,12 @@ export class OasisAccountToPartnerDto implements OasisAccount {
 
   @Expose({ name: 'updated_at_formatted' })
   'modifiedon@OData.Community.Display.V1.FormattedValue'?: string;
+
+  @Exclude()
+  address1_latitude?: number;
+
+  @Exclude()
+  address1_longitude?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -18,6 +18,8 @@ export const OASIS_ACCOUNT_SELECT_FIELDS = [
   '_cap_partenaireparentid_value',
   'createdon',
   'modifiedon',
+  'address1_latitude',
+  'address1_longitude',
 ] as const;
 
 export type OasisAccountSelectFields =
