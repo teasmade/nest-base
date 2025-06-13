@@ -6,6 +6,8 @@ export const OASIS_INCIDENT_SELECT_FIELDS = [
   '_cap_domaineid_value',
   'caseorigincode',
   '_customerid_value',
+  'cap_adresse_latitude',
+  'cap_adresse_longitude',
 ] as const;
 
 export type OasisIncidentSelectFields =

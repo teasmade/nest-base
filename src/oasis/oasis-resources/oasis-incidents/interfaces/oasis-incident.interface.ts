@@ -14,6 +14,8 @@ export interface OasisIncident {
   'caseorigincode@OData.Community.Display.V1.FormattedValue': string;
   '_customerid_value@OData.Community.Display.V1.FormattedValue': string;
   _customerid_value: string;
+  cap_adresse_latitude: number;
+  cap_adresse_longitude: number;
 }
 
 type NonODataFormattedOasisIncidentKeys =

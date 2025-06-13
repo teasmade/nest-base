@@ -40,4 +40,10 @@ export class OasisIncidentToDemandeDto implements OasisIncident {
 
   @Expose({ name: 'customer_name' })
   '_customerid_value@OData.Community.Display.V1.FormattedValue': string;
+
+  @Exclude()
+  cap_adresse_latitude: number;
+
+  @Exclude()
+  cap_adresse_longitude: number;
 }
