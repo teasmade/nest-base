@@ -5,23 +5,29 @@ export enum AccountTypeCodes {
   AssoMixte = 809020003,
 }
 
-const accountTypeConfig = {
-  Nationaux: {
-    code: 809020000,
+const accountTypeOptionSet = [
+  {
+    code: AccountTypeCodes.Nationaux,
     name: 'Partenaires nationaux',
   },
-  SansVoiture: {
-    code: 809020001,
+  {
+    code: AccountTypeCodes.SansVoiture,
     name: 'Partenaires sans voiture',
   },
-  Asso4Roues: {
-    code: 809020002,
+  {
+    code: AccountTypeCodes.Asso4Roues,
     name: 'Partenaires 4 roues associatif',
   },
-  AssoMixte: {
-    code: 809020003,
+  {
+    code: AccountTypeCodes.AssoMixte,
     name: 'Partenaires associatifs mixtes',
   },
+];
+
+const accountTypeConfig = {
+  targetOasisProperty: 'cap_typedepartenairepointgeocode',
+  paramName: 'filterType',
+  optionSet: accountTypeOptionSet,
 };
 
 export enum AccountCategoryCodes {
@@ -31,29 +37,107 @@ export enum AccountCategoryCodes {
   ReparationVehicule = 809020003,
 }
 
-const accountCategoryConfig = {
-  ReparationRenault: {
-    code: 809020006,
+const accountCategoryOptionSet = [
+  {
+    code: AccountCategoryCodes.ReparationRenault,
     name: 'Réparation de véhicule Renault',
   },
-  Permis: {
-    code: 809020005,
+  {
+    code: AccountCategoryCodes.Permis,
     name: 'Permis de conduire',
   },
-  LocationVehicule: {
-    code: 809020004,
+  {
+    code: AccountCategoryCodes.LocationVehicule,
     name: 'Location de véhicule',
   },
-  ReparationVehicule: {
-    code: 809020003,
+  {
+    code: AccountCategoryCodes.ReparationVehicule,
     name: 'Réparation de véhicule',
   },
+];
+
+const accountCategoryConfig = {
+  targetOasisProperty: 'cap_typedepointdegeolocalisationcode',
+  paramName: 'filterCategory',
+  optionSet: accountCategoryOptionSet,
 };
+
+export enum VehicleTypeCodes {
+  DRM_TAXI = 809020011,
+  DRM_VELO = 809020010,
+  DRM_VELO_TAXI = 809020009,
+  DRM = 809020001,
+  TAXI = 809020013,
+  VELO = 809020002,
+  VELO_TAXI = 809020012,
+  VOITURE = 809020000,
+  VOITURE_DRM = 809020003,
+  VOITURE_DRM_TAXI = 809020006,
+  VOITURE_DRM_VELO = 809020004,
+  VOITURE_DRM_VELO_TAXI = 809020005,
+  VOITURE_TAXI = 809020008,
+}
+
+const vehicleTypeOptionSet = [
+  {
+    code: VehicleTypeCodes.DRM_TAXI,
+    name: '2 roues motorisées et taxi collectif',
+  },
+  {
+    code: VehicleTypeCodes.DRM_VELO,
+    name: '2 roues motorisées et vélo',
+  },
+  {
+    code: VehicleTypeCodes.DRM_VELO_TAXI,
+    name: '2 roues motorisées et vélo et taxi collectif',
+  },
+
+  {
+    code: VehicleTypeCodes.DRM,
+    name: '2 roues motorisés',
+  },
+  {
+    code: VehicleTypeCodes.TAXI,
+    name: 'Taxi collectif',
+  },
+  {
+    code: VehicleTypeCodes.VELO,
+    name: 'Vélo',
+  },
+  {
+    code: VehicleTypeCodes.VELO_TAXI,
+    name: 'Vélo et taxi collectif',
+  },
+  {
+    code: VehicleTypeCodes.VOITURE,
+    name: 'Voiture',
+  },
+  {
+    code: VehicleTypeCodes.VOITURE_DRM,
+    name: 'Voiture et 2 roues motorisées',
+  },
+  {
+    code: VehicleTypeCodes.VOITURE_DRM_TAXI,
+    name: 'Voiture et 2 roues motorisées et taxi collectif',
+  },
+  {
+    code: VehicleTypeCodes.VOITURE_DRM_VELO,
+    name: 'Voiture et 2 roues motorisées et vélo',
+  },
+  {
+    code: VehicleTypeCodes.VOITURE_DRM_VELO_TAXI,
+    name: 'Voiture et 2 roues motorisées et vélo et taxi collectif',
+  },
+  {
+    code: VehicleTypeCodes.VOITURE_TAXI,
+    name: 'Voiture et taxi collectif',
+  },
+];
 
 // Exporting config object with account types and categories under partners key for use in client
 export const partnersConfig = {
   partners: {
-    PartnerTypes: accountTypeConfig,
-    PartnerCategories: accountCategoryConfig,
+    types: accountTypeConfig,
+    categories: accountCategoryConfig,
   },
 };

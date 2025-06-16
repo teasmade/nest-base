@@ -4,23 +4,29 @@ export enum ContactTypeCodes {
   PartnerContact = 809020002,
 }
 
-const contactTypeConfig = {
-  InterimWorker: {
-    code: 809020000,
+const contactTypeOptionSet = [
+  {
+    code: ContactTypeCodes.InterimWorker,
     name: 'Intérimaire',
   },
-  AgencyContact: {
-    code: 809020001,
+  {
+    code: ContactTypeCodes.AgencyContact,
     name: 'Contact Agence',
   },
-  PartnerContact: {
-    code: 809020002,
+  {
+    code: ContactTypeCodes.PartnerContact,
     name: 'Contact Partenaire',
   },
+];
+
+const contactTypeConfig = {
+  targetOasisProperty: 'cap_type_contact_code',
+  paramName: 'filterType',
+  optionSet: contactTypeOptionSet,
 };
 
 export const contactsConfig = {
   contacts: {
-    ContactTypes: contactTypeConfig,
+    types: contactTypeConfig,
   },
 };
