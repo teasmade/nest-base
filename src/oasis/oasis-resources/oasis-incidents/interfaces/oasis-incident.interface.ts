@@ -1,4 +1,4 @@
-import { ExcludeODataValues } from 'src/oasis/oasis-common/utils/oasis-utility-types';
+import { ExcludeODataFields } from 'src/oasis/oasis-common/utils/oasis-utility-types';
 import { OasisIncidentSelectFields } from '../oasis-incidents.constants';
 
 export interface OasisIncident {
@@ -18,16 +18,15 @@ export interface OasisIncident {
   cap_adresse_longitude: number;
 }
 
-type NonODataFormattedOasisIncidentKeys =
-  keyof ExcludeODataValues<OasisIncident>;
+type NonSelectableOasisIncidentKeys = keyof ExcludeODataFields<OasisIncident>;
 
 type _AssertKeysSelectFieldsMatch =
-  NonODataFormattedOasisIncidentKeys extends OasisIncidentSelectFields
+  NonSelectableOasisIncidentKeys extends OasisIncidentSelectFields
     ? true
     : {
         error: 'OasisIncidentSelectFields array is missing fields from OasisIncident interface';
         missingFields: Exclude<
-          NonODataFormattedOasisIncidentKeys,
+          NonSelectableOasisIncidentKeys,
           OasisIncidentSelectFields
         >;
       };

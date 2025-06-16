@@ -88,7 +88,49 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   address1_latitude?: number;
 
   @Exclude()
+  'address1_latitude@OData.Community.Display.V1.FormattedValue'?: string;
+
+  @Exclude()
   address1_longitude?: number;
+
+  @Exclude()
+  'address1_longitude@OData.Community.Display.V1.FormattedValue'?: string;
+
+  @Expose({ name: 'vehicle_type_code' })
+  cap_typevehiculecode: number | null;
+
+  @Expose({ name: 'vehicle_type' })
+  'cap_typevehiculecode@OData.Community.Display.V1.FormattedValue'?: string;
+
+  @Expose({ name: 'opening_hours' })
+  cap_horairesdouverture: string;
+
+  @Expose({ name: 'max_car_price' })
+  cap_coutmaximumvoiture: number;
+
+  @Expose({ name: 'max_bike_price' })
+  cap_coutmaximum2roues: number;
+
+  @Expose({ name: 'car_deposit' })
+  cap_montantcautionvoiture: number;
+
+  @Expose({ name: 'bike_deposit' })
+  cap_montantcaution2roues: number;
+
+  @Exclude()
+  _transactioncurrencyid_value: string;
+
+  @Exclude()
+  '_transactioncurrencyid_value@OData.Community.Display.V1.FormattedValue'?: string;
+
+  @Expose({ name: 'zone_of_intervention' })
+  cap_zonedintervention: string;
+
+  @Expose({ name: 'unavailable_start_date' })
+  cap_date_debut_indisponibilite: string;
+
+  @Expose({ name: 'unavailable_end_date' })
+  cap_date_fin_indisponibilite: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

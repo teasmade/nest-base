@@ -1,14 +1,18 @@
-/***
- * Utility type used to exclude OData values from an interface.
+/**
+ * Utility type used to exclude specificOData fields from an interface.
  * This is used in type assertions to ensure that the interface we use
  * to type the response from OASIS corresponds with the values we use
  * to build the select query params.
+ * @remarks Excludes all `@odata.context`, `@odata.etag`, and `@OData.Community.Display.V1.FormattedValue` fields.
+ * @param T The type to exclude fields from
+ * @param AdditionalFields Additional fields to exclude beyond the standard OData fields
  */
-export type ExcludeODataValues<T> = {
+export type ExcludeODataFields<T, AdditionalFields extends string = never> = {
   [K in keyof T as K extends
     | '@odata.etag'
     | '@odata.context'
     | `${string}@OData.Community.Display.V1.FormattedValue`
+    | AdditionalFields
     ? never
     : K]: T[K];
 };

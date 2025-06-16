@@ -20,6 +20,15 @@ export const OASIS_ACCOUNT_SELECT_FIELDS = [
   'modifiedon',
   'address1_latitude',
   'address1_longitude',
+  'cap_typevehiculecode',
+  'cap_horairesdouverture',
+  'cap_coutmaximumvoiture',
+  'cap_coutmaximum2roues',
+  'cap_montantcautionvoiture',
+  'cap_montantcaution2roues',
+  'cap_zonedintervention',
+  'cap_date_debut_indisponibilite',
+  'cap_date_fin_indisponibilite',
 ] as const;
 
 export type OasisAccountSelectFields =

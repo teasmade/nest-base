@@ -1,4 +1,4 @@
-import { ExcludeODataValues } from 'src/oasis/oasis-common/utils/oasis-utility-types';
+import { ExcludeODataFields } from 'src/oasis/oasis-common/utils/oasis-utility-types';
 import { OasisAccountSelectFields } from '../oasis-accounts.constants';
 
 export interface OasisAccount {
@@ -29,19 +29,38 @@ export interface OasisAccount {
   modifiedon: string;
   'modifiedon@OData.Community.Display.V1.FormattedValue'?: string;
   address1_latitude?: number;
+  'address1_latitude@OData.Community.Display.V1.FormattedValue'?: string;
   address1_longitude?: number;
+  'address1_longitude@OData.Community.Display.V1.FormattedValue'?: string;
+  cap_typevehiculecode: number | null;
+  'cap_typevehiculecode@OData.Community.Display.V1.FormattedValue'?: string;
+  cap_horairesdouverture: string;
+  cap_coutmaximumvoiture: number;
+  cap_coutmaximum2roues: number;
+  cap_montantcautionvoiture: number;
+  cap_montantcaution2roues: number;
+  // Cost and caution fields trigger currency fields being included in the response by Dynamics
+  // The base currencyid_value field is manually excluded in the ExcludeODataFields utility type
+  _transactioncurrencyid_value?: string;
+  '_transactioncurrencyid_value@OData.Community.Display.V1.FormattedValue'?: string;
+  cap_zonedintervention: string;
+  cap_date_debut_indisponibilite: string;
+  cap_date_fin_indisponibilite: string;
 }
 
-type NonODataFormattedOasisAccountKeys = keyof ExcludeODataValues<OasisAccount>;
+type NonSelectableOasisAccountKeys = keyof ExcludeODataFields<
+  OasisAccount,
+  '_transactioncurrencyid_value'
+>;
 
 // Assert that the keys of the OasisAccount interface match the values in the OasisAccountSelectFields array
 type _AssertKeysSelectFieldsMatch =
-  NonODataFormattedOasisAccountKeys extends OasisAccountSelectFields
+  NonSelectableOasisAccountKeys extends OasisAccountSelectFields
     ? true
     : {
         error: 'OasisAccountSelectFields array is missing fields from OasisAccount interface';
         missingFields: Exclude<
-          NonODataFormattedOasisAccountKeys,
+          NonSelectableOasisAccountKeys,
           OasisAccountSelectFields
         >;
       };

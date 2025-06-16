@@ -1,4 +1,4 @@
-import { ExcludeODataValues } from 'src/oasis/oasis-common/utils/oasis-utility-types';
+import { ExcludeODataFields } from 'src/oasis/oasis-common/utils/oasis-utility-types';
 import { OasisContactSelectFields } from '../oasis-contacts.constants';
 
 export interface OasisContact {
@@ -31,17 +31,17 @@ export interface OasisContact {
   'address1_latitude@OData.Community.Display.V1.FormattedValue'?: string;
 }
 
-type NonODataFormattedOasisContactKeys = keyof ExcludeODataValues<OasisContact>;
+type NonSelectableOasisContactKeys = keyof ExcludeODataFields<OasisContact>;
 
 // Assert that the keys of the OasisContact interface match the values in the OasisContactSelectFields array, excluding the OData.Community.Display.V1.FormattedValue fields
 // This allows us to enforce the interface we use to type the response from OASIS with the values we use to build the select query params when we get contacts.
 type _AssertKeysSelectFieldsMatch =
-  NonODataFormattedOasisContactKeys extends OasisContactSelectFields
+  NonSelectableOasisContactKeys extends OasisContactSelectFields
     ? true
     : {
         error: 'OasisContactSelectFields array is missing fields from OasisContact interface';
         missingFields: Exclude<
-          NonODataFormattedOasisContactKeys,
+          NonSelectableOasisContactKeys,
           OasisContactSelectFields
         >;
       };
