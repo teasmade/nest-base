@@ -132,29 +132,57 @@ export class OasisIncidentsService extends OasisResourceService {
       longitude = longContact;
     }
 
-    const boxMarginMetres = 5000;
-
     if (!latitude || !longitude) {
       throw new NotFoundException('Centre point not determinable');
     }
 
     const centrePoint = { latitude, longitude };
+    const initialBoxMarginMetres = 1500;
+    const maxBoxMarginMetres = 12000;
+    const minRequiredPartners = 3;
 
-    const partnersInBoundingBox = await this._getPartnersInBoundingBox(
+    return this._findPartnersWithProximity(
       centrePoint,
-      boxMarginMetres,
+      initialBoxMarginMetres,
+      maxBoxMarginMetres,
+      minRequiredPartners,
+      postalCodeContact,
+      proximityTarget,
       getPartnerProximityQueryParams,
     );
+  }
 
-    // TODO add params for geoloc and partner type / category
-    // TODO - add in type of rental offered property to partner model
+  private async _findPartnersWithProximity(
+    centrePoint: { latitude: number; longitude: number },
+    currentBoxMarginMetres: number,
+    maxBoxMarginMetres: number,
+    minRequiredPartners: number,
+    postalCodeContact: string,
+    proximityTarget: ProximityTarget,
+    getPartnerProximityQueryParams: GetPartnerProximityQueryParamsDTO,
+  ): Promise<PaginatedOasisResponse<OasisAccountWithProximity>> {
+    const partnersInBoundingBox = await this._getPartnersInBoundingBox(
+      centrePoint,
+      currentBoxMarginMetres,
+      getPartnerProximityQueryParams,
+    );
 
     const partners =
       partnersInBoundingBox.data as OasisCollectionResponse<OasisAccount>;
 
     if (!partners?.value?.length) {
-      // TODO: up the bounding box and search again
-      return partnersInBoundingBox as PaginatedOasisResponse<OasisAccountWithProximity>;
+      if (currentBoxMarginMetres > maxBoxMarginMetres) {
+        return partnersInBoundingBox as PaginatedOasisResponse<OasisAccountWithProximity>;
+      }
+      return this._findPartnersWithProximity(
+        centrePoint,
+        currentBoxMarginMetres * 2,
+        maxBoxMarginMetres,
+        minRequiredPartners,
+        postalCodeContact,
+        proximityTarget,
+        getPartnerProximityQueryParams,
+      );
     }
 
     const validPartners = this._classifyValidPartners(
@@ -164,20 +192,28 @@ export class OasisIncidentsService extends OasisResourceService {
       proximityTarget,
     );
 
-    const partnersWithDistanceResponse = {
+    if (
+      validPartners.length < minRequiredPartners &&
+      currentBoxMarginMetres <= maxBoxMarginMetres
+    ) {
+      return this._findPartnersWithProximity(
+        centrePoint,
+        currentBoxMarginMetres * 2,
+        maxBoxMarginMetres,
+        minRequiredPartners,
+        postalCodeContact,
+        proximityTarget,
+        getPartnerProximityQueryParams,
+      );
+    }
+
+    return {
       ...partnersInBoundingBox,
       data: {
         ...partnersInBoundingBox.data,
         value: validPartners,
       },
-    };
-
-    return partnersWithDistanceResponse as PaginatedOasisResponse<OasisAccountWithProximity>;
-
-    // TODO: update partners to return lat / long
-    // TODO: call partners service with contact lat/long params + partner type
-    // TODO: private method for distance calculation
-    // TODO: return partners with distance
+    } as PaginatedOasisResponse<OasisAccountWithProximity>;
   }
 
   // NB: we don't want to accept a location array here, even though the geoloc library could handle it. This ensure we only ever calculate the bounding box around a single point.
