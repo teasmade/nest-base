@@ -10,8 +10,14 @@ import {
   OasisCollectionResponse,
   OasisSingleResponse,
 } from '@oasis/oasis-common/interfaces/oasis-response.interface';
-import { GetPartnerProximityQueryParamsDTO } from 'src/external-resources/demandes/dtos/get-partner-proximity-query-params.dto';
-import { OasisAccount } from '@oasis/oasis-resources/oasis-accounts/interfaces';
+import {
+  GetPartnerProximityQueryParamsDTO,
+  ProximityTarget,
+} from 'src/external-resources/demandes/dtos';
+import {
+  OasisAccount,
+  OasisAccountWithProximity,
+} from '@oasis/oasis-resources/oasis-accounts/interfaces';
 import { OasisContact } from '../oasis-contacts/interfaces/oasis-contact.interface';
 import { OasisAccountsService } from '../oasis-accounts/oasis-accounts.service';
 import { distanceTo, getBoundingBox } from 'geolocation-utils';
@@ -63,10 +69,10 @@ export class OasisIncidentsService extends OasisResourceService {
   public async getPartnerProximity(
     demandeId: string,
     getPartnerProximityQueryParams: GetPartnerProximityQueryParamsDTO,
-  ): Promise<PaginatedOasisResponse<OasisAccount & { distance: number }>> {
+  ): Promise<PaginatedOasisResponse<OasisAccountWithProximity>> {
     const incidentId = demandeId;
 
-    const { missionCentered, ...partnerQueryParams } =
+    const { proximityTarget, ...partnerQueryParams } =
       getPartnerProximityQueryParams;
 
     const incident = (await this.getOne(incidentId))
@@ -82,7 +88,7 @@ export class OasisIncidentsService extends OasisResourceService {
       throw new NotFoundException('Incident has no associated contact ID');
     }
 
-    if (missionCentered) {
+    if (proximityTarget === ProximityTarget.MISSION) {
       const {
         cap_adresse_latitude: latMission,
         cap_adresse_longitude: longMission,
@@ -134,9 +140,7 @@ export class OasisIncidentsService extends OasisResourceService {
 
     if (!partners?.value?.length) {
       // TODO: up the bounding box and search again
-      return partnersInBoundingBox as PaginatedOasisResponse<
-        OasisAccount & { distance: number }
-      >;
+      return partnersInBoundingBox as PaginatedOasisResponse<OasisAccountWithProximity>;
     }
 
     const validPartners = this._classifyValidPartners(
@@ -154,9 +158,7 @@ export class OasisIncidentsService extends OasisResourceService {
       },
     };
 
-    return partnersWithDistanceResponse as PaginatedOasisResponse<
-      OasisAccount & { distance: number }
-    >;
+    return partnersWithDistanceResponse as PaginatedOasisResponse<OasisAccountWithProximity>;
 
     // TODO: update partners to return lat / long
     // TODO: call partners service with contact lat/long params + partner type
@@ -214,11 +216,11 @@ export class OasisIncidentsService extends OasisResourceService {
         { lat: latPartner, lon: longPartner },
       );
       // round to integer
-      return { ...partner, distance: Math.round(distance) };
+      return { ...partner, proximity: Math.round(distance) };
     });
 
     const sortedClassifiedPartners = classifiedPartners.sort((a, b) => {
-      return a.distance - b.distance;
+      return a.proximity - b.proximity;
     });
 
     return sortedClassifiedPartners;

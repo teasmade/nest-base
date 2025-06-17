@@ -8,6 +8,11 @@ import {
 } from '@oasis/oasis-common/enums/accounts.enum';
 import { Type } from 'class-transformer';
 
+export enum ProximityTarget {
+  MISSION = 'mission',
+  DOMICILE = 'domicile',
+}
+
 // NB: we're not extending BaseExternalResourceQueryParamsDTO because we don't want to accept pagination params - proximity comprises a range of calls to different Oasis services and the addition of our own calculalted values; this means we can't use OData generated pagination links.
 export class GetPartnerProximityQueryParamsDTO {
   @IsNotEmpty()
@@ -29,6 +34,6 @@ export class GetPartnerProximityQueryParamsDTO {
   partnerFilterVehicleType?: QueryParamComponent<VehicleTypeCodes>;
 
   @IsOptional()
-  @IsBoolean()
-  missionCentered?: boolean = false;
+  @IsEnum(ProximityTarget)
+  proximityTarget?: ProximityTarget = ProximityTarget.DOMICILE;
 }
