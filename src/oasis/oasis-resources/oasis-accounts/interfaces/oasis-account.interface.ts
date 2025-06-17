@@ -67,3 +67,10 @@ type _AssertKeysSelectFieldsMatch =
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _test: _AssertKeysSelectFieldsMatch = true;
+
+export interface OasisAccountProximity {
+  proximity: number;
+  proximityTarget: 'mission' | 'domicile';
+}
+
+export type OasisAccountWithProximity = OasisAccount & OasisAccountProximity;
