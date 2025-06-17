@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsBoolean, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
 import { OasisQueryParamTarget } from 'src/external-resources/common/decorators';
 import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
 import {
@@ -35,5 +35,5 @@ export class GetPartnerProximityQueryParamsDTO {
 
   @IsOptional()
   @IsEnum(ProximityTarget)
-  proximityTarget?: ProximityTarget = ProximityTarget.DOMICILE;
+  proximityTarget: ProximityTarget = ProximityTarget.DOMICILE;
 }

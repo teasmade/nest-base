@@ -1,5 +1,6 @@
 import { Expose } from 'class-transformer';
 import { OasisAccountToPartnerDto } from 'src/external-resources/partners/dtos/oasis-account-to-partner.dto';
+import { ProximityTarget } from './get-partner-proximity-query-params.dto';
 
 /**
  * DTO used to transform Oasis account to partner with distance.
@@ -10,5 +11,5 @@ export class OasisAccountToPartnerWithDistanceDto extends OasisAccountToPartnerD
   proximity: number;
 
   @Expose({ name: 'proximity_target' })
-  proximityTarget: 'mission' | 'domicile';
+  proximityTarget: ProximityTarget = ProximityTarget.DOMICILE;
 }
