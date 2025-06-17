@@ -134,10 +134,17 @@ const vehicleTypeOptionSet = [
   },
 ];
 
+const vehicleTypeConfig = {
+  targetOasisProperty: 'cap_typevehiculecode',
+  paramName: 'filterVehicleType',
+  optionSet: vehicleTypeOptionSet,
+};
+
 // Exporting config object with account types and categories under partners key for use in client
 export const partnersConfig = {
   partners: {
     types: accountTypeConfig,
     categories: accountCategoryConfig,
+    vehicleTypes: vehicleTypeConfig,
   },
 };

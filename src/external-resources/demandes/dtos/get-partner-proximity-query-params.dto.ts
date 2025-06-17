@@ -4,6 +4,7 @@ import { QueryParamComponent } from 'src/external-resources/common/types/query-p
 import {
   AccountCategoryCodes,
   AccountTypeCodes,
+  VehicleTypeCodes,
 } from '@oasis/oasis-common/enums/accounts.enum';
 import { Type } from 'class-transformer';
 
@@ -20,6 +21,12 @@ export class GetPartnerProximityQueryParamsDTO {
   @IsEnum(AccountTypeCodes)
   @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
   partnerFilterType?: QueryParamComponent<AccountTypeCodes>;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsEnum(VehicleTypeCodes)
+  @OasisQueryParamTarget('cap_typevehiculecode', 'filter')
+  partnerFilterVehicleType?: QueryParamComponent<VehicleTypeCodes>;
 
   @IsOptional()
   @IsBoolean()
