@@ -164,7 +164,7 @@ export class OasisHttpService {
     const basePrefer =
       'odata.include-annotations=OData.Community.Display.V1.FormattedValue';
     return pageSize
-      ? `${basePrefer}, odata.maxpagesize=${pageSize}`
+      ? `${basePrefer}, odata.maxpagesize=${pageSize.toString()}`
       : basePrefer;
   }
 

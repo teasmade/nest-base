@@ -10,6 +10,7 @@ import {
 } from './interfaces';
 import { OasisResourceService } from '@oasis/oasis-common/base-services/oasis-resource.service';
 import { BoundingBox } from 'geolocation-utils';
+import { GetPartnerProximityQueryParamsDTO } from 'src/external-resources/demandes/dtos';
 
 @Injectable()
 export class OasisAccountsService extends OasisResourceService {
@@ -83,8 +84,20 @@ export class OasisAccountsService extends OasisResourceService {
 
   public async getInBoundingBox(
     boundingBox: BoundingBox,
+    partnerQueryParams: Exclude<
+      GetPartnerProximityQueryParamsDTO,
+      'missionCentered'
+    >,
   ): Promise<PaginatedOasisResponse<OasisAccount>> {
     const endpoint = '/accounts';
+
+    const { partnerFilterType, partnerFilterCategory } = partnerQueryParams;
+
+    let partnerFilter = `${partnerFilterCategory.target} eq ${partnerFilterCategory.value}`;
+
+    if (partnerFilterType) {
+      partnerFilter += ` and ${partnerFilterType.target} eq ${partnerFilterType.value}`;
+    }
 
     // We need to round to 5 decimal places for OData ge le filters
     const {
@@ -92,12 +105,14 @@ export class OasisAccountsService extends OasisResourceService {
       bottomRight: { latitude: bottomRightLat, longitude: bottomRightLon },
     } = boundingBox;
 
-    const filter = `address1_latitude ge ${bottomRightLat.toFixed(5)} and address1_latitude le ${topLeftLat.toFixed(5)} and address1_longitude ge ${topLeftLon.toFixed(5)} and address1_longitude le ${bottomRightLon.toFixed(5)}`;
+    const geoFilter = `address1_latitude ge ${bottomRightLat.toFixed(5)} and address1_latitude le ${topLeftLat.toFixed(5)} and address1_longitude ge ${topLeftLon.toFixed(5)} and address1_longitude le ${bottomRightLon.toFixed(5)}`;
 
-    const paramsString = `?$select=${OASIS_ACCOUNT_SELECT_FIELDS.join(',')}&$filter=${filter}`;
+    // TODO - define the set of fields we need for a proximity query
+    const paramsString = `?$select=${OASIS_ACCOUNT_SELECT_FIELDS.join(',')}&$filter=${geoFilter} and ${partnerFilter}`;
 
     const response = await this.oasisHttpService.get<OasisAccount>(
       `${endpoint}${paramsString}`,
+      100,
     );
     return response;
   }

@@ -66,7 +66,8 @@ export class OasisIncidentsService extends OasisResourceService {
   ): Promise<PaginatedOasisResponse<OasisAccount & { distance: number }>> {
     const incidentId = demandeId;
 
-    const { missionCentered, partnerType } = getPartnerProximityQueryParams;
+    const { missionCentered, ...partnerQueryParams } =
+      getPartnerProximityQueryParams;
 
     const incident = (await this.getOne(incidentId))
       .data as OasisSingleResponse<OasisIncident>;
@@ -102,23 +103,31 @@ export class OasisIncidentsService extends OasisResourceService {
       throw new NotFoundException('Contact not found');
     }
 
-    const { address1_latitude: latContact, address1_longitude: longContact } =
-      contact;
+    const {
+      address1_latitude: latContact,
+      address1_longitude: longContact,
+      address1_postalcode: postalCodeContact,
+    } = contact;
 
     if (!latContact || !longContact) {
       throw new NotFoundException('Contact has no associated geoloc');
     }
 
-    const boxMarginMetres = 2500;
+    if (!postalCodeContact) {
+      throw new NotFoundException('Contact has no associated postal code');
+    }
+
+    const boxMarginMetres = 5000;
 
     const partnersInBoundingBox = await this._getPartnersInBoundingBox(
       latContact,
       longContact,
       boxMarginMetres,
+      partnerQueryParams,
     );
 
     // TODO add params for geoloc and partner type / category
-    // const partnersResponse = await this.oasisAccountsService.get();
+    // TODO - add in type of rental offered property to partner model
 
     const partners =
       partnersInBoundingBox.data as OasisCollectionResponse<OasisAccount>;
@@ -130,27 +139,18 @@ export class OasisIncidentsService extends OasisResourceService {
       >;
     }
 
-    const partnersWithDistance = partners.value.map((partner: OasisAccount) => {
-      const { address1_latitude: latPartner, address1_longitude: longPartner } =
-        partner;
-
-      if (!latPartner || !longPartner) {
-        return partner;
-      }
-
-      const distance = distanceTo(
-        { lat: latContact, lon: longContact },
-        { lat: latPartner, lon: longPartner },
-      );
-      // round to integer
-      return { ...partner, distance: Math.round(distance) };
-    });
+    const validPartners = this._classifyValidPartners(
+      latContact,
+      longContact,
+      partners,
+      postalCodeContact,
+    );
 
     const partnersWithDistanceResponse = {
       ...partnersInBoundingBox,
       data: {
         ...partnersInBoundingBox.data,
-        value: partnersWithDistance,
+        value: validPartners,
       },
     };
 
@@ -164,19 +164,63 @@ export class OasisIncidentsService extends OasisResourceService {
     // TODO: return partners with distance
   }
 
+  // NB: we don't want to accept a location array here, even though the geoloc library could handle it. This ensure we only ever calculate the bounding box around a single point.
   private async _getPartnersInBoundingBox(
     lat: number,
     lon: number,
     marginMetres: number,
+    partnerQueryParams: Exclude<
+      GetPartnerProximityQueryParamsDTO,
+      'missionCentered'
+    >,
   ) {
     const boundingBox = getBoundingBox(
       [{ latitude: lat, longitude: lon }],
       marginMetres,
     );
 
-    const partners =
-      await this.oasisAccountsService.getInBoundingBox(boundingBox);
+    const partners = await this.oasisAccountsService.getInBoundingBox(
+      boundingBox,
+      partnerQueryParams,
+    );
 
     return partners;
+  }
+
+  private _classifyValidPartners(
+    latContact: number,
+    longContact: number,
+    partners: OasisCollectionResponse<OasisAccount>,
+    postalCodeContact: string,
+  ) {
+    const classifiedPartners = partners.value.flatMap((partner) => {
+      // Exclude partners not in the same department
+      const { address1_postalcode: postalCodePartner } = partner;
+      if (postalCodePartner.slice(0, 2) !== postalCodeContact.slice(0, 2)) {
+        return [];
+      }
+
+      // Exclude partners without geoloc
+      const { address1_latitude: latPartner, address1_longitude: longPartner } =
+        partner;
+
+      if (!latPartner || !longPartner) {
+        return [];
+      }
+
+      // Calculate distance between contact and partner
+      const distance = distanceTo(
+        { lat: latContact, lon: longContact },
+        { lat: latPartner, lon: longPartner },
+      );
+      // round to integer
+      return { ...partner, distance: Math.round(distance) };
+    });
+
+    const sortedClassifiedPartners = classifiedPartners.sort((a, b) => {
+      return a.distance - b.distance;
+    });
+
+    return sortedClassifiedPartners;
   }
 }

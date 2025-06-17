@@ -1,4 +1,3 @@
-import { BaseExternalResourceQueryParamsDTO } from 'src/external-resources/common/dtos/base-query-params.dto';
 import { IsNotEmpty, IsOptional, IsBoolean, IsEnum } from 'class-validator';
 import { OasisQueryParamTarget } from 'src/external-resources/common/decorators';
 import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
@@ -8,17 +7,19 @@ import {
 } from '@oasis/oasis-common/enums/accounts.enum';
 import { Type } from 'class-transformer';
 
-export class GetPartnerProximityQueryParamsDTO extends BaseExternalResourceQueryParamsDTO {
+// NB: we're not extending BaseExternalResourceQueryParamsDTO because we don't want to accept pagination params - proximity comprises a range of calls to different Oasis services and the addition of our own calculalted values; this means we can't use OData generated pagination links.
+export class GetPartnerProximityQueryParamsDTO {
   @IsNotEmpty()
   @Type(() => Number)
   @IsEnum(AccountCategoryCodes)
-  partnerCategory: QueryParamComponent<string>;
+  @OasisQueryParamTarget('cap_typedepointdegeolocalisationcode', 'filter')
+  partnerFilterCategory: QueryParamComponent<AccountCategoryCodes>;
 
   @IsOptional()
   @Type(() => Number)
   @IsEnum(AccountTypeCodes)
   @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
-  partnerType?: QueryParamComponent<string>;
+  partnerFilterType?: QueryParamComponent<AccountTypeCodes>;
 
   @IsOptional()
   @IsBoolean()
