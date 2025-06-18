@@ -1,6 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { BaseExternalResourceQueryParamsDTO } from 'src/external-resources/common/dtos/base-query-params.dto';
-import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
+import {
+  QueryParamComponent,
+  QueryParamComponentType,
+} from 'src/external-resources/common/types/query-param-component.type';
+
+const VALID_QUERY_PARAM_COMPONENT_TYPES: QueryParamComponentType[] = [
+  'filter',
+  'search',
+  'orderby',
+];
 
 @Injectable()
 export abstract class OasisResourceService {
@@ -9,7 +18,7 @@ export abstract class OasisResourceService {
   constructor() {}
 
   protected handleQueryParams<T extends BaseExternalResourceQueryParamsDTO>(
-    queryParams: T,
+    domainQueryParams: T,
     selectFields: readonly string[],
   ): {
     pageSize?: number;
@@ -17,9 +26,10 @@ export abstract class OasisResourceService {
     direction?: 'next' | 'prev';
     paramsString?: string;
   } {
-    const { pageSize, paginationSessionId, direction, ...params } = queryParams;
+    const { pageSize, paginationSessionId, direction, ...otherDomainParams } =
+      domainQueryParams;
 
-    const paramsComponents = Object.values(params).filter(
+    const paramsComponents = Object.values(otherDomainParams).filter(
       (param) => param !== undefined,
     ) as QueryParamComponent<string>[];
 
@@ -44,14 +54,19 @@ export abstract class OasisResourceService {
     let filterString = '';
     let searchString = '';
 
+    const validComponents = this._filterValidParamsComponents(
+      paramsComponents,
+      selectFields,
+    );
+
     // Separate param components by type
-    const orderbyComponents = paramsComponents.filter(
+    const orderbyComponents = validComponents.filter(
       (component) => component.type === 'orderby',
     );
-    const filterComponents = paramsComponents.filter(
+    const filterComponents = validComponents.filter(
       (component) => component.type === 'filter',
     );
-    const searchComponents = paramsComponents.filter(
+    const searchComponents = validComponents.filter(
       (component) => component.type === 'search',
     );
 
@@ -72,8 +87,9 @@ export abstract class OasisResourceService {
     // Build searches substring
     // (searches and filterscomponents get combined into $filter)
     // search e.g. `contains(name, 'John') and contains(city, 'Paris')`
+    // NOTE: single quotes need to be escaped with double single quotes e.g. "CROIX-D'EAU" -> "CROIX-D''EAU"
     if (searchComponents.length > 0) {
-      searchString = `contains(${searchComponents.map((component) => `${component.target}, '${component.value}')`).join(' and contains(')}`;
+      searchString = `contains(${searchComponents.map((component) => `${component.target}, '${component.value.replace(/'/g, "''")}')`).join(' and contains(')}`;
     }
 
     // Build final $filter string combining filters and searches
@@ -108,6 +124,19 @@ export abstract class OasisResourceService {
     }
 
     return paramsString;
+  }
+
+  private _filterValidParamsComponents(
+    paramsComponents: QueryParamComponent<string>[],
+    selectFields: readonly string[],
+  ): QueryParamComponent<string>[] {
+    return paramsComponents.filter(
+      (component) =>
+        selectFields.includes(component.target) &&
+        component.value !== undefined &&
+        component.value !== '' &&
+        VALID_QUERY_PARAM_COMPONENT_TYPES.includes(component.type),
+    );
   }
 
   private _validateGuid(guid: string): boolean {
