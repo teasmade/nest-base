@@ -1,5 +1,7 @@
 export type QueryParamComponent<T> = {
-  type: 'filter' | 'search' | 'orderby';
+  type: QueryParamComponentType;
   target: string;
   value: T;
 };
+
+export type QueryParamComponentType = 'filter' | 'search' | 'orderby';

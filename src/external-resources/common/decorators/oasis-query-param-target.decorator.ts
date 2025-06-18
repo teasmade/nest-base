@@ -1,5 +1,8 @@
 import { Transform } from 'class-transformer';
-import { QueryParamComponent } from '../types/query-param-component.type';
+import {
+  QueryParamComponent,
+  QueryParamComponentType,
+} from '../types/query-param-component.type';
 
 /**
  * This decorator is used to provide a QueryParamComponent object on the target property, for ease of use building OData query params strings in the external resources layer.
@@ -7,7 +10,7 @@ import { QueryParamComponent } from '../types/query-param-component.type';
  */
 function OasisQueryParamTarget(
   targetOasisProperty: string,
-  type: 'filter' | 'search' | 'orderby',
+  type: QueryParamComponentType,
 ) {
   return function (target: object, propertyKey: string) {
     Transform(
