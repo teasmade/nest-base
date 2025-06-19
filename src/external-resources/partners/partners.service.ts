@@ -13,6 +13,7 @@ import {
   UpdatePartnerDto,
 } from './dtos';
 import { plainToInstance } from 'class-transformer';
+import { validAccountTypeCodes } from '@oasis/oasis-common/enums/accounts.enum';
 
 @Injectable()
 export class PartnersService extends ExternalResourceService {
@@ -23,9 +24,15 @@ export class PartnersService extends ExternalResourceService {
   async getPartners(
     getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
+    const paramsWithDefaults = {
+      ...getPartnersQueryParams,
+      multiFilterType:
+        getPartnersQueryParams?.multiFilterType ?? validAccountTypeCodes,
+    };
+
     const transformedQueryParams = plainToInstance(
       GetPartnersQueryParamsDTO,
-      getPartnersQueryParams,
+      paramsWithDefaults,
       { groups: ['transform'] },
     );
 

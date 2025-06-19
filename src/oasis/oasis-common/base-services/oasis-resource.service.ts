@@ -50,7 +50,6 @@ export abstract class OasisResourceService {
     paramsComponents: QueryParamComponent<unknown>[],
     selectFields: readonly string[],
   ): string {
-    console.log('paramsComponents', paramsComponents);
     let orderbyString = '';
     let filterString = '';
     let searchString = '';

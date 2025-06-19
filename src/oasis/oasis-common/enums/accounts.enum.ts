@@ -5,6 +5,13 @@ export enum AccountTypeCodes {
   AssoMixte = 809020003,
 }
 
+export const validAccountTypeCodes = [
+  AccountTypeCodes.Nationaux,
+  AccountTypeCodes.SansVoiture,
+  AccountTypeCodes.Asso4Roues,
+  AccountTypeCodes.AssoMixte,
+];
+
 const accountTypeOptionSet = [
   {
     code: AccountTypeCodes.Nationaux,
