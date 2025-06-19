@@ -7,7 +7,7 @@ import { QueryParamComponent } from 'src/external-resources/common/types/query-p
 class TestOasisResourceService extends OasisResourceService {
   // Expose protected methods for testing
   public testBuildParamsString(
-    paramsComponents: QueryParamComponent<string>[],
+    paramsComponents: QueryParamComponent<unknown>[],
     selectFields: readonly string[],
   ): string {
     return this['_buildParamsString'](paramsComponents, selectFields);
@@ -105,6 +105,38 @@ describe('OasisResourceService', () => {
 
       expect(result).toBe(
         "?$select=id,name,email&$filter=name eq 'John' and id eq 25&$count=true",
+      );
+    });
+
+    it('should build correct filter string for array values', () => {
+      const paramsComponents: QueryParamComponent<unknown>[] = [
+        { type: 'filter', target: 'id', value: [1, 2, 3] },
+        { type: 'filter', target: 'name', value: 'John' },
+      ];
+
+      const result = service.testBuildParamsString(
+        paramsComponents,
+        selectFields,
+      );
+
+      expect(result).toBe(
+        '?$select=id,name,email&$filter=(id eq 1 or id eq 2 or id eq 3) and name eq John&$count=true',
+      );
+    });
+
+    it('should build correct filter string for array values with single value', () => {
+      const paramsComponents: QueryParamComponent<unknown>[] = [
+        { type: 'filter', target: 'id', value: [1] },
+        { type: 'filter', target: 'name', value: 'John' },
+      ];
+
+      const result = service.testBuildParamsString(
+        paramsComponents,
+        selectFields,
+      );
+
+      expect(result).toBe(
+        '?$select=id,name,email&$filter=(id eq 1) and name eq John&$count=true',
       );
     });
 

@@ -31,7 +31,7 @@ export abstract class OasisResourceService {
 
     const paramsComponents = Object.values(otherDomainParams).filter(
       (param) => param !== undefined,
-    ) as QueryParamComponent<string>[];
+    ) as QueryParamComponent<unknown>[];
 
     const paramsString = this._buildParamsString(
       paramsComponents,
@@ -47,9 +47,10 @@ export abstract class OasisResourceService {
   }
 
   private _buildParamsString(
-    paramsComponents: QueryParamComponent<string>[],
+    paramsComponents: QueryParamComponent<unknown>[],
     selectFields: readonly string[],
   ): string {
+    console.log('paramsComponents', paramsComponents);
     let orderbyString = '';
     let filterString = '';
     let searchString = '';
@@ -73,7 +74,7 @@ export abstract class OasisResourceService {
     // Build orderby string
     // e.g. $orderby=name asc,city asc
     if (orderbyComponents.length > 0) {
-      orderbyString = `$orderby=${orderbyComponents.map((component) => `${component.target} ${component.value}`).join(',')}`;
+      orderbyString = `$orderby=${orderbyComponents.map((component) => `${component.target} ${component.value as string}`).join(',')}`;
     }
 
     // Build filters substring
@@ -81,7 +82,20 @@ export abstract class OasisResourceService {
     // (filters and searches components get combined into $filter)
     // filter e.g. `name eq 'John' and code eq 123`
     if (filterComponents.length > 0) {
-      filterString = `${filterComponents.map((component) => `${component.target} eq ${component.value}`).join(' and ')}`;
+      filterString = filterComponents
+        .map((component) => {
+          if (Array.isArray(component.value)) {
+            // For arrays, create OR conditions: (target eq value1 or target eq value2)
+            const orConditions = component.value
+              .map((value) => `${component.target} eq ${value}`)
+              .join(' or ');
+            return `(${orConditions})`;
+          } else {
+            // For single values, use simple equality
+            return `${component.target} eq ${component.value as string}`;
+          }
+        })
+        .join(' and ');
     }
 
     // Build searches substring
@@ -89,7 +103,7 @@ export abstract class OasisResourceService {
     // search e.g. `contains(name, 'John') and contains(city, 'Paris')`
     // NOTE: single quotes need to be escaped with double single quotes e.g. "CROIX-D'EAU" -> "CROIX-D''EAU"
     if (searchComponents.length > 0) {
-      searchString = `contains(${searchComponents.map((component) => `${component.target}, '${component.value.replace(/'/g, "''")}')`).join(' and contains(')}`;
+      searchString = `contains(${searchComponents.map((component) => `${component.target}, '${(component.value as string).replace(/'/g, "''")}')`).join(' and contains(')}`;
     }
 
     // Build final $filter string combining filters and searches
@@ -127,9 +141,9 @@ export abstract class OasisResourceService {
   }
 
   private _filterValidParamsComponents(
-    paramsComponents: QueryParamComponent<string>[],
+    paramsComponents: QueryParamComponent<unknown>[],
     selectFields: readonly string[],
-  ): QueryParamComponent<string>[] {
+  ): QueryParamComponent<unknown>[] {
     return paramsComponents.filter(
       (component) =>
         selectFields.includes(component.target) &&

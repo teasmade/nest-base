@@ -1,5 +1,5 @@
 import { BaseExternalResourceQueryParamsDTO } from 'src/external-resources/common/dtos/base-query-params.dto';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import {
   AccountTypeCodes,
   AccountCategoryCodes,
@@ -10,6 +10,7 @@ import {
 } from 'src/external-resources/common/decorators';
 import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
 import { Type } from 'class-transformer';
+import { StringToNumberArray } from '@common/decorators/string-to-array.decorator';
 
 export class GetPartnersQueryParamsDTO extends BaseExternalResourceQueryParamsDTO {
   @IsOptional()
@@ -17,6 +18,13 @@ export class GetPartnersQueryParamsDTO extends BaseExternalResourceQueryParamsDT
   @IsEnum(AccountTypeCodes)
   @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
   filterType?: QueryParamComponent<AccountTypeCodes>;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(AccountTypeCodes, { each: true })
+  @StringToNumberArray()
+  @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
+  multiFilterType?: QueryParamComponent<AccountTypeCodes[]>;
 
   @IsOptional()
   @Type(() => Number)
