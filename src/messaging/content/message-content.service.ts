@@ -13,7 +13,6 @@ import {
   TemplateStatus,
 } from '../entities/message-template.entity';
 import { AuthUser } from '../../auth/interfaces';
-import { UsersService } from '../../users/users.service';
 import {
   CreateMessageTemplateDto,
   UpdateMessageTemplateDto,
@@ -25,7 +24,6 @@ export class MessageContentService {
   constructor(
     @InjectRepository(MessageTemplate)
     private messageTemplateRepository: Repository<MessageTemplate>,
-    private usersService: UsersService,
   ) {}
 
   async findAll(): Promise<MessageTemplateResponseDto[]> {
@@ -58,8 +56,6 @@ export class MessageContentService {
     createMessageTemplateDto: CreateMessageTemplateDto,
     authUser: AuthUser,
   ): Promise<MessageTemplateResponseDto> {
-    const user = await this.usersService.findByAuthUserId(authUser.id);
-
     // Check if template name already exists
     const existingTemplate = await this.messageTemplateRepository.findOne({
       where: { name: createMessageTemplateDto.name },
@@ -73,8 +69,8 @@ export class MessageContentService {
 
     const template = this.messageTemplateRepository.create({
       ...createMessageTemplateDto,
-      createdBy: user,
-      updatedBy: user,
+      createdBy: { id: authUser.id },
+      updatedBy: { id: authUser.id },
     });
 
     const savedTemplate = await this.messageTemplateRepository.save(template);
@@ -113,11 +109,9 @@ export class MessageContentService {
       }
     }
 
-    const user = await this.usersService.findByAuthUserId(authUser.id);
-
     Object.assign(template, {
       ...updateMessageTemplateDto,
-      updatedBy: user,
+      updatedBy: { id: authUser.id },
     });
 
     const updatedTemplate = await this.messageTemplateRepository.save(template);
