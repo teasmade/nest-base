@@ -10,7 +10,6 @@ import { Repository } from 'typeorm';
 import { WorkflowVersion } from './entities/workflow-version.entity';
 import { Workflow } from './entities/workflow.entity';
 import { AuthUser } from 'src/auth/interfaces';
-import { UsersService } from 'src/users/users.service';
 import {
   CreateWorkflowVersionDto,
   CreateWorkflowVersionResponseDto,
@@ -26,7 +25,6 @@ export class WorkflowVersionService {
     private versionRepository: Repository<WorkflowVersion>,
     @InjectRepository(Workflow)
     private workflowRepository: Repository<Workflow>,
-    private usersService: UsersService,
   ) {}
 
   // async findAll(workflowId: string): Promise<WorkflowVersion[]> {
@@ -56,8 +54,6 @@ export class WorkflowVersionService {
     createVersionDto: CreateWorkflowVersionDto,
     authUser: AuthUser,
   ): Promise<CreateWorkflowVersionResponseDto> {
-    const user = await this.usersService.findByAuthUserId(authUser.id);
-
     const workflow = await this.workflowRepository.findOne({
       where: { id: workflowId },
     });
@@ -71,13 +67,13 @@ export class WorkflowVersionService {
     }
 
     Object.assign(workflow, {
-      updatedBy: user,
+      updatedBy: { id: authUser.id },
     });
 
     const version = this.versionRepository.create({
       ...createVersionDto,
-      createdBy: user,
-      updatedBy: user,
+      createdBy: { id: authUser.id },
+      updatedBy: { id: authUser.id },
       workflow,
     });
 

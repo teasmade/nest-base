@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import { plainToInstance } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not, IsNull } from 'typeorm';
@@ -28,7 +27,6 @@ export class WorkflowService {
     private workflowRepository: Repository<Workflow>,
     @InjectRepository(WorkflowVersion)
     private versionRepository: Repository<WorkflowVersion>,
-    private usersService: UsersService,
   ) {}
 
   async findAll(): Promise<Partial<Workflow>[]> {
@@ -89,12 +87,10 @@ export class WorkflowService {
     authUser: AuthUser,
   ): Promise<CreateWorkflowResponseDto> {
     // Example of cascading entity creation, with return DTO  transformation to only expose relevant fields to the client
-    const user = await this.usersService.findByAuthUserId(authUser.id);
-
     const workflow = this.workflowRepository.create({
       ...createWorkflowDto,
-      createdBy: user,
-      updatedBy: user,
+      createdBy: { id: authUser.id },
+      updatedBy: { id: authUser.id },
       activeVersion: null,
     });
 
@@ -103,8 +99,8 @@ export class WorkflowService {
     const startingVersion = this.versionRepository.create({
       version: '1.0.0',
       description: `Version initiale pour ${savedWorkflow.name}`,
-      createdBy: user,
-      updatedBy: user,
+      createdBy: { id: authUser.id },
+      updatedBy: { id: authUser.id },
       workflow: savedWorkflow,
     });
 
