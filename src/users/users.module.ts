@@ -5,13 +5,9 @@ import { UserGroup } from './entities/user-group.entity';
 import { UserProfile } from './entities/user-profile.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { MessagingModule } from '../messaging/messaging.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User, UserGroup, UserProfile]),
-    MessagingModule,
-  ],
+  imports: [TypeOrmModule.forFeature([User, UserGroup, UserProfile])],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],
