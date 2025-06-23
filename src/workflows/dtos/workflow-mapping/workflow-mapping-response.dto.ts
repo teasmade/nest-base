@@ -1,4 +1,5 @@
-import { IsString, IsUUID, IsDate, IsOptional } from 'class-validator';
+import { IsString, IsUUID, IsOptional } from 'class-validator';
+import { Exclude } from 'class-transformer';
 
 export class WorkflowMappingResponseDto {
   @IsUUID()
@@ -17,9 +18,9 @@ export class WorkflowMappingResponseDto {
   @IsOptional()
   workflowId: string | null;
 
-  @IsDate()
+  @Exclude()
   createdAt: Date;
 
-  @IsDate()
+  @Exclude()
   updatedAt: Date;
 }

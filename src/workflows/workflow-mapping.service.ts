@@ -8,6 +8,7 @@ import {
   UpdateWorkflowMappingDto,
   WorkflowMappingResponseDto,
 } from './dtos/workflow-mapping';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class WorkflowMappingService {
@@ -39,7 +40,8 @@ export class WorkflowMappingService {
     const mappings = await this.workflowMappingRepository.find({
       relations: ['workflow'],
     });
-    return mappings.map(this._toResponseDto);
+    const response = mappings.map(this._toResponseDto);
+    return plainToInstance(WorkflowMappingResponseDto, response);
   }
 
   async findOne(id: string): Promise<WorkflowMappingResponseDto> {
