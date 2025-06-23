@@ -4,13 +4,13 @@ import { SmsProvider } from './channels/sms/providers/interfaces/sms-provider.in
 // import { BaseSmsDTO } from './channels/sms/dtos/sms.dto';
 import { SendSmsDTO } from './channels/sms/dtos';
 import { MessageSendEvent } from './events/message-send.event';
-import { MessageContentService } from './content/message-content.service';
+import { MessageTemplateService } from './content/message-template.service';
 @Injectable()
 export class MessagingService {
   constructor(
     @Inject('SmsProvider')
     private readonly smsProvider: SmsProvider,
-    private readonly messageContentService: MessageContentService,
+    private readonly messageTemplateService: MessageTemplateService,
   ) {}
 
   async sendSms(dto: SendSmsDTO) {
@@ -32,7 +32,7 @@ export class MessagingService {
     // 4. Handling errors and retries
     // 5. Logging and tracking the message status
 
-    const template = await this.messageContentService.findOne(templateId);
+    const template = await this.messageTemplateService.findOne(templateId);
 
     if (!template) {
       throw new NotFoundException('Template not found');

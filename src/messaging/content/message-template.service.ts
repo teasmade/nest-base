@@ -20,7 +20,7 @@ import {
 } from './dtos';
 
 @Injectable()
-export class MessageContentService {
+export class MessageTemplateService {
   constructor(
     @InjectRepository(MessageTemplate)
     private messageTemplateRepository: Repository<MessageTemplate>,

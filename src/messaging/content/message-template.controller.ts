@@ -13,7 +13,7 @@ import {
   ParseUUIDPipe,
   ValidationPipe,
 } from '@nestjs/common';
-import { MessageContentService } from './message-content.service';
+import { MessageTemplateService } from './message-template.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { AuthUser } from '../../auth/interfaces';
 import {
@@ -27,35 +27,35 @@ import {
 } from './dtos';
 import { User } from 'src/auth/decorators/user.decorator';
 
-@Controller('messaging/content')
+@Controller('messaging/templates')
 @UseGuards(JwtAuthGuard)
-export class MessageContentController {
-  constructor(private readonly contentService: MessageContentService) {}
+export class MessageTemplateController {
+  constructor(private readonly templateService: MessageTemplateService) {}
 
   @Get()
   findAll(): Promise<MessageTemplateResponseDto[]> {
-    return this.contentService.findAll();
+    return this.templateService.findAll();
   }
 
   @Get('channel/:channel')
   findByChannel(
     @Param('channel') channel: MessageChannel,
   ): Promise<MessageTemplateResponseDto[]> {
-    return this.contentService.findByChannel(channel);
+    return this.templateService.findByChannel(channel);
   }
 
   @Get('status/:status')
   findByStatus(
     @Param('status') status: TemplateStatus,
   ): Promise<MessageTemplateResponseDto[]> {
-    return this.contentService.findByStatus(status);
+    return this.templateService.findByStatus(status);
   }
 
   @Get(':id')
   findOne(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<MessageTemplateResponseDto> {
-    return this.contentService.findOne(id);
+    return this.templateService.findOne(id);
   }
 
   @Post()
@@ -64,7 +64,7 @@ export class MessageContentController {
     createMessageTemplateDto: CreateMessageTemplateDto,
     @User() user: AuthUser,
   ): Promise<MessageTemplateResponseDto> {
-    return this.contentService.create(createMessageTemplateDto, user);
+    return this.templateService.create(createMessageTemplateDto, user);
   }
 
   @Patch(':id')
@@ -74,12 +74,12 @@ export class MessageContentController {
     updateMessageTemplateDto: UpdateMessageTemplateDto,
     @User() user: AuthUser,
   ): Promise<MessageTemplateResponseDto> {
-    return this.contentService.update(id, updateMessageTemplateDto, user);
+    return this.templateService.update(id, updateMessageTemplateDto, user);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
-    return this.contentService.remove(id);
+    return this.templateService.remove(id);
   }
 }
