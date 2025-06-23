@@ -13,7 +13,7 @@ import {
   UpdatePartnerDto,
 } from './dtos';
 import { plainToInstance } from 'class-transformer';
-import { validAccountTypeCodes } from '@oasis/oasis-common/enums/accounts.enum';
+import { validAccountCategoryCodes } from '@oasis/oasis-common/enums/accounts.enum';
 
 @Injectable()
 export class PartnersService extends ExternalResourceService {
@@ -21,13 +21,14 @@ export class PartnersService extends ExternalResourceService {
     super();
   }
 
+  // TODO - need category and type filters to not be exclusive.
   async getPartners(
     getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
     const paramsWithDefaults = {
       ...getPartnersQueryParams,
-      multiFilterType:
-        getPartnersQueryParams?.multiFilterType ?? validAccountTypeCodes,
+      filterCategory:
+        getPartnersQueryParams?.filterCategory ?? validAccountCategoryCodes,
     };
 
     const transformedQueryParams = plainToInstance(

@@ -9,28 +9,22 @@ import {
   OrderBy,
 } from 'src/external-resources/common/decorators';
 import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
-import { Type } from 'class-transformer';
 import { StringToNumberArray } from '@common/decorators/string-to-array.decorator';
 
 export class GetPartnersQueryParamsDTO extends BaseExternalResourceQueryParamsDTO {
-  @IsOptional()
-  @Type(() => Number)
-  @IsEnum(AccountTypeCodes)
-  @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
-  filterType?: QueryParamComponent<AccountTypeCodes>;
-
   @IsOptional()
   @IsArray()
   @IsEnum(AccountTypeCodes, { each: true })
   @StringToNumberArray()
   @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
-  multiFilterType?: QueryParamComponent<AccountTypeCodes[]>;
+  filterType?: QueryParamComponent<AccountTypeCodes[]>;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsEnum(AccountCategoryCodes)
+  @IsArray()
+  @IsEnum(AccountCategoryCodes, { each: true })
+  @StringToNumberArray()
   @OasisQueryParamTarget('cap_typedepointdegeolocalisationcode', 'filter')
-  filterCategory?: QueryParamComponent<AccountCategoryCodes>;
+  filterCategory?: QueryParamComponent<AccountCategoryCodes[]>;
 
   @IsOptional()
   @IsString()

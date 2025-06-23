@@ -5,13 +5,6 @@ export enum AccountTypeCodes {
   AssoMixte = 809020003,
 }
 
-export const validAccountTypeCodes = [
-  AccountTypeCodes.Nationaux,
-  AccountTypeCodes.SansVoiture,
-  AccountTypeCodes.Asso4Roues,
-  AccountTypeCodes.AssoMixte,
-];
-
 const accountTypeOptionSet = [
   {
     code: AccountTypeCodes.Nationaux,
@@ -43,6 +36,14 @@ export enum AccountCategoryCodes {
   LocationVehicule = 809020004,
   ReparationVehicule = 809020003,
 }
+
+// We need to export as an array of values to use as defaults in domain resource service methods
+export const validAccountCategoryCodes = [
+  AccountCategoryCodes.ReparationRenault,
+  AccountCategoryCodes.Permis,
+  AccountCategoryCodes.LocationVehicule,
+  AccountCategoryCodes.ReparationVehicule,
+];
 
 const accountCategoryOptionSet = [
   {
