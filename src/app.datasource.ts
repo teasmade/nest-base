@@ -3,7 +3,11 @@ import { SeederOptions } from 'typeorm-extension';
 import { User } from './users/entities/user.entity';
 import { UserProfile } from './users/entities/user-profile.entity';
 import { UserGroup } from './users/entities/user-group.entity';
-import { Workflow, WorkflowVersion } from './workflows/entities';
+import {
+  Workflow,
+  WorkflowVersion,
+  WorkflowMapping,
+} from './workflows/entities';
 import { MessageTemplate, MessageSend } from './messaging/entities';
 import * as dotenv from 'dotenv';
 
@@ -23,6 +27,7 @@ export const dataSourceConfig: DataSourceOptions & SeederOptions = {
     UserGroup,
     Workflow,
     WorkflowVersion,
+    WorkflowMapping,
     MessageTemplate,
     MessageSend,
   ],
