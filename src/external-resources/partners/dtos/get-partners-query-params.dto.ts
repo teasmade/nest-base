@@ -1,6 +1,7 @@
 import { BaseExternalResourceQueryParamsDTO } from 'src/external-resources/common/dtos/base-query-params.dto';
 import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import {
+  AccountTypeCodes,
   RentalStructureTypeCodes,
   ServicePointTypeCodes,
 } from 'src/oasis/oasis-common/enums/accounts.enum';
@@ -10,8 +11,15 @@ import {
 } from 'src/external-resources/common/decorators';
 import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
 import { StringToNumberArray } from '@common/decorators/string-to-array.decorator';
+import { Type } from 'class-transformer';
 
 export class GetPartnersQueryParamsDTO extends BaseExternalResourceQueryParamsDTO {
+  @IsOptional()
+  @IsEnum(AccountTypeCodes)
+  @Type(() => Number)
+  @OasisQueryParamTarget('cap_typecode', 'filter')
+  filterAccountType?: QueryParamComponent<AccountTypeCodes>;
+
   @IsOptional()
   @IsArray()
   @IsEnum(RentalStructureTypeCodes, { each: true })
