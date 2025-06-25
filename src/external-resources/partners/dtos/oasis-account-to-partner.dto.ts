@@ -45,16 +45,16 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Expose({ name: 'country' })
   address1_country: string;
 
-  @Expose({ name: 'partner_category' })
+  @Expose({ name: 'service_point_type' })
   'cap_typedepointdegeolocalisationcode@OData.Community.Display.V1.FormattedValue'?: string;
 
-  @Expose({ name: 'partner_category_code' })
+  @Expose({ name: 'service_point_type_code' })
   cap_typedepointdegeolocalisationcode: number | null;
 
-  @Expose({ name: 'partner_type' })
+  @Expose({ name: 'rental_structure_type' })
   'cap_typedepartenairepointgeocode@OData.Community.Display.V1.FormattedValue'?: string;
 
-  @Expose({ name: 'partner_type_code' })
+  @Expose({ name: 'rental_structure_type_code' })
   cap_typedepartenairepointgeocode: number | null;
 
   @Exclude()
@@ -96,11 +96,11 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Exclude()
   'address1_longitude@OData.Community.Display.V1.FormattedValue'?: string;
 
-  @Expose({ name: 'vehicle_type_code' })
-  cap_typevehiculecode: number | null;
-
   @Expose({ name: 'vehicle_type' })
   'cap_typevehiculecode@OData.Community.Display.V1.FormattedValue'?: string;
+
+  @Expose({ name: 'vehicle_type_code' })
+  cap_typevehiculecode: number | null;
 
   @Expose({ name: 'opening_hours' })
   cap_horairesdouverture: string;

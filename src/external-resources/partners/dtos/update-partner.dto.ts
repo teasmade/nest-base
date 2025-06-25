@@ -24,15 +24,15 @@ export class UpdatePartnerDto {
   @IsNumber()
   @IsOptional()
   @ExposeForRename()
-  partner_type_code: number;
-  @Rename('partner_type_code')
+  rental_structure_type_code: number;
+  @Rename('rental_structure_type_code')
   cap_typedepartenairepointgeocode: number;
 
   @IsNumber()
   @IsOptional()
   @ExposeForRename()
-  partner_category_code: number;
-  @Rename('partner_category_code')
+  service_point_type_code: number;
+  @Rename('service_point_type_code')
   cap_typedepointdegeolocalisationcode: number;
 
   @IsString()
