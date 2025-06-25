@@ -91,12 +91,13 @@ export class OasisAccountsService extends OasisResourceService {
   ): Promise<PaginatedOasisResponse<OasisAccount>> {
     const endpoint = '/accounts';
 
-    const { partnerFilterType, partnerFilterCategory } = partnerQueryParams;
+    const { filterRentalStructureType, filterServicePointType } =
+      partnerQueryParams;
 
-    let partnerFilter = `${partnerFilterCategory.target} eq ${partnerFilterCategory.value}`;
+    let partnerFilter = `${filterServicePointType.target} eq ${filterServicePointType.value}`;
 
-    if (partnerFilterType) {
-      partnerFilter += ` and ${partnerFilterType.target} eq ${partnerFilterType.value}`;
+    if (filterRentalStructureType) {
+      partnerFilter += ` and ${filterRentalStructureType.target} eq ${filterRentalStructureType.value}`;
     }
 
     // We need to round to 5 decimal places for OData ge le filters

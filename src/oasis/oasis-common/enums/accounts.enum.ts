@@ -1,36 +1,36 @@
-export enum AccountTypeCodes {
+export enum RentalStructureTypeCodes {
   Nationaux = 809020000,
   SansVoiture = 809020001,
   Asso4Roues = 809020002,
   AssoMixte = 809020003,
 }
 
-const accountTypeOptionSet = [
+const rentalStructureTypeOptionSet = [
   {
-    code: AccountTypeCodes.Nationaux,
+    code: RentalStructureTypeCodes.Nationaux,
     name: 'Partenaires nationaux',
   },
   {
-    code: AccountTypeCodes.SansVoiture,
+    code: RentalStructureTypeCodes.SansVoiture,
     name: 'Partenaires sans voiture',
   },
   {
-    code: AccountTypeCodes.Asso4Roues,
+    code: RentalStructureTypeCodes.Asso4Roues,
     name: 'Partenaires 4 roues associatif',
   },
   {
-    code: AccountTypeCodes.AssoMixte,
+    code: RentalStructureTypeCodes.AssoMixte,
     name: 'Partenaires associatifs mixtes',
   },
 ];
 
-const accountTypeConfig = {
+const rentalStructureTypeConfig = {
   targetOasisProperty: 'cap_typedepartenairepointgeocode',
-  paramName: 'filterType',
-  optionSet: accountTypeOptionSet,
+  paramName: 'filterRentalStructureType',
+  optionSet: rentalStructureTypeOptionSet,
 };
 
-export enum AccountCategoryCodes {
+export enum ServicePointTypeCodes {
   ReparationRenault = 809020006,
   Permis = 809020005,
   LocationVehicule = 809020004,
@@ -38,36 +38,36 @@ export enum AccountCategoryCodes {
 }
 
 // We need to export as an array of values to use as defaults in domain resource service methods
-export const validAccountCategoryCodes = [
-  AccountCategoryCodes.ReparationRenault,
-  AccountCategoryCodes.Permis,
-  AccountCategoryCodes.LocationVehicule,
-  AccountCategoryCodes.ReparationVehicule,
+export const validServicePointTypeCodes = [
+  ServicePointTypeCodes.ReparationRenault,
+  ServicePointTypeCodes.Permis,
+  ServicePointTypeCodes.LocationVehicule,
+  ServicePointTypeCodes.ReparationVehicule,
 ];
 
-const accountCategoryOptionSet = [
+const servicePointTypeOptionSet = [
   {
-    code: AccountCategoryCodes.ReparationRenault,
+    code: ServicePointTypeCodes.ReparationRenault,
     name: 'Réparation de véhicule Renault',
   },
   {
-    code: AccountCategoryCodes.Permis,
+    code: ServicePointTypeCodes.Permis,
     name: 'Permis de conduire',
   },
   {
-    code: AccountCategoryCodes.LocationVehicule,
+    code: ServicePointTypeCodes.LocationVehicule,
     name: 'Location de véhicule',
   },
   {
-    code: AccountCategoryCodes.ReparationVehicule,
+    code: ServicePointTypeCodes.ReparationVehicule,
     name: 'Réparation de véhicule',
   },
 ];
 
-const accountCategoryConfig = {
+const servicePointTypeConfig = {
   targetOasisProperty: 'cap_typedepointdegeolocalisationcode',
-  paramName: 'filterCategory',
-  optionSet: accountCategoryOptionSet,
+  paramName: 'filterServicePointType',
+  optionSet: servicePointTypeOptionSet,
 };
 
 export enum VehicleTypeCodes {
@@ -151,8 +151,8 @@ const vehicleTypeConfig = {
 // Exporting config object with account types and categories under partners key for use in client
 export const partnersConfig = {
   partners: {
-    types: accountTypeConfig,
-    categories: accountCategoryConfig,
+    rentalStructureTypes: rentalStructureTypeConfig,
+    servicePointTypes: servicePointTypeConfig,
     vehicleTypes: vehicleTypeConfig,
   },
 };

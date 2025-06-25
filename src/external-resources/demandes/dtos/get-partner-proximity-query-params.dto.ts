@@ -2,8 +2,8 @@ import { IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
 import { OasisQueryParamTarget } from 'src/external-resources/common/decorators';
 import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
 import {
-  AccountCategoryCodes,
-  AccountTypeCodes,
+  ServicePointTypeCodes,
+  RentalStructureTypeCodes,
   VehicleTypeCodes,
 } from '@oasis/oasis-common/enums/accounts.enum';
 import { Type } from 'class-transformer';
@@ -17,15 +17,15 @@ export enum ProximityTarget {
 export class GetPartnerProximityQueryParamsDTO {
   @IsNotEmpty()
   @Type(() => Number)
-  @IsEnum(AccountCategoryCodes)
+  @IsEnum(ServicePointTypeCodes)
   @OasisQueryParamTarget('cap_typedepointdegeolocalisationcode', 'filter')
-  partnerFilterCategory: QueryParamComponent<AccountCategoryCodes>;
+  filterServicePointType: QueryParamComponent<ServicePointTypeCodes>;
 
   @IsOptional()
   @Type(() => Number)
-  @IsEnum(AccountTypeCodes)
+  @IsEnum(RentalStructureTypeCodes)
   @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
-  partnerFilterType?: QueryParamComponent<AccountTypeCodes>;
+  filterRentalStructureType?: QueryParamComponent<RentalStructureTypeCodes>;
 
   @IsOptional()
   @Type(() => Number)

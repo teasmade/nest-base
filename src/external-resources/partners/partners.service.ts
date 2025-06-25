@@ -13,7 +13,7 @@ import {
   UpdatePartnerDto,
 } from './dtos';
 import { plainToInstance } from 'class-transformer';
-import { validAccountCategoryCodes } from '@oasis/oasis-common/enums/accounts.enum';
+import { validServicePointTypeCodes } from '@oasis/oasis-common/enums/accounts.enum';
 
 @Injectable()
 export class PartnersService extends ExternalResourceService {
@@ -27,8 +27,9 @@ export class PartnersService extends ExternalResourceService {
   ): Promise<GetPartnersDto> {
     const paramsWithDefaults = {
       ...getPartnersQueryParams,
-      filterCategory:
-        getPartnersQueryParams?.filterCategory ?? validAccountCategoryCodes,
+      filterServicePointType:
+        getPartnersQueryParams?.filterServicePointType ??
+        validServicePointTypeCodes,
     };
 
     const transformedQueryParams = plainToInstance(
