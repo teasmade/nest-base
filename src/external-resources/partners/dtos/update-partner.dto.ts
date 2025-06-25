@@ -14,6 +14,13 @@ import {
  */
 
 export class UpdatePartnerDto {
+  @IsNumber()
+  @IsOptional()
+  @ExposeForRename()
+  account_type_code: number;
+  @Rename('account_type_code')
+  cap_typecode: number;
+
   @IsString()
   @IsOptional()
   @ExposeForRename()

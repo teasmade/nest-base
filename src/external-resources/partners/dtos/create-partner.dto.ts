@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import {
   ExposeForRename,
   Rename,
@@ -14,6 +14,13 @@ import {
  */
 
 export class CreatePartnerDto {
+  @IsNumber()
+  @IsOptional()
+  @ExposeForRename()
+  account_type_code: number;
+  @Rename('account_type_code')
+  cap_typecode: number;
+
   @IsString()
   @IsNotEmpty()
   @ExposeForRename()
@@ -22,14 +29,14 @@ export class CreatePartnerDto {
   name: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   rental_structure_type_code: number;
   @Rename('rental_structure_type_code')
   cap_typedepartenairepointgeocode: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @ExposeForRename()
   service_point_type_code: number;
   @Rename('service_point_type_code')
