@@ -1,3 +1,39 @@
+export enum AccountTypeCodes {
+  Agency = 809020002,
+  Brand = 809020003,
+  Partner = 809020000,
+  ServicePoint = 809020007,
+}
+
+const accountTypeOptionSet = [
+  {
+    code: AccountTypeCodes.Agency,
+    name: 'Agence',
+  },
+  {
+    code: AccountTypeCodes.Brand,
+    name: 'Enseigne',
+  },
+  {
+    code: AccountTypeCodes.Partner,
+    name: 'Partenaire',
+  },
+  {
+    code: AccountTypeCodes.ServicePoint,
+    name: 'Point de Géolocalisation',
+  },
+];
+
+/**
+ * Rental Structure Types
+ */
+
+const accountTypeConfig = {
+  targetOasisProperty: 'cap_typecode',
+  paramName: 'filterAccountType',
+  optionSet: accountTypeOptionSet,
+};
+
 export enum RentalStructureTypeCodes {
   Nationaux = 809020000,
   SansVoiture = 809020001,
@@ -29,6 +65,10 @@ const rentalStructureTypeConfig = {
   paramName: 'filterRentalStructureType',
   optionSet: rentalStructureTypeOptionSet,
 };
+
+/**
+ * Service Point Types
+ */
 
 export enum ServicePointTypeCodes {
   ReparationRenault = 809020006,
@@ -69,6 +109,10 @@ const servicePointTypeConfig = {
   paramName: 'filterServicePointType',
   optionSet: servicePointTypeOptionSet,
 };
+
+/**
+ * Rental Vehicle Types
+ */
 
 export enum VehicleTypeCodes {
   DRM_TAXI = 809020011,
@@ -148,11 +192,20 @@ const vehicleTypeConfig = {
   optionSet: vehicleTypeOptionSet,
 };
 
-// Exporting config object with account types and categories under partners key for use in client
+/**
+ * Config objects for /api/config endpoint
+ */
+
 export const partnersConfig = {
   partners: {
     rentalStructureTypes: rentalStructureTypeConfig,
     servicePointTypes: servicePointTypeConfig,
     vehicleTypes: vehicleTypeConfig,
+  },
+};
+
+export const oasisAccountsConfig = {
+  oasisAccounts: {
+    oasisAccountTypes: accountTypeConfig,
   },
 };

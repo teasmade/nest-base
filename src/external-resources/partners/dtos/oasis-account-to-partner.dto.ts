@@ -131,6 +131,12 @@ export class OasisAccountToPartnerDto implements OasisAccount {
 
   @Expose({ name: 'unavailable_end_date' })
   cap_date_fin_indisponibilite: string;
+
+  @Expose({ name: 'account_type' })
+  'cap_typecode@OData.Community.Display.V1.FormattedValue'?: string;
+
+  @Expose({ name: 'account_type_code' })
+  cap_typecode: number | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

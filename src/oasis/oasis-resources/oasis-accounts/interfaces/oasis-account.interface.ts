@@ -46,6 +46,8 @@ export interface OasisAccount {
   cap_zonedintervention: string;
   cap_date_debut_indisponibilite: string;
   cap_date_fin_indisponibilite: string;
+  cap_typecode: number | null;
+  'cap_typecode@OData.Community.Display.V1.FormattedValue'?: string;
 }
 
 type NonSelectableOasisAccountKeys = keyof ExcludeODataFields<

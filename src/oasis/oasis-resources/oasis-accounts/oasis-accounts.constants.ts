@@ -29,6 +29,7 @@ export const OASIS_ACCOUNT_SELECT_FIELDS = [
   'cap_zonedintervention',
   'cap_date_debut_indisponibilite',
   'cap_date_fin_indisponibilite',
+  'cap_typecode',
 ] as const;
 
 export type OasisAccountSelectFields =
