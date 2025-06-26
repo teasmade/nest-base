@@ -19,7 +19,6 @@ export interface OasisAccount {
   cap_typedepointdegeolocalisationcode: number | null;
   'cap_typedepartenairepointgeocode@OData.Community.Display.V1.FormattedValue'?: string;
   cap_typedepartenairepointgeocode: number | null;
-  cap_typedepartenairecode: number | null;
   '_cap_partenaireparentid_value@OData.Community.Display.V1.FormattedValue'?: string;
   _cap_partenaireparentid_value: string;
   cap_siret: string | null;

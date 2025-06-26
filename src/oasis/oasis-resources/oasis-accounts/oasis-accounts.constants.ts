@@ -12,7 +12,6 @@ export const OASIS_ACCOUNT_SELECT_FIELDS = [
   'address1_postalcode',
   'cap_siret',
   'cap_numtva',
-  'cap_typedepartenairecode',
   'cap_typedepointdegeolocalisationcode',
   'cap_typedepartenairepointgeocode',
   '_cap_partenaireparentid_value',

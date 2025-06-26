@@ -104,7 +104,7 @@ export class OasisAccountsService extends OasisResourceService {
     }
 
     if (partnerFilterVehicleTypeMulti) {
-      // For arrays, create OR conditions: (target eq value1 or target eq value2)
+      // For array of vehicle type codes, create OR conditions: (target eq value1 or target eq value2)
       const orConditions = partnerFilterVehicleTypeMulti.value
         .map((value) => `${partnerFilterVehicleTypeMulti.target} eq ${value}`)
         .join(' or ');
