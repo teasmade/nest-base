@@ -1,37 +1,28 @@
 import { IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
-import { OasisQueryParamTarget } from 'src/external-resources/common/decorators';
-import { QueryParamComponent } from 'src/external-resources/common/types/query-param-component.type';
-import {
-  ServicePointTypeCodes,
-  RentalStructureTypeCodes,
-  VehicleTypeCodes,
-} from '@oasis/oasis-common/enums/accounts.enum';
-import { Type } from 'class-transformer';
+import { BasePartnersQueryParamsDTO } from 'src/external-resources/partners/common/dtos/base-partners-query-params.dto';
+import { PickType } from '@nestjs/mapped-types';
 
 export enum ProximityTarget {
   MISSION = 'mission',
   DOMICILE = 'domicile',
 }
 
-// NB: we're not extending BaseExternalResourceQueryParamsDTO because we don't want to accept pagination params - proximity comprises a range of calls to different Oasis services and the addition of our own calculalted values; this means we can't use OData generated pagination links.
-export class GetPartnerProximityQueryParamsDTO {
+export class GetPartnerProximityQueryParamsDTO extends PickType(
+  BasePartnersQueryParamsDTO,
+  [
+    'filterServicePointType',
+    'filterRentalStructureType',
+    'partnerFilterVehicleTypeMulti',
+  ] as const,
+) {
   @IsNotEmpty()
-  @Type(() => Number)
-  @IsEnum(ServicePointTypeCodes)
-  @OasisQueryParamTarget('cap_typedepointdegeolocalisationcode', 'filter')
-  filterServicePointType: QueryParamComponent<ServicePointTypeCodes>;
+  filterServicePointType: BasePartnersQueryParamsDTO['filterServicePointType'];
 
   @IsOptional()
-  @Type(() => Number)
-  @IsEnum(RentalStructureTypeCodes)
-  @OasisQueryParamTarget('cap_typedepartenairepointgeocode', 'filter')
-  filterRentalStructureType?: QueryParamComponent<RentalStructureTypeCodes>;
+  filterRentalStructureType: BasePartnersQueryParamsDTO['filterRentalStructureType'];
 
   @IsOptional()
-  @Type(() => Number)
-  @IsEnum(VehicleTypeCodes)
-  @OasisQueryParamTarget('cap_typevehiculecode', 'filter')
-  partnerFilterVehicleType?: QueryParamComponent<VehicleTypeCodes>;
+  partnerFilterVehicleTypeMulti: BasePartnersQueryParamsDTO['partnerFilterVehicleTypeMulti'];
 
   @IsOptional()
   @IsEnum(ProximityTarget)

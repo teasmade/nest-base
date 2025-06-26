@@ -91,13 +91,24 @@ export class OasisAccountsService extends OasisResourceService {
   ): Promise<PaginatedOasisResponse<OasisAccount>> {
     const endpoint = '/accounts';
 
-    const { filterRentalStructureType, filterServicePointType } =
-      partnerQueryParams;
+    const {
+      filterRentalStructureType,
+      filterServicePointType,
+      partnerFilterVehicleTypeMulti,
+    } = partnerQueryParams;
 
-    let partnerFilter = `${filterServicePointType.target} eq ${filterServicePointType.value}`;
+    let servicePointFilter = `${filterServicePointType.target} eq ${filterServicePointType.value}`;
 
     if (filterRentalStructureType) {
-      partnerFilter += ` and ${filterRentalStructureType.target} eq ${filterRentalStructureType.value}`;
+      servicePointFilter += ` and ${filterRentalStructureType.target} eq ${filterRentalStructureType.value}`;
+    }
+
+    if (partnerFilterVehicleTypeMulti) {
+      // For arrays, create OR conditions: (target eq value1 or target eq value2)
+      const orConditions = partnerFilterVehicleTypeMulti.value
+        .map((value) => `${partnerFilterVehicleTypeMulti.target} eq ${value}`)
+        .join(' or ');
+      servicePointFilter += ` and (${orConditions})`;
     }
 
     // We need to round to 5 decimal places for OData ge le filters
@@ -109,7 +120,7 @@ export class OasisAccountsService extends OasisResourceService {
     const geoFilter = `address1_latitude ge ${bottomRightLat.toFixed(5)} and address1_latitude le ${topLeftLat.toFixed(5)} and address1_longitude ge ${topLeftLon.toFixed(5)} and address1_longitude le ${bottomRightLon.toFixed(5)}`;
 
     // TODO - define the set of fields we need for a proximity query
-    const paramsString = `?$select=${OASIS_ACCOUNT_SELECT_FIELDS.join(',')}&$filter=${geoFilter} and ${partnerFilter}`;
+    const paramsString = `?$select=${OASIS_ACCOUNT_SELECT_FIELDS.join(',')}&$filter=${geoFilter} and ${servicePointFilter}`;
 
     const response = await this.oasisHttpService.get<OasisAccount>(
       `${endpoint}${paramsString}`,

@@ -11,7 +11,6 @@ import { Type } from 'class-transformer';
 /**
  * Base query params DTO for external resources.
  * @remarks
- * - DTOs used for query params should extend this class.
  * - This class provides validation decorators for pagination-related query params.
  */
 export abstract class BaseExternalResourceQueryParamsDTO {
