@@ -6,10 +6,10 @@ import { AssertInterfaceKeysMatch } from 'src/oasis/oasis-common/utils/oasis-uti
  * DTO to map relevant Oasis Account data structure to Orizon Partner data structure for frontend usage
  */
 export class OasisAccountToPartnerDto implements OasisAccount {
-  @Exclude()
+  @Expose()
   '@odata.context': string;
 
-  @Exclude()
+  @Expose()
   '@odata.etag': string;
 
   @Expose({ name: 'oasis_account_id' })
@@ -21,7 +21,7 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Expose({ name: 'partner_name' })
   name: string;
 
-  @Exclude()
+  @Expose()
   address1_composite: string;
 
   @Expose({ name: 'address_line1' })
@@ -57,9 +57,6 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Expose({ name: 'rental_structure_type_code' })
   cap_typedepartenairepointgeocode: number | null;
 
-  @Exclude()
-  cap_typedepartenairecode: number | null;
-
   @Expose({ name: 'parent_name' })
   '_cap_partenaireparentid_value@OData.Community.Display.V1.FormattedValue'?: string;
 
@@ -84,16 +81,16 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Expose({ name: 'updated_at_formatted' })
   'modifiedon@OData.Community.Display.V1.FormattedValue'?: string;
 
-  @Exclude()
+  @Expose({ name: 'latitude' })
   address1_latitude?: number;
 
-  @Exclude()
+  @Expose({ name: 'latitude_formatted' })
   'address1_latitude@OData.Community.Display.V1.FormattedValue'?: string;
 
-  @Exclude()
+  @Expose({ name: 'longitude' })
   address1_longitude?: number;
 
-  @Exclude()
+  @Expose({ name: 'longitude_formatted' })
   'address1_longitude@OData.Community.Display.V1.FormattedValue'?: string;
 
   @Expose({ name: 'vehicle_type' })
@@ -117,10 +114,10 @@ export class OasisAccountToPartnerDto implements OasisAccount {
   @Expose({ name: 'bike_deposit' })
   cap_montantcaution2roues: number;
 
-  @Exclude()
+  @Expose({ name: 'transaction_currency_id' })
   _transactioncurrencyid_value: string;
 
-  @Exclude()
+  @Expose({ name: 'transaction_currency' })
   '_transactioncurrencyid_value@OData.Community.Display.V1.FormattedValue'?: string;
 
   @Expose({ name: 'zone_of_intervention' })
