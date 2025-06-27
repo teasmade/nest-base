@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer';
-import { OasisAccountToPartnerDto } from './oasis-account-to-partner.dto';
+import { BaseOasisAccountToPartnerDto } from '../common/dtos';
 import { BaseExternalResourceResponseDto } from 'src/external-resources/common/dtos/base-response.dto';
 
-export class GetPartnersDto extends BaseExternalResourceResponseDto<OasisAccountToPartnerDto> {
-  @Type(() => OasisAccountToPartnerDto)
-  declare value: OasisAccountToPartnerDto[];
+export class GetPartnersDto extends BaseExternalResourceResponseDto<BaseOasisAccountToPartnerDto> {
+  @Type(() => BaseOasisAccountToPartnerDto)
+  declare value: BaseOasisAccountToPartnerDto[];
 }

@@ -1,8 +1,8 @@
-import { OasisAccountToPartnerDto } from 'src/external-resources/partners/dtos/oasis-account-to-partner.dto';
+import { BaseOasisAccountToPartnerDto } from 'src/external-resources/partners/common/dtos/base-oasis-account-to-partner.dto';
 import { PickType } from '@nestjs/mapped-types';
 
 export class OasisAccountToServicePointDto extends PickType(
-  OasisAccountToPartnerDto,
+  BaseOasisAccountToPartnerDto,
   [
     'accountid',
     'name',
