@@ -82,6 +82,9 @@ export class ServicePointsService extends ExternalResourceService {
       CreateServicePointDto
     >(createServicePointDto);
 
+    // Account type code must be set to service point
+    oasisCreateAccountBody.cap_typecode = AccountTypeCodes.ServicePoint;
+
     return await this.oasisAccountsService.create(oasisCreateAccountBody);
   }
 

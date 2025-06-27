@@ -1,79 +1,77 @@
-import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-import {
-  ExposeForRename,
-  Rename,
-} from 'src/external-resources/common/decorators';
+import { IsOptional } from 'class-validator';
 
-/**
- * This DTO uses a combination of `@ExposeForRename` and `@Rename` decorators to handle validation and transformation in two steps. The transformation is to convert property names to match the requirements of the OASIS OData API.
- *
- * - Validation is performed as usual on the controller method with a validation pipe. At this step ExposeForRename uses the `@Expose({ toClassOnly: true })` decorator to expose the domain model property names (e.g. `service_point_name`) and exclude the OASIS property names.
- *
- * - The controller calls the service point service, which converts the DTO using `instanceToPlain()` to a plain object. At this step Rename uses the `@Expose({ toPlainOnly: true })` decorator to expose the target OASIS property names `@Transform` to map them to the domain model property values. Domain model property names are excluded with `@Exclude({ toPlainOnly: true })`.
- *
- */
+import { BaseCreatePartnerDto } from '../../common/dtos';
+import { PickType } from '@nestjs/mapped-types';
 
-export class CreateServicePointDto {
-  @IsNumber()
+export class CreateServicePointDto extends PickType(BaseCreatePartnerDto, [
+  'name',
+  'partner_name',
+  'email',
+  'emailaddress3',
+  'address_line1',
+  'address1_line1',
+  'address_line2',
+  'address1_line2',
+  'address_line3',
+  'address1_line3',
+  'city',
+  'address1_city',
+  'departement',
+  'address1_stateorprovince',
+  'postal_code',
+  'address1_postalcode',
+  'country',
+  'address1_country',
+  'parent_oasis_id',
+  'cap_Partenaireparentid@odata.bind',
+  'service_point_type_code',
+  'cap_typedepointdegeolocalisationcode',
+  'rental_structure_type_code',
+  'cap_typedepartenairepointgeocode',
+  'opening_hours',
+  'cap_horairesdouverture',
+  'max_car_price',
+  'cap_coutmaximumvoiture',
+  'max_bike_price',
+  'cap_coutmaximum2roues',
+  'car_deposit',
+  'cap_montantcautionvoiture',
+  'bike_deposit',
+  'cap_montantcaution2roues',
+  'zone_of_intervention',
+  'cap_zonedintervention',
+  'unavailable_start_date',
+  'cap_date_debut_indisponibilite',
+  'unavailable_end_date',
+  'cap_date_fin_indisponibilite',
+]) {
   @IsOptional()
-  @ExposeForRename()
-  account_type_code: number;
-  @Rename('account_type_code')
-  cap_typecode: number;
+  address_line2: BaseCreatePartnerDto['address_line2'];
 
-  @IsString()
-  @IsNotEmpty()
-  @ExposeForRename()
-  service_point_name: string;
-  @Rename('service_point_name')
-  name: string;
-
-  @IsNumber()
   @IsOptional()
-  @ExposeForRename()
-  service_point_type_code: number;
-  @Rename('service_point_type_code')
-  cap_typedepointdegeolocalisationcode: number;
+  address_line3: BaseCreatePartnerDto['address_line3'];
 
-  @IsString()
-  @IsNotEmpty()
-  @ExposeForRename()
-  email: string;
-  @Rename('email')
-  emailaddress3: string;
+  @IsOptional()
+  opening_hours: BaseCreatePartnerDto['opening_hours'];
 
-  @IsString()
-  @IsNotEmpty()
-  @ExposeForRename()
-  address_line1: string;
-  @Rename('address_line1')
-  address1_line1: string;
+  @IsOptional()
+  max_car_price: BaseCreatePartnerDto['max_car_price'];
 
-  @IsString()
-  @IsNotEmpty()
-  @ExposeForRename()
-  city: string;
-  @Rename('city')
-  address1_city: string;
+  @IsOptional()
+  max_bike_price: BaseCreatePartnerDto['max_bike_price'];
 
-  @IsString()
-  @IsNotEmpty()
-  @ExposeForRename()
-  departement: string;
-  @Rename('departement')
-  address1_stateorprovince: string;
+  @IsOptional()
+  car_deposit: BaseCreatePartnerDto['car_deposit'];
 
-  @IsString()
-  @IsNotEmpty()
-  @ExposeForRename()
-  postal_code: string;
-  @Rename('postal_code')
-  address1_postalcode: string;
+  @IsOptional()
+  bike_deposit: BaseCreatePartnerDto['bike_deposit'];
 
-  @IsString()
-  @IsNotEmpty()
-  @ExposeForRename()
-  country: string;
-  @Rename('country')
-  address1_country: string;
+  @IsOptional()
+  zone_of_intervention: BaseCreatePartnerDto['zone_of_intervention'];
+
+  @IsOptional()
+  unavailable_start_date: BaseCreatePartnerDto['unavailable_start_date'];
+
+  @IsOptional()
+  unavailable_end_date: BaseCreatePartnerDto['unavailable_end_date'];
 }
