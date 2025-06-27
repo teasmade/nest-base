@@ -9,7 +9,7 @@ import {
   ValidationPipe,
   Patch,
 } from '@nestjs/common';
-import { ClassSerializerInterceptor } from '@nestjs/common';
+import { ClassSerializerInterceptor, SerializeOptions } from '@nestjs/common';
 import { PartnersService } from './partners.service';
 import {
   GetPartnersDto,
@@ -20,6 +20,9 @@ import {
 import { UpdatePartnerDto } from './dtos/update-partner.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
+@SerializeOptions({
+  excludeExtraneousValues: true,
+})
 @Controller('partners')
 export class PartnersController {
   constructor(private readonly partnersService: PartnersService) {}

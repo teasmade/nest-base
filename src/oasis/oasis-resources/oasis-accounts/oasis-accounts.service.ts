@@ -54,14 +54,10 @@ export class OasisAccountsService extends OasisResourceService {
 
   public async create(account: OasisCreateAccountBody): Promise<string> {
     const endpoint = '/accounts';
-    const accountToCreate = {
-      ...account,
-      // always 809020000 for partners, TODO organise this in a constant
-      cap_typecode: 809020000,
-    };
+
     const response = await this.oasisHttpService.post<OasisCreateAccountBody>(
       endpoint,
-      accountToCreate,
+      account,
     );
 
     const id = this.extractGuidFromODataUrl(response);

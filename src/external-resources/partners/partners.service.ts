@@ -25,6 +25,7 @@ export class PartnersService extends ExternalResourceService {
   async getPartners(
     getPartnersQueryParams?: GetPartnersQueryParamsDTO,
   ): Promise<GetPartnersDto> {
+    // Apply fallback defaults to query params
     const paramsWithDefaults = {
       ...getPartnersQueryParams,
       filterServicePointType:
