@@ -5,7 +5,7 @@ import { AssertInterfaceKeysMatch } from 'src/oasis/oasis-common/utils/oasis-uti
 /**
  * DTO to map relevant Oasis Account data structure to Orizon Partner data structure for frontend usage
  */
-export class OasisAccountToPartnerDto implements OasisAccount {
+export class BaseOasisAccountToPartnerDto implements OasisAccount {
   @Expose()
   '@odata.context': string;
 
@@ -138,6 +138,6 @@ export class OasisAccountToPartnerDto implements OasisAccount {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _testImplementationKeys: AssertInterfaceKeysMatch<
-  OasisAccountToPartnerDto,
+  BaseOasisAccountToPartnerDto,
   OasisAccount
 > = true;

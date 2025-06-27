@@ -15,7 +15,7 @@ import { StringToNumberArray } from '@common/decorators/string-to-array.decorato
 import { Type } from 'class-transformer';
 
 /**
- * This is the base class for partner module query params.
+ * This is the base class for partner module query params. All query params that will be used for multiple features should be defined here.
  * It's responsible for input value validation and mapping to Oasis query param property names.
  * Query param DTOs for features should extend this class using the PickType utility from @nestjs/mapped-types to select the properties they need.
  * DTOs extending this class are responsible for defining validation rules for the presence of the properties they pick using @IsNotEmpty() / @IsOptional()
